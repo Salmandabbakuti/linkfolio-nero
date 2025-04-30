@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import "@ant-design/v5-patch-for-react-19";
 import { ConfigProvider, theme } from "antd";
 import { createAppKit } from "@reown/appkit/react";
 import { EthersAdapter } from "@reown/appkit-adapter-ethers";
