@@ -2,10 +2,14 @@
 
 LinkFolio is a platform enabling users to craft personalized digital profiles transformed into non-fungible tokens (NFTs). Seamlessly curate your profile with a bio, avatar, and custom links to social media, portfolios, and more. With LinkFolio, your digital identity becomes a unique NFT asset, offering ownership and authenticity. Whether you're a creator, influencer, or professional, LinkFolio provides a streamlined solution to manage your digital presence as valuable NFTs.
 
+Built on NERO Chain, LinkFolio leverages native Account Abstraction (AA) and Paymaster infrastructure to deliver a gasless, seamless onboarding experience. Users can claim and update their profiles without ever needing to hold or manage gas tokens, eliminating a major barrier to Web3 adoption.
+
 Craft your unique bio, avatar, and links to social media as properties and attributes of your nft. Own your soulbound digital identity effortlessly fully onchain. Think of it as web3 version of linktree profile as digital collectible.
 
 ### Features
 
+- **Gasless Experience:** Powered by NERO Chain Paymaster, users can interact without paying gas fees using ETH or stablecoins.
+- **Native Account Abstraction:** Streamlines wallet interactions and enhances user experience through smart contract-based wallets.
 - **Customizable Profiles:** Personalize your profile with a bio, avatar, and custom links.
 - **Soulbound NFTs:** Each profile is minted as a unique non transferrable NFT, offering ownership and authenticity.
 - **On-chain Metadata:** Store profile data directly on-chain, ensuring data integrity and immutability.
@@ -46,11 +50,15 @@ npx hardhat ignition deploy ./ignition/modules/LinkFolio.ts --network neroTestne
 
 ### References
 
+- [Dapp Architecture - Nero Chain](https://docs.nerochain.io/en/getting-started/nero-dapp-architecture)
+- [AA Wallet Integration - NERO Chain](https://docs.nerochain.io/en/tutorials/aa-wallet-integration)
+- [Create your first Dapp - NERO Chain](https://docs.nerochain.io/en/tutorials/create-first-dapp)
 - [Openzeppelin ERC721 DOCS](https://docs.openzeppelin.com/contracts/5.x/erc721)
 - [ERC721 Metadata Standards](https://docs.opensea.io/docs/metadata-standards)
 - [ERC721 Soulbound Reference](https://ethereum.stackexchange.com/a/161807)
 - [ERC721 Onchain Metadata](https://andyhartnett.medium.com/solidity-tutorial-how-to-store-nft-metadata-and-svgs-on-the-blockchain-6df44314406b)
 - [Constructing Onchain Metadata directly in tokenURI without storing offchain](https://stackoverflow.com/a/70924789)
+- [Appkit Overview](https://docs.reown.com/appkit/overview)
 
 ## Built With
 
