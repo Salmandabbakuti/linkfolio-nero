@@ -54,8 +54,7 @@ export default function SiteLayout({ children }) {
           target="_blank"
           rel="noopener noreferrer"
         >
-          ©{new Date().getFullYear()} Salman Dabbakuti. Powered by Nextjs &
-          Reown
+          ©{new Date().getFullYear()} LinkFolio. Powered by NERO Chain & Reown
         </a>
         <p style={{ fontSize: "12px" }}>v0.0.2</p>
       </Footer>
