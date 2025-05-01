@@ -5,7 +5,8 @@ import { linkFolioContract } from ".";
 const NERO_RPC_URL = "https://rpc-testnet.nerochain.io";
 const BUNDLER_URL = "https://bundler.service.nerochain.io";
 const PAYMASTER_URL = "https://paymaster-testnet.nerochain.io";
-const API_KEY = process.env.NEXT_PUBLIC_NERO_API_KEY || "your_api_key_here";
+const API_KEY =
+  process.env.NEXT_PUBLIC_NERO_PLATFORM_API_KEY || "your_api_key_here";
 
 // Contract addresses
 const ENTRYPOINT_ADDRESS = "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789";
@@ -73,7 +74,7 @@ export const executeOperation = async (
   functionParams
 ) => {
   // Initialize client
-  const client = await initAAClient(accountSigner);
+  const client = await initAAClient();
 
   // Initialize builder with paymaster
   const builder = await initAABuilder(accountSigner);
@@ -83,7 +84,7 @@ export const executeOperation = async (
     functionParams
   );
 
-  const userOp = await builder.execute(contractAddress, 0, callData);
+  const userOp = builder.execute(contractAddress, 0, callData);
 
   // Send the user operation
   console.log("Sending UserOperation to bundler");

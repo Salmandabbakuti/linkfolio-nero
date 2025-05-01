@@ -32,6 +32,7 @@ import { BrowserProvider } from "ethers";
 import ProfileCard from "@/app/components/ProfileCard";
 import { linkFolioContract, supportedSocials } from "@/app/utils";
 import { LINKFOLIO_CONTRACT_ADDRESS } from "@/app/utils/constants";
+import { executeOperation } from "@/app/utils/aaUtils";
 
 export default function Profile({ params }) {
   // State
@@ -110,7 +111,7 @@ export default function Profile({ params }) {
 
   const onFinish = async (dataObj) => {
     if (!account) return message.error("Please connect your wallet first");
-    if (selectedNetworkId !== "eip155:80002")
+    if (selectedNetworkId !== "eip155:689")
       return message.error("Please switch to Polygon Amoy Testnet");
     const tokenId = profile?.id;
     setLoading({ write: true });
@@ -143,32 +144,22 @@ export default function Profile({ params }) {
       const signer = await ethersProvider.getSigner();
       console.log("create/update data:", { ...dataObj, linkKeys, links });
       if (!tokenId) {
-        const createTx = await linkFolioContract
-          .connect(signer)
-          .createProfile(
-            dataObj.name,
-            handle,
-            dataObj.bio,
-            dataObj.avatar,
-            linkKeys,
-            links
-          );
-        console.log("Create Profile Tx:", createTx);
-        await createTx.wait();
+        const createOpTx = await executeOperation(
+          signer,
+          linkFolioContract.target,
+          "createProfile",
+          [dataObj.name, handle, dataObj.bio, dataObj.avatar, linkKeys, links]
+        );
+        console.log("Create Profile Tx:", createOpTx);
         return message.success("Profile created successfully!");
       }
-      const updateTx = await linkFolioContract
-        .connect(signer)
-        .updateProfile(
-          tokenId,
-          dataObj.name,
-          dataObj.bio,
-          dataObj.avatar,
-          linkKeys,
-          links
-        );
-      console.log("Update Profile Tx:", updateTx);
-      await updateTx.wait();
+      const updateOpTx = await executeOperation(
+        signer,
+        LINKFOLIO_CONTRACT_ADDRESS,
+        "updateProfile",
+        [tokenId, dataObj.name, dataObj.bio, dataObj.avatar, linkKeys, links]
+      );
+      console.log("Update Profile Tx:", updateOpTx);
       message.success("Profile updated successfully!");
     } catch (err) {
       console.error("Failed to create/update profile:", err);
@@ -185,17 +176,19 @@ export default function Profile({ params }) {
   const handleDeleteProfile = async () => {
     if (!profile?.id) return message.error("Profile not found");
     if (!account) return message.error("Please connect your wallet first");
-    if (selectedNetworkId !== "eip155:80002")
+    if (selectedNetworkId !== "eip155:689")
       return message.error("Please switch to Polygon Amoy Testnet");
     setLoading({ write: true });
     try {
       const ethersProvider = new BrowserProvider(walletProvider);
       const signer = await ethersProvider.getSigner();
-      const tx = await linkFolioContract
-        .connect(signer)
-        .deleteProfile(profile?.id);
-      console.log("Profile deleted:", tx);
-      await tx.wait();
+      const deleteOpTx = await executeOperation(
+        signer,
+        LINKFOLIO_CONTRACT_ADDRESS,
+        "deleteProfile",
+        [profile?.id]
+      );
+      console.log("Delete Profile Tx:", deleteOpTx);
       message.success("Profile deleted successfully!");
       router.push("/");
     } catch (err) {
