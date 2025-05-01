@@ -32,7 +32,7 @@ import { BrowserProvider } from "ethers";
 import ProfileCard from "@/app/components/ProfileCard";
 import { linkFolioContract, supportedSocials } from "@/app/utils";
 import { LINKFOLIO_CONTRACT_ADDRESS } from "@/app/utils/constants";
-import { executeOperation } from "@/app/utils/aaUtils";
+import { executeOperation, getAAWalletAddress } from "@/app/utils/aaUtils";
 
 export default function Profile({ params }) {
   // State
@@ -44,6 +44,7 @@ export default function Profile({ params }) {
     read: false,
     write: false
   });
+  const [aaWalletAddress, setAAWalletAddress] = useState(null);
 
   const { handle } = use(params);
   const router = useRouter();
@@ -63,14 +64,32 @@ export default function Profile({ params }) {
   };
 
   const isProfileOwner = useMemo(
-    () => account && profile?.owner?.toLowerCase() === account?.toLowerCase(),
-    [account, profile]
+    () =>
+      aaWalletAddress &&
+      profile?.owner?.toLowerCase() === aaWalletAddress?.toLowerCase(),
+    [aaWalletAddress, profile]
   );
 
   // Effects
   useEffect(() => {
     fetchProfile();
-  }, []);
+    resolveAAWalletAddress();
+  }, [walletProvider]);
+
+  const resolveAAWalletAddress = async () => {
+    if (!walletProvider) return;
+    try {
+      const ethersProvider = new BrowserProvider(walletProvider);
+      const signer = await ethersProvider.getSigner();
+      const aaWalletAddress = await getAAWalletAddress(signer);
+      console.log(
+        `Resolved AA Wallet Address for account ${account}: ${aaWalletAddress}`
+      );
+      setAAWalletAddress(aaWalletAddress);
+    } catch (err) {
+      console.error("Error resolving AA Wallet Address:", err);
+    }
+  };
 
   // Functions
   const fetchProfile = async () => {

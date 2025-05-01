@@ -28,7 +28,7 @@ export const getAAWalletAddress = async (accountSigner) => {
   );
 
   // Get the counterfactual address of the AA wallet
-  const address = await simpleAccount.getSender();
+  const address = simpleAccount.getSender();
   console.log("AA wallet address:", address);
   return address;
 };
@@ -64,6 +64,9 @@ export const initAABuilder = async (accountSigner) => {
   builder.setCallGasLimit(300000);
   builder.setVerificationGasLimit(2000000);
   builder.setPreVerificationGas(100000);
+  builder.setMaxFeePerGas(10000000);
+  builder.setMaxPriorityFeePerGas(10000000);
+
   return builder;
 };
 
