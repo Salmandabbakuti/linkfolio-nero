@@ -38,6 +38,12 @@ npx hardhat compile
 npx hardhat ignition deploy ./ignition/modules/LinkFolio.ts --network neroTestnet
 ```
 
+### Paymaster and AA Integration
+
+The core implemtation of Paymaster and Account Abstraction(AA) can be found [here](https://github.com/Salmandabbakuti/linkfolio-nero/blob/main/client/app/utils/aaUtils.js)
+
+Interaction flow is demonstrated [here](https://github.com/Salmandabbakuti/linkfolio-nero/blob/main/client/app/utils/aaUtils.js#L73) and [here](https://github.com/Salmandabbakuti/linkfolio-nero/blob/main/client/app/%5Bhandle%5D/page.jsx#L204)
+
 ### Demo
 
 ![Screen1](https://github.com/user-attachments/assets/94e01554-2bab-4fdc-bd36-9deec2c18c2b)
