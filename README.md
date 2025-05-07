@@ -15,6 +15,27 @@ Craft your unique bio, avatar, and links to social media as properties and attri
 - **On-chain Metadata:** Store profile data directly on-chain, ensuring data integrity and immutability.
 - **User-Friendly DApp:** Claim, curate and update your social links securely and intuitively.
 
+### UX Flow
+
+```mermaid
+graph TD
+    A[User Visits LinkFolio Homepage] --> B[Connect Wallet]
+    B --> C[Assign Smart Wallet via NERO AA Platform]
+    C --> D[Enter Desired Handle to Claim]
+
+    D --> E{Is Handle Taken?}
+    E -->|Yes| F[Show Error: Handle Already Claimed]
+    E -->|No| G[Open Claim Page: Upload Avatar, Name, Bio, Social Links]
+    
+    G --> H[Sign Message via Metamask]
+    H --> I[Mint Soulbound Profile NFT to Smart Wallet Address]
+    I --> J[Redirect to /username Profile Page]
+
+    J --> K{Visit /username}
+    K -->|Profile Exists| L[Display Profile Details: Avatar, Name, Bio, Links, NFT Info, Share]
+    K -->|Profile Not Found| M[Show Claim Page to Register the Handle]
+```
+
 In LinkFolio, I prioritize on-chain metadata to safeguard the integrity and permanence of NFT content. Unlike many platforms, it ensure that the symbolic value of NFT ownership remains secure and untampered by storing all metadata directly on the blockchain. This approach prevents data manipulation and loss, preserving the unique nature and exclusivity of each NFT.
 
 ![Screen1](https://github.com/user-attachments/assets/94e01554-2bab-4fdc-bd36-9deec2c18c2b)
