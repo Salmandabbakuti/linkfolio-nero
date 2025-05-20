@@ -39,7 +39,7 @@ In LinkFolio, I prioritize on-chain metadata to safeguard the integrity and perm
 
 ![Screen1](https://github.com/user-attachments/assets/a65575d9-44bd-47df-8f95-adb19e5866e3)
 
-**Contract Address:** [0xf12d01e64e4a17976b532c72a9c2fce57b57654a](https://testnet.neroscan.io/address/0xf12d01e64e4a17976b532c72a9c2fce57b57654a?tab=Transactions). Deployed on Nerochain Testnet.
+**Contract Address:** [0xfaf07923e3ed82a432c7f7b2b6a976d0d38817fe](https://testnet.neroscan.io/address/0xfaf07923e3ed82a432c7f7b2b6a976d0d38817fe?tab=Transactions). Deployed on Nerochain Testnet.
 
 ## Getting Started
 
