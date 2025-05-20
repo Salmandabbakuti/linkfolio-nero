@@ -1,0 +1,37 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: LinkFolio
+    network: nero-evm-testnet
+    source:
+      address: "0xfaf07923e3ed82a432c7f7b2b6a976d0d38817fe"
+      abi: LinkFolio
+      startBlock: 6914427
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Profile
+        - User
+        - Note
+        - Post
+      abis:
+        - name: LinkFolio
+          file: ./abis/LinkFolio.json
+      eventHandlers:
+        - event: ProfileCreated(indexed uint256,string,string,string,string,address,string[],string[])
+          handler: handleProfileCreated
+        - event: ProfileDeleted(indexed uint256,string)
+          handler: handleProfileDeleted
+        - event: ProfileUpdated(indexed uint256,string,string,string,string,address,string[],string[])
+          handler: handleProfileUpdated
+        - event: NoteLeft(indexed uint256,string,uint256,string,address)
+          handler: handleNoteLeft
+        - event: PostCreated(indexed uint256,string,uint256,string,address)
+          handler: handlePostCreated
+      file: ./src/mapping.ts
