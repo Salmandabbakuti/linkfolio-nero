@@ -105,7 +105,6 @@ export default function ProfileCard({ profile, aaWalletAddress }) {
       );
       console.log("Create post operation transaction:", createPostOpTx);
       message.success("Post created successfully!");
-      setPostInput("");
       // add the new post to the profile posts
       profile.posts = [
         {
