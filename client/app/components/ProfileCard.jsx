@@ -11,7 +11,6 @@ import {
   Typography,
   Divider
 } from "antd";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { LinkOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -41,11 +40,6 @@ export default function ProfileCard({ profile, aaWalletAddress }) {
   const { address: account } = useAppKitAccount();
   const { selectedNetworkId } = useAppKitState();
   const { walletProvider } = useAppKitProvider("eip155");
-
-  const searchParams = useSearchParams();
-  const activeTab = searchParams.get("tab") || "links";
-  const router = useRouter();
-  const pathname = usePathname();
 
   const isProfileOwner = useMemo(
     () =>
@@ -173,9 +167,12 @@ export default function ProfileCard({ profile, aaWalletAddress }) {
       </div>
       <Tabs
         defaultActiveKey="links"
-        activeKey={activeTab}
+        // activeKey={activeTab}
         onChange={(key) => {
-          router.push(`${pathname}?tab=${key}`);
+          // const urlSearchParams = new URLSearchParams(window.location.search);
+          // urlSearchParams.set("tab", key);
+          // router.push(`${pathname}?${urlSearchParams.toString()}`);
+          // router.push(`${pathname}?tab=${key}`);
         }}
         items={[
           {
@@ -213,7 +210,7 @@ export default function ProfileCard({ profile, aaWalletAddress }) {
                   </>
                 )}
                 <Typography.Text strong>
-                  Posts ({profile?.posts?.length})
+                  Posts ({profile?.posts?.length || 0})
                 </Typography.Text>
                 <List
                   dataSource={profile?.posts || []}
@@ -278,7 +275,7 @@ export default function ProfileCard({ profile, aaWalletAddress }) {
                 </Button>
                 <Divider />
                 <Typography.Text strong>
-                  Notes ({profile?.notes?.length})
+                  Notes ({profile?.notes?.length || 0})
                 </Typography.Text>
                 <List
                   itemLayout="horizontal"

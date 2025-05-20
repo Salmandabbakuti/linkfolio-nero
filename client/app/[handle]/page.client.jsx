@@ -238,7 +238,7 @@ export default function Profile({ params }) {
   };
 
   return (
-    <div style={{ maxWidth: "600px", margin: "0 auto" }}>
+    <div style={{ maxWidth: "800px", margin: "0 auto" }}>
       {mode === "edit" ? (
         <Card
           title={profile?.id ? "Edit Profile" : "Create Profile"}
@@ -363,7 +363,7 @@ export default function Profile({ params }) {
           </Form>
         </Card>
       ) : (
-        <div style={{ maxWidth: "600px", margin: "0 auto" }}>
+        <div style={{ maxWidth: "800px", margin: "0 auto" }}>
           <Card
             title={
               mode === "preview" ? (
@@ -466,7 +466,12 @@ export default function Profile({ params }) {
               <ProfileCard
                 aaWalletAddress={aaWalletAddress}
                 profile={
-                  mode === "preview" ? formData.getFieldsValue() : profile
+                  mode === "preview"
+                    ? {
+                        ...profile,
+                        ...formData.getFieldsValue()
+                      }
+                    : profile
                 }
               />
             )}
