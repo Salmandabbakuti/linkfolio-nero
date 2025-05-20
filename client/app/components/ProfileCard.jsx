@@ -189,13 +189,10 @@ export default function ProfileCard({ profile, aaWalletAddress }) {
                 {isProfileOwner && (
                   <>
                     <Input.TextArea
-                      placeholder="Write a post..."
+                      placeholder="Share your thoughts..."
                       value={postInput}
                       onChange={(e) => setPostInput(e.target.value)}
-                      onPressEnter={() => {
-                        // handle post submission
-                        setPostInput("");
-                      }}
+                      onPressEnter={handleCreatePost}
                       style={{ marginBottom: "16px" }}
                     />
                     <Button
@@ -258,10 +255,8 @@ export default function ProfileCard({ profile, aaWalletAddress }) {
                   placeholder="Write a note..."
                   value={noteInput}
                   onChange={(e) => setNoteInput(e.target.value)}
-                  onPressEnter={() => {
-                    // handle note submission
-                    setNoteInput("");
-                  }}
+                  onPressEnter={handleLeaveNote}
+                  maxLength={280}
                   style={{ marginBottom: "16px" }}
                 />
                 {/* add submit button */}
