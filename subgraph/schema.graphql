@@ -1,0 +1,39 @@
+type User @entity(immutable: true) {
+  id: ID!
+  address: String!
+  profiles: [Profile!]! @derivedFrom(field: "owner")
+  createdAt: BigInt!
+}
+
+type Profile @entity(immutable: false) {
+  id: ID!
+  tokenId: BigInt!
+  name: String!
+  handle: String!
+  bio: String
+  avatar: String
+  linkKeys: [String!]!
+  links: [String!]!
+  owner: User!
+  posts: [Post!]! @derivedFrom(field: "author")
+  notes: [Note!]! @derivedFrom(field: "to")
+  createdAt: BigInt!
+  updatedAt: BigInt!
+}
+
+type Note @entity(immutable: true) {
+  # The ID of the note is a combination of the profile ID and the note ID
+  id: ID! 
+  to: Profile! # to which profile the note belongs
+  content: String!
+  author: Bytes! # who created the note
+  createdAt: BigInt!
+}
+
+type Post @entity(immutable: true) {
+  # The ID of the post is a combination of the profile ID and the post ID
+  id: ID!
+  content: String!
+  author: Profile! # who created the post
+  createdAt: BigInt!
+}

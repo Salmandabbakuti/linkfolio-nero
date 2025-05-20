@@ -20,9 +20,31 @@ contract LinkFolio is ERC721 {
         string[] linkKeys;
         mapping(string => string) links;
     }
+
+    struct Note {
+        uint256 id;
+        string content;
+        address author;
+    }
+
+    struct Post {
+        uint256 id;
+        string content;
+        address author;
+    }
+
     mapping(uint256 tokenId => Profile profile) public profiles;
     mapping(string handle => uint256 tokenId) public handleToTokenId;
     mapping(string handle => bool isExists) public profileExists;
+
+    // notes
+    mapping(string handle => mapping(uint256 noteId => Note note))
+        public notesByHandle;
+    mapping(uint256 tokenId => uint256 noteCount) public profileNoteCount;
+    // posts
+    mapping(string handle => mapping(uint256 postId => Post post))
+        public postsByHandle;
+    mapping(uint256 tokenId => uint256 postCount) public profilePostCount;
 
     event ProfileCreated(
         uint256 indexed tokenId,
@@ -47,6 +69,22 @@ contract LinkFolio is ERC721 {
     );
 
     event ProfileDeleted(uint256 indexed tokenId, string handle);
+
+    event NoteLeft(
+        uint256 indexed tokenId,
+        string handle,
+        uint256 noteId,
+        string content,
+        address author
+    );
+
+    event PostCreated(
+        uint256 indexed tokenId,
+        string handle,
+        uint256 postId,
+        string content,
+        address author
+    );
 
     constructor() ERC721("LinkFolio", "LIFO") {}
 
@@ -152,6 +190,35 @@ contract LinkFolio is ERC721 {
         delete profiles[_tokenId];
         _burn(_tokenId);
         emit ProfileDeleted(_tokenId, handle);
+    }
+
+    function leaveNote(string memory _handle, string memory _content) external {
+        uint256 tokenId = handleToTokenId[_handle];
+        require(
+            _ownerOf(tokenId) != address(0),
+            "LinkFolio: Profile not found by handle"
+        );
+        require(
+            bytes(_content).length > 0 && bytes(_content).length <= 280,
+            "LinkFolio: content must be between 1-280 characters"
+        );
+        uint256 noteId = profileNoteCount[tokenId]++;
+        notesByHandle[_handle][noteId] = Note(noteId, _content, msg.sender);
+        emit NoteLeft(tokenId, _handle, noteId, _content, msg.sender);
+    }
+
+    function createPost(
+        uint256 _tokenId,
+        string memory _content
+    ) external onlyProfileOwner(_tokenId) {
+        string memory _handle = profiles[_tokenId].handle;
+        require(
+            bytes(_content).length > 0,
+            "LinkFolio: content cannot be empty"
+        );
+        uint256 postId = profilePostCount[_tokenId]++;
+        postsByHandle[_handle][postId] = Post(postId, _content, msg.sender);
+        emit PostCreated(_tokenId, _handle, postId, _content, msg.sender);
     }
 
     function getProfileByHandle(
