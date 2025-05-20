@@ -26,7 +26,6 @@ graph TD
     D --> E{Is Handle Taken?}
     E -->|Yes| F[Show Error: Handle Already Claimed]
     E -->|No| G[Open Claim Page: Upload Avatar, Name, Bio, Social Links]
-    
     G --> H[Sign Message via Metamask]
     H --> I[Mint Soulbound Profile NFT to Smart Wallet Address]
     I --> J[Redirect to /username Profile Page]
@@ -38,7 +37,7 @@ graph TD
 
 In LinkFolio, I prioritize on-chain metadata to safeguard the integrity and permanence of NFT content. Unlike many platforms, it ensure that the symbolic value of NFT ownership remains secure and untampered by storing all metadata directly on the blockchain. This approach prevents data manipulation and loss, preserving the unique nature and exclusivity of each NFT.
 
-![Screen1](https://github.com/user-attachments/assets/94e01554-2bab-4fdc-bd36-9deec2c18c2b)
+![Screen1](https://github.com/user-attachments/assets/a65575d9-44bd-47df-8f95-adb19e5866e3)
 
 **Contract Address:** [0xf12d01e64e4a17976b532c72a9c2fce57b57654a](https://testnet.neroscan.io/address/0xf12d01e64e4a17976b532c72a9c2fce57b57654a?tab=Transactions). Deployed on Nerochain Testnet.
 
@@ -61,19 +60,35 @@ npx hardhat ignition deploy ./ignition/modules/LinkFolio.ts --network neroTestne
 
 ### Paymaster and AA Integration
 
-The core implemtation of Paymaster and Account Abstraction(AA) can be found [here](https://github.com/Salmandabbakuti/linkfolio-nero/blob/main/client/app/utils/aaUtils.js)
+The core implemtation of Paymaster and Account Abstraction(AA) can be found in [`client/app/utils/aaUtils.js`](client/app/utils/aaUtils.js)
 
-Interaction flow is demonstrated [here](https://github.com/Salmandabbakuti/linkfolio-nero/blob/main/client/app/utils/aaUtils.js#L73) and [here](https://github.com/Salmandabbakuti/linkfolio-nero/blob/main/client/app/%5Bhandle%5D/page.jsx#L204)
+Interaction flow is demonstrated in [Creation, Update, Delete of Profiles](client/app/[handle]/page.client.jsx#L181) and in [Creation of posts and notes](client/app/components/ProfileCard.jsx#L62),
+where the user is prompted to sign a message to create a profile, post or note. The Paymaster handles the gasless transaction and the AA SDK manages the smart contract wallet interactions.
 
 ### Demo
 
-![Screen1](https://github.com/user-attachments/assets/94e01554-2bab-4fdc-bd36-9deec2c18c2b)
+![Screen1](https://github.com/user-attachments/assets/a65575d9-44bd-47df-8f95-adb19e5866e3)
+![Screen5](https://github.com/user-attachments/assets/9bea64a1-959d-4dca-b10f-61e0883e3a06)
+![Screen2](https://github.com/user-attachments/assets/c4f57abc-856a-47e7-b801-3ca3b85b8894)
+![Screen3](https://github.com/user-attachments/assets/ce2a3bef-bdfb-49c7-afa0-cf3bc0ed8dd3)
+![Screen4](https://github.com/user-attachments/assets/7c915022-14be-4518-8db6-cc8a5f01968d)
 
-![Screen2](https://github.com/user-attachments/assets/9bea64a1-959d-4dca-b10f-61e0883e3a06)
+### ChangeLog
 
-![Screen3](https://github.com/user-attachments/assets/76af1e8c-eec5-4e3c-a213-658f4efdd4b6)
+#### 0.2.0
 
-![Screen4](https://github.com/user-attachments/assets/ca06870f-da37-4bd2-a81c-24be629c71c0)
+- Added notes feature for profiles to let community members leave quick thoughts or messages.
+- Added posts feature for profile owners to share updates or announcements.
+- Integrated NERO Account Abstraction (AA) and Paymaster for gasless note and post creation.
+- Added subgraph for indexing and querying profile data, posts, notes.
+- Added Explore section in home page to discover community profiles with search and filter options using subgraph.
+- Added profile metadata for individual handle pages to enable rich link previews when shared.
+
+#### 0.1.0 - Initial Release
+
+- Initial release of LinkFolio, a decentralized platform for creating and managing personalized digital profiles as NFTs.
+- Integrated NERO platform AA and paymaster for seamless user experience.
+- Users can create, update, and manage their profiles with a bio, avatar, and custom links.
 
 ### References
 
