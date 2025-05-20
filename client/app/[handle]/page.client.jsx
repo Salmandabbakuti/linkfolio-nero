@@ -11,7 +11,8 @@ import {
   Avatar,
   Space,
   Popconfirm,
-  Card
+  Card,
+  List
 } from "antd";
 import {
   GlobalOutlined,
@@ -30,7 +31,12 @@ import {
 } from "@reown/appkit/react";
 import { BrowserProvider } from "ethers";
 import ProfileCard from "@/app/components/ProfileCard";
-import { linkFolioContract, supportedSocials } from "@/app/utils";
+import {
+  linkFolioContract,
+  supportedSocials,
+  subgraphClient as client,
+  GET_PROFILE_QUERY
+} from "@/app/utils";
 import { LINKFOLIO_CONTRACT_ADDRESS } from "@/app/utils/constants";
 import { executeOperation, getAAWalletAddress } from "@/app/utils/aaUtils";
 
@@ -94,44 +100,53 @@ export default function Profile({ params }) {
   // Functions
   const fetchProfile = async () => {
     setLoading({ read: true });
-    try {
-      const isProfileExists = await linkFolioContract.profileExists(handle);
-      console.log("Profile exists:", isProfileExists);
-      // if profile does not exist, show claim modal
-      if (!isProfileExists && modeParam === "claim") setMode("edit");
-      if (!isProfileExists) return;
-      const res = await linkFolioContract.getProfileByHandle(handle);
-      console.log("Profile fetched:", res);
-      const { tokenId, name, bio, avatar, linkKeys, links, owner } = res;
-      // parse links as key value pairs from arrays of keys and links
-      const linksObj = {};
-      linkKeys.forEach((key, i) => {
-        linksObj[key] = links[i];
-      });
-      const parsedProfile = {
-        id: tokenId?.toString(),
-        name,
-        handle,
-        bio,
-        avatar,
-        links: linksObj,
-        owner
-      };
-      console.log("parsed profile:", parsedProfile);
-      setProfile(parsedProfile);
-      formData.setFieldsValue(parsedProfile);
-    } catch (err) {
-      console.error("Error fetching profile:", err);
-      message.error(`Error fetching profile: ${err.message}`);
-    } finally {
-      setLoading({ read: false });
-    }
+    client
+      .request(GET_PROFILE_QUERY, {
+        id: handle,
+        notes_first: 100,
+        notes_skip: 0,
+        notes_orderBy: "createdAt",
+        notes_orderDirection: "desc",
+        notes_where: {},
+        posts_first: 100,
+        posts_skip: 0,
+        posts_orderBy: "createdAt",
+        posts_orderDirection: "desc",
+        posts_where: {}
+      })
+      .then((data) => {
+        console.log("Fetched profile:", data);
+        const profile = data?.profile;
+        if (!profile && modeParam === "claim") setMode("edit");
+        if (!profile) return;
+        const { tokenId, linkKeys, links, owner, ...profileObj } = profile;
+        // parse links as key value pairs from arrays of keys and links
+        const linksObj = {};
+        linkKeys.forEach((key, i) => {
+          linksObj[key] = links[i];
+        });
+        const parsedProfile = {
+          ...profileObj,
+          tokenId,
+          links: linksObj,
+          id: tokenId,
+          owner: owner?.id
+        };
+        console.log("parsed profile:", parsedProfile);
+        setProfile(parsedProfile);
+        formData.setFieldsValue(parsedProfile);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch profile:", err);
+        message.error("Failed to fetch profile. Please try again.");
+      })
+      .finally(() => setLoading({ read: false }));
   };
 
   const onFinish = async (dataObj) => {
     if (!account) return message.error("Please connect your wallet first");
     if (selectedNetworkId !== "eip155:689")
-      return message.error("Please switch to Polygon Amoy Testnet");
+      return message.error("Please switch to NERO Testnet");
     const tokenId = profile?.id;
     setLoading({ write: true });
     try {
@@ -449,6 +464,7 @@ export default function Profile({ params }) {
               </>
             ) : (
               <ProfileCard
+                aaWalletAddress={aaWalletAddress}
                 profile={
                   mode === "preview" ? formData.getFieldsValue() : profile
                 }
