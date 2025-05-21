@@ -14,6 +14,7 @@
     "@reown/appkit": "^1.7.3",
     "@reown/appkit-adapter-ethers": "^1.7.3",
     "antd": "^5.24.9",
+    "dayjs": "^1.11.13",
     "ethers": "^6.13.7",
     "graphql": "^16.11.0",
     "graphql-request": "^7.1.2",

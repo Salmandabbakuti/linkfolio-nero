@@ -29,6 +29,8 @@ import { executeOperation } from "@/app/utils/aaUtils";
 
 dayjs.extend(relativeTime);
 
+const { Paragraph } = Typography;
+
 export default function ProfileCard({ profile, aaWalletAddress }) {
   const [postInput, setPostInput] = useState("");
   const [noteInput, setNoteInput] = useState("");
@@ -184,12 +186,19 @@ export default function ProfileCard({ profile, aaWalletAddress }) {
             label: "Posts",
             children: (
               <>
-                {/* add note input and submit button */}
+                <Paragraph type="secondary">
+                  📢 Stay in the loop — see what this creator is sharing with
+                  the world.
+                </Paragraph>
                 {isProfileOwner && (
                   <>
                     <Input.TextArea
-                      placeholder="Share your thoughts..."
+                      placeholder="Share what you're building. Updates, ideas, milestones — your space, your voice."
                       value={postInput}
+                      rows={4}
+                      autoSize={{ minRows: 3, maxRows: 6 }}
+                      maxLength={1000}
+                      showCount
                       onChange={(e) => setPostInput(e.target.value)}
                       onPressEnter={handleCreatePost}
                       style={{ marginBottom: "16px" }}
@@ -202,9 +211,9 @@ export default function ProfileCard({ profile, aaWalletAddress }) {
                     >
                       Submit
                     </Button>
-                    <Divider />
                   </>
                 )}
+                <Divider />
                 <Typography.Text strong>
                   Posts ({profile?.posts?.length || 0})
                 </Typography.Text>
@@ -249,16 +258,20 @@ export default function ProfileCard({ profile, aaWalletAddress }) {
             label: "Notes",
             children: (
               <>
-                {/* add note input and submit button */}
+                <Paragraph type="secondary">
+                  ✍️ Got something to say? Leave a note and make their day! Your
+                  notes will be visible to the community.
+                </Paragraph>
                 <Input.TextArea
-                  placeholder="Write a note..."
+                  placeholder="Drop a quick thought, shout-out, or question for this creator."
                   value={noteInput}
                   onChange={(e) => setNoteInput(e.target.value)}
                   onPressEnter={handleLeaveNote}
+                  rows={2}
                   maxLength={280}
+                  showCount
                   style={{ marginBottom: "16px" }}
                 />
-                {/* add submit button */}
                 <Button
                   type="primary"
                   shape="round"
