@@ -56,7 +56,7 @@ export default function SiteLayout({ children }) {
         >
           ©{new Date().getFullYear()} LinkFolio. Powered by NERO Chain & Reown
         </a>
-        <p style={{ fontSize: "12px" }}>v0.2.0</p>
+        <p style={{ fontSize: "12px" }}>v0.2.1</p>
       </Footer>
     </Layout>
   );

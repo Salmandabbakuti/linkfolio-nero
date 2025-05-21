@@ -206,43 +206,46 @@ export default function Home() {
             onClick={fetchProfiles}
           />
         </Space>
-
-        {/* antd responsive card grids */}
         <List
-          grid={{ gutter: 16, column: 5 }}
+          grid={{
+            xs: 1,
+            gutter: 16
+          }}
           dataSource={profiles}
           loading={dataLoading}
           itemLayout="vertical"
           renderItem={(item) => (
             <List.Item>
-              <div
+              <Card
+                hoverable
+                variant="bordered"
                 style={{
-                  border: "2px solid #e8e8e8",
+                  width: 340,
+                  textAlign: "center",
                   borderRadius: "10px",
-                  padding: "5px",
-                  textAlign: "center"
+                  padding: "10px"
+                  // boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)"
                 }}
+                actions={[
+                  <Link href={`/${item?.handle}`}>
+                    <Button variant="outlined" color="primary" shape="round">
+                      View Profile
+                    </Button>
+                  </Link>
+                ]}
               >
                 <Avatar
                   src={`https://api.dicebear.com/5.x/open-peeps/svg?seed=${item?.handle}`}
-                  alt="Profile"
+                  alt="avatar"
                   size={100}
                   shape="circle"
                   style={{ border: "1px solid grey" }}
                 />
+
                 <h3>{item?.name}</h3>
                 <p>@{item?.handle}</p>
                 <p>{item?.bio}</p>
-                <Divider />
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  shape="round"
-                  href={`/${item?.handle}`}
-                >
-                  View Profile
-                </Button>
-              </div>
+              </Card>
             </List.Item>
           )}
         />

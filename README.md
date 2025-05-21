@@ -67,11 +67,11 @@ where the user is prompted to sign a message to create a profile, post or note. 
 
 ### Demo
 
-![Screen1](https://github.com/user-attachments/assets/a65575d9-44bd-47df-8f95-adb19e5866e3)
-![Screen5](https://github.com/user-attachments/assets/9bea64a1-959d-4dca-b10f-61e0883e3a06)
-![Screen2](https://github.com/user-attachments/assets/c4f57abc-856a-47e7-b801-3ca3b85b8894)
-![Screen3](https://github.com/user-attachments/assets/ce2a3bef-bdfb-49c7-afa0-cf3bc0ed8dd3)
-![Screen4](https://github.com/user-attachments/assets/7c915022-14be-4518-8db6-cc8a5f01968d)
+![Profile-Screen](https://github.com/user-attachments/assets/a65575d9-44bd-47df-8f95-adb19e5866e3)
+![Edit-Screen](https://github.com/user-attachments/assets/9bea64a1-959d-4dca-b10f-61e0883e3a06)
+![Posts-Screen](https://github.com/user-attachments/assets/c4f57abc-856a-47e7-b801-3ca3b85b8894)
+![Notes-Screen](https://github.com/user-attachments/assets/ce2a3bef-bdfb-49c7-afa0-cf3bc0ed8dd3)
+![Discover-Screen](https://github.com/user-attachments/assets/099a6deb-014b-43ab-a71f-96b371ff2614)
 
 ### ChangeLog
 
