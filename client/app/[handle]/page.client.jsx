@@ -186,7 +186,15 @@ export default function Profile({ params }) {
           [dataObj.name, handle, dataObj.bio, dataObj.avatar, linkKeys, links]
         );
         console.log("Create Profile Tx:", createOpTx);
-        return message.success("Profile created successfully!");
+        message.success(
+          "Profile created successfully. Redirecting in a few..."
+        );
+        // fetchProfile in 5 seconds to get the new profile
+        setTimeout(() => {
+          fetchProfile();
+          setMode("view");
+        }, 5000);
+        return;
       }
       const updateOpTx = await executeOperation(
         signer,
@@ -195,7 +203,14 @@ export default function Profile({ params }) {
         [tokenId, dataObj.name, dataObj.bio, dataObj.avatar, linkKeys, links]
       );
       console.log("Update Profile Tx:", updateOpTx);
-      message.success("Profile updated successfully!");
+      message.success(
+        "Profile updated successfully. Redirecting to view mode in a few..."
+      );
+      // fetchProfile in 5 seconds to get the updated profile
+      setTimeout(() => {
+        fetchProfile();
+        setMode("view");
+      }, 5000);
     } catch (err) {
       console.error("Failed to create/update profile:", err);
       message.error(

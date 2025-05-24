@@ -125,11 +125,14 @@ export default function Home() {
     }
     setLoading(true);
     try {
-      const handleExists = await linkFolioContract.profileExists(handle);
-      if (handleExists)
+      const handleTokenId = await linkFolioContract.handleToTokenId(handle);
+      console.log("Claiming handle token ID", handleTokenId);
+      // if handleTokenId is not 0n, it means the handle is already taken
+      if (handleTokenId !== 0n) {
         return message.error(
           `${handle} is already taken. Please try another one.`
         );
+      }
       router.push(`/${handle}?mode=claim`);
     } catch (err) {
       console.error("Error while checking handle availability", err);
