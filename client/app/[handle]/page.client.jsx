@@ -22,7 +22,8 @@ import {
   ShareAltOutlined,
   ArrowRightOutlined,
   ExportOutlined,
-  ExclamationCircleOutlined
+  ExclamationCircleOutlined,
+  SyncOutlined
 } from "@ant-design/icons";
 import {
   useAppKitProvider,
@@ -408,23 +409,26 @@ export default function Profile({ params }) {
                   <Button
                     title="Edit Profile"
                     shape="circle"
+                    type="primary"
                     icon={<EditOutlined />}
                     onClick={() => setMode("edit")}
                   />
                 )}
                 {profile?.id && (
                   <Space>
-                    <a
+                    <Button
+                      title="Refresh"
+                      shape="circle"
+                      icon={<SyncOutlined spin={loading?.read} />}
+                      onClick={fetchProfile}
+                    />
+                    <Button
+                      title="View on Explorer"
+                      shape="circle"
+                      icon={<ExportOutlined />}
                       href={`https://testnet.neroscan.io/token/${LINKFOLIO_CONTRACT_ADDRESS}?a=${profile?.id}`}
                       target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Button
-                        title="View on Opensea"
-                        shape="circle"
-                        icon={<ExportOutlined />}
-                      />
-                    </a>
+                    />
                     <Button
                       title="Share Profile"
                       shape="circle"

@@ -37,7 +37,6 @@ const linkFolioContractABI = [
   "function createPost(uint256 _tokenId, string _content)",
   "function getProfileByHandle(string _handle) view returns (uint256 tokenId, string name, string handle, string bio, string avatar, address owner, string[] linkKeys, string[] links)",
   "function handleToTokenId(string handle) view returns (uint256 tokenId)",
-  "function profileExists(string handle) view returns (bool isExists)",
   "function tokenURI(uint256 tokenId) view returns (string uri)"
 ];
 
