@@ -12,7 +12,11 @@ import {
   Space,
   Popconfirm,
   Card,
-  List
+  List,
+  Row,
+  Col,
+  Typography,
+  Divider
 } from "antd";
 import {
   GlobalOutlined,
@@ -40,6 +44,8 @@ import {
 } from "@/app/utils";
 import { LINKFOLIO_CONTRACT_ADDRESS } from "@/app/utils/constants";
 import { executeOperation, getAAWalletAddress } from "@/app/utils/aaUtils";
+
+const { Title, Text } = Typography;
 
 export default function Profile({ params }) {
   // State
@@ -290,9 +296,15 @@ export default function Profile({ params }) {
             onFinish={onFinish}
             initialValues={initialValues}
             layout="vertical"
+            // size="large"
             requiredMark
           >
-            <Form.Item label="Avatar" name="avatar">
+            <Form.Item
+              label="Avatar"
+              name="avatar"
+              hasFeedback
+              help="Recommended 78x78, Max: 300KB"
+            >
               <Upload
                 name="avatar"
                 multiple={false}
@@ -333,36 +345,62 @@ export default function Profile({ params }) {
                 )}
               </Upload>
             </Form.Item>
-            <Form.Item
-              label="Name"
-              name="name"
-              rules={[{ required: true, message: "Please enter your name" }]}
-            >
-              <Input required />
-            </Form.Item>
-            <Form.Item
-              label="Handle"
-              name="handle"
-              rules={[{ required: true, message: "Please enter your handle" }]}
-            >
-              <Input readOnly required />
-            </Form.Item>
-            <Form.Item label="Bio" name="bio">
-              <Input.TextArea />
-            </Form.Item>
-            {supportedSocials.map((social) => (
-              <Form.Item
-                key={social.id}
-                label={social.name}
-                name={["links", social.name.toLowerCase()]}
-                defaultValue=""
-              >
-                <Input
-                  addonBefore={social?.icon || <GlobalOutlined />}
-                  placeholder={`Enter your ${social.name} profile link`}
-                />
-              </Form.Item>
-            ))}
+
+            <Row gutter={16}>
+              <Col xs={24} lg={12}>
+                <Form.Item
+                  label="Name"
+                  name="name"
+                  rules={[
+                    { required: true, message: "Please enter your name" }
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
+              <Col xs={24} lg={12}>
+                <Form.Item
+                  label="Handle"
+                  name="handle"
+                  hasFeedback
+                  help="Your unique handle, cannot be changed."
+                  rules={[
+                    { required: true, message: "Please enter your handle" }
+                  ]}
+                >
+                  <Input readOnly />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row gutter={16}>
+              <Col xs={24} lg={24}>
+                <Form.Item label="Bio" name="bio">
+                  <Input.TextArea />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Divider>
+              <Title level={5}>Social Links</Title>
+            </Divider>
+
+            <Row gutter={16}>
+              {supportedSocials.map((social) => (
+                <Col xs={24} lg={12} key={social.id}>
+                  <Form.Item
+                    label={social.name}
+                    name={["links", social.name.toLowerCase()]}
+                  >
+                    <Input
+                      addonBefore={social.icon || <GlobalOutlined />}
+                      placeholder={`Enter your ${social.name} profile link`}
+                    />
+                  </Form.Item>
+                </Col>
+              ))}
+            </Row>
+
             <Space>
               <Link href="/">
                 <Button shape="round">Back</Button>
@@ -379,7 +417,7 @@ export default function Profile({ params }) {
           </Form>
         </Card>
       ) : (
-        <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+        <>
           <Card
             title={
               mode === "preview" ? (
@@ -509,7 +547,7 @@ export default function Profile({ params }) {
               <ArrowRightOutlined />
             </Button>
           </Link>
-        </div>
+        </>
       )}
     </div>
   );
