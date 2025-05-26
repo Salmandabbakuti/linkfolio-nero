@@ -176,39 +176,6 @@ export default function Home() {
         <Paragraph type="secondary">
           Explore amazing profiles from our community
         </Paragraph>
-        <Space style={{ marginBottom: "20px" }}>
-          <Search
-            size="default"
-            allowClear
-            placeholder="Search profiles"
-            onSearch={fetchProfiles}
-            onPressEnter={fetchProfiles}
-            enterButton
-            loading={dataLoading}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={{ width: "300px" }}
-          />
-
-          <label>Owned by:</label>
-          <Select
-            style={{ width: 120 }}
-            defaultValue={false}
-            onChange={(value) => {
-              setShowMyProfiles(value);
-            }}
-          >
-            <Option value={false}>All</Option>
-            <Option value={true} disabled={!account}>
-              Me
-            </Option>
-          </Select>
-          <Button
-            type="primary"
-            shape="circle"
-            icon={<SyncOutlined spin={dataLoading} />}
-            onClick={fetchProfiles}
-          />
-        </Space>
         <List
           grid={{
             xs: 1,
@@ -216,7 +183,37 @@ export default function Home() {
           }}
           dataSource={profiles}
           loading={dataLoading}
-          itemLayout="vertical"
+          itemLayout="horizontal"
+          header={
+            <Space wrap>
+              <Search
+                allowClear
+                placeholder="Search by name, handle, or bio"
+                onSearch={fetchProfiles}
+                onPressEnter={fetchProfiles}
+                enterButton
+                loading={dataLoading}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <Select
+                defaultValue={false}
+                onChange={(value) => {
+                  setShowMyProfiles(value);
+                }}
+              >
+                <Option value={false}>By All</Option>
+                <Option value={true} disabled={!account}>
+                  By Me
+                </Option>
+              </Select>
+              <Button
+                type="primary"
+                shape="circle"
+                icon={<SyncOutlined spin={dataLoading} />}
+                onClick={fetchProfiles}
+              />
+            </Space>
+          }
           renderItem={(item) => (
             <List.Item>
               <Card
@@ -224,9 +221,11 @@ export default function Home() {
                 variant="bordered"
                 style={{
                   width: 340,
+                  height: 350,
                   textAlign: "center",
                   borderRadius: "10px",
-                  padding: "10px"
+                  padding: "10px",
+                  transition: "all 0.3s"
                   // boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)"
                 }}
                 actions={[
@@ -244,10 +243,9 @@ export default function Home() {
                   shape="circle"
                   style={{ border: "1px solid grey" }}
                 />
-
                 <h3>{item?.name}</h3>
                 <p>@{item?.handle}</p>
-                <p>{item?.bio}</p>
+                <p>{item?.bio || "No bio available"}</p>
               </Card>
             </List.Item>
           )}
