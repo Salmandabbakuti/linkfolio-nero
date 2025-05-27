@@ -12,11 +12,11 @@ import {
   Space,
   Popconfirm,
   Card,
-  List,
   Row,
   Col,
   Typography,
-  Divider
+  Divider,
+  Spin
 } from "antd";
 import {
   GlobalOutlined,
@@ -27,7 +27,8 @@ import {
   ArrowRightOutlined,
   ExportOutlined,
   ExclamationCircleOutlined,
-  SyncOutlined
+  SyncOutlined,
+  LoadingOutlined
 } from "@ant-design/icons";
 import {
   useAppKitProvider,
@@ -106,7 +107,7 @@ export default function Profile({ params }) {
 
   // Functions
   const fetchProfile = async () => {
-    setLoading({ read: true });
+    setLoading({ ...loading, read: true });
     client
       .request(GET_PROFILE_QUERY, {
         id: handle,
@@ -147,7 +148,7 @@ export default function Profile({ params }) {
         console.error("Failed to fetch profile:", err);
         message.error("Failed to fetch profile. Please try again.");
       })
-      .finally(() => setLoading({ read: false }));
+      .finally(() => setLoading({ ...loading, read: false }));
   };
 
   const onFinish = async (dataObj) => {
@@ -155,7 +156,7 @@ export default function Profile({ params }) {
     if (selectedNetworkId !== "eip155:689")
       return message.error("Please switch to NERO Testnet");
     const tokenId = profile?.id;
-    setLoading({ write: true });
+    setLoading({ ...loading, write: true });
     try {
       // if avatar file is present, upload it to IPFS
       if (avatarFile) {
@@ -225,7 +226,7 @@ export default function Profile({ params }) {
         }`
       );
     } finally {
-      setLoading({ write: false });
+      setLoading({ ...loading, write: false });
     }
   };
 
@@ -234,7 +235,7 @@ export default function Profile({ params }) {
     if (!account) return message.error("Please connect your wallet first");
     if (selectedNetworkId !== "eip155:689")
       return message.error("Please switch to Polygon Amoy Testnet");
-    setLoading({ write: true });
+    setLoading({ ...loading, write: true });
     try {
       const ethersProvider = new BrowserProvider(walletProvider);
       const signer = await ethersProvider.getSigner();
@@ -255,7 +256,7 @@ export default function Profile({ params }) {
         }`
       );
     } finally {
-      setLoading({ write: false });
+      setLoading({ ...loading, write: false });
     }
   };
 
@@ -299,121 +300,128 @@ export default function Profile({ params }) {
             // size="large"
             requiredMark
           >
-            <Form.Item
-              label="Avatar"
-              name="avatar"
-              hasFeedback
-              help="Recommended 78x78, Max: 300KB"
+            <Spin
+              spinning={loading?.write}
+              size="large"
+              tip="Transaction in progress..."
+              indicator={<LoadingOutlined spin />}
             >
-              <Upload
+              <Form.Item
+                label="Avatar"
                 name="avatar"
-                multiple={false}
-                showUploadList
-                listType="picture-circle"
-                fileList={avatarFile ? [avatarFile] : []}
-                accept="image/*"
-                maxCount={1}
-                beforeUpload={() => false}
-                onChange={({ fileList }) => {
-                  console.log("Avatar changed", fileList[0]);
-                  const file = fileList[0];
-                  if (!file) {
-                    setAvatarFile(null);
-                    return;
-                  }
-                  if (
-                    !file?.type?.startsWith("image/") ||
-                    file?.size > 300000
-                  ) {
-                    return message.error(
-                      "Invalid file type or size (Max 300KB)"
-                    );
-                  }
-                  setAvatarFile(file);
-                }}
+                hasFeedback
+                help="Recommended 78x78, Max: 300KB"
               >
-                {avatarFile ? null : (
-                  <Avatar
-                    src={
-                      profile?.avatar ||
-                      `https://api.dicebear.com/5.x/open-peeps/svg?seed=${handle}`
+                <Upload
+                  name="avatar"
+                  multiple={false}
+                  showUploadList
+                  listType="picture-circle"
+                  fileList={avatarFile ? [avatarFile] : []}
+                  accept="image/*"
+                  maxCount={1}
+                  beforeUpload={() => false}
+                  onChange={({ fileList }) => {
+                    console.log("Avatar changed", fileList[0]);
+                    const file = fileList[0];
+                    if (!file) {
+                      setAvatarFile(null);
+                      return;
                     }
-                    alt="Profile"
-                    size={100}
-                    shape="circle"
-                  />
-                )}
-              </Upload>
-            </Form.Item>
-
-            <Row gutter={16}>
-              <Col xs={24} lg={12}>
-                <Form.Item
-                  label="Name"
-                  name="name"
-                  rules={[
-                    { required: true, message: "Please enter your name" }
-                  ]}
+                    if (
+                      !file?.type?.startsWith("image/") ||
+                      file?.size > 300000
+                    ) {
+                      return message.error(
+                        "Invalid file type or size (Max 300KB)"
+                      );
+                    }
+                    setAvatarFile(file);
+                  }}
                 >
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col xs={24} lg={12}>
-                <Form.Item
-                  label="Handle"
-                  name="handle"
-                  hasFeedback
-                  help="Your unique handle, cannot be changed."
-                  rules={[
-                    { required: true, message: "Please enter your handle" }
-                  ]}
-                >
-                  <Input readOnly />
-                </Form.Item>
-              </Col>
-            </Row>
-
-            <Row gutter={16}>
-              <Col xs={24} lg={24}>
-                <Form.Item label="Bio" name="bio">
-                  <Input.TextArea />
-                </Form.Item>
-              </Col>
-            </Row>
-
-            <Divider>
-              <Title level={5}>Social Links</Title>
-            </Divider>
-
-            <Row gutter={16}>
-              {supportedSocials.map((social) => (
-                <Col xs={24} lg={12} key={social.id}>
-                  <Form.Item
-                    label={social.name}
-                    name={["links", social.name.toLowerCase()]}
-                  >
-                    <Input
-                      addonBefore={social.icon || <GlobalOutlined />}
-                      placeholder={`Enter your ${social.name} profile link`}
+                  {avatarFile ? null : (
+                    <Avatar
+                      src={
+                        profile?.avatar ||
+                        `https://api.dicebear.com/5.x/open-peeps/svg?seed=${handle}`
+                      }
+                      alt="Profile"
+                      size={100}
+                      shape="circle"
                     />
+                  )}
+                </Upload>
+              </Form.Item>
+
+              <Row gutter={16}>
+                <Col xs={24} lg={12}>
+                  <Form.Item
+                    label="Name"
+                    name="name"
+                    rules={[
+                      { required: true, message: "Please enter your name" }
+                    ]}
+                  >
+                    <Input />
                   </Form.Item>
                 </Col>
-              ))}
-            </Row>
+                <Col xs={24} lg={12}>
+                  <Form.Item
+                    label="Handle"
+                    name="handle"
+                    hasFeedback
+                    help="Your unique handle, cannot be changed."
+                    rules={[
+                      { required: true, message: "Please enter your handle" }
+                    ]}
+                  >
+                    <Input readOnly />
+                  </Form.Item>
+                </Col>
+              </Row>
 
-            <Space>
-              <Link href="/">
-                <Button shape="round">Back</Button>
-              </Link>
-              <Button
-                type="primary"
-                shape="round"
-                htmlType="submit"
-                loading={loading?.write}
-              >
-                Save
-              </Button>
-            </Space>
+              <Row gutter={16}>
+                <Col xs={24} lg={24}>
+                  <Form.Item label="Bio" name="bio">
+                    <Input.TextArea />
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Divider>
+                <Title level={5}>Social Links</Title>
+              </Divider>
+
+              <Row gutter={16}>
+                {supportedSocials.map((social) => (
+                  <Col xs={24} lg={12} key={social.id}>
+                    <Form.Item
+                      label={social.name}
+                      name={["links", social.name.toLowerCase()]}
+                    >
+                      <Input
+                        addonBefore={social.icon || <GlobalOutlined />}
+                        placeholder={`Enter your ${social.name} profile link`}
+                      />
+                    </Form.Item>
+                  </Col>
+                ))}
+              </Row>
+
+              <Space>
+                <Button shape="round" onClick={() => setMode("view")}>
+                  Back
+                </Button>
+                <Button
+                  type="primary"
+                  shape="round"
+                  htmlType="submit"
+                  loading={loading?.write}
+                >
+                  Save
+                </Button>
+              </Space>
+            </Spin>
           </Form>
         </Card>
       ) : (
