@@ -185,6 +185,8 @@ export default function Home() {
             >
               {Array.from({ length: 5 }).map((_, index) => (
                 <Card
+                  key={index}
+                  variant="outlined"
                   hoverable
                   style={{ height: 100, borderRadius: 18 }}
                   cover={

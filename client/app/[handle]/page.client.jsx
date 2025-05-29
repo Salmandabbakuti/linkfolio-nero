@@ -489,6 +489,7 @@ export default function Profile({ params }) {
                       icon={<ExportOutlined />}
                       href={`https://testnet.neroscan.io/token/${LINKFOLIO_CONTRACT_ADDRESS}?a=${profile?.id}`}
                       target="_blank"
+                      rel="noopener noreferrer"
                     />
                     <Button
                       title="Share Profile"

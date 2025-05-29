@@ -136,6 +136,7 @@ contract LinkFolio is ERC721 {
         newProfile.avatar = _avatar;
         newProfile.linkKeys = _linkKeys;
         newProfile.owner = msg.sender;
+        newProfile._eoa = _eoa;
 
         for (uint256 i = 0; i < _linkKeys.length; i++) {
             newProfile.links[_linkKeys[i]] = _links[i];

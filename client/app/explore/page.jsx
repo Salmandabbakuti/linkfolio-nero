@@ -72,7 +72,10 @@ export default function Explore() {
         setProfiles(data?.profiles || []);
       })
       .catch((err) => {
-        message.error("Something went wrong. Please try again!");
+        console.error("Error fetching profiles:", err);
+        message.error(
+          err?.message || "Failed to fetch profiles. Please try again!"
+        );
       })
       .finally(() => {
         setDataLoading(false);
@@ -87,7 +90,7 @@ export default function Explore() {
       const aaWalletAddress = await getAAWalletAddress(signer);
       setAAWalletAddress(aaWalletAddress?.toLowerCase());
     } catch (err) {
-      // ignore
+      console.error("Failed to resolve AA wallet address:", err);
     }
   };
 
@@ -168,7 +171,7 @@ export default function Explore() {
                   }}
                   actions={[
                     <Link href={`/${item?.handle}`} key="view-profile">
-                      <Button variant="outlined" shape="round">
+                      <Button variant="outlined" color="primary" shape="round">
                         View Profile
                       </Button>
                     </Link>
