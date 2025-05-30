@@ -59,6 +59,7 @@ export default function Profile({ params }) {
     write: false
   });
   const [aaWalletAddress, setAAWalletAddress] = useState(null);
+  const [selectedSocials, setSelectedSocials] = useState([]);
 
   const { handle } = use(params);
   const router = useRouter();
@@ -89,6 +90,15 @@ export default function Profile({ params }) {
     fetchProfile();
     resolveAAWalletAddress();
   }, [walletProvider]);
+
+  // On edit mode, preselect socials with existing links
+  useEffect(() => {
+    if (mode === "edit" && profile?.links) {
+      setSelectedSocials(
+        Object.keys(profile.links).filter((k) => profile.links[k])
+      );
+    }
+  }, [mode, profile]);
 
   const resolveAAWalletAddress = async () => {
     if (!walletProvider) return;
@@ -170,7 +180,8 @@ export default function Profile({ params }) {
 
       // clean & parse links as arrays of keys and links from key value pairs for contract function input
       // we need to remove empty or undefined links as form item make keys undefined if not filled and contract wont accept it
-      const cleanedLinksObj = Object.entries(dataObj.links).reduce(
+      const linksObj = dataObj.links || {}; // if no links selected, use empty object. sothat keys, links are empty arrays
+      const cleanedLinksObj = Object.entries(linksObj).reduce(
         (acc, [key, value]) => {
           if (value) {
             acc[key] = value;
@@ -391,21 +402,67 @@ export default function Profile({ params }) {
               <Divider>
                 <Title level={5}>Social Links</Title>
               </Divider>
-
+              <Typography.Paragraph
+                type="secondary"
+                style={{ marginBottom: "10px" }}
+              >
+                Select the social platforms to include links in your profile.
+                Click to add or remove them.
+              </Typography.Paragraph>
+              <Row gutter={16} style={{ marginBottom: 16 }}>
+                <Col span={24}>
+                  <Space wrap>
+                    {supportedSocials.map((social) => (
+                      <Button
+                        key={social.id}
+                        type={
+                          selectedSocials.includes(social.name.toLowerCase())
+                            ? "primary"
+                            : "default"
+                        }
+                        icon={social.icon || <GlobalOutlined />}
+                        shape="round"
+                        onClick={() => {
+                          setSelectedSocials((prev) =>
+                            prev.includes(social.name.toLowerCase())
+                              ? prev.filter(
+                                  (s) => s !== social.name.toLowerCase()
+                                )
+                              : [...prev, social.name.toLowerCase()]
+                          );
+                        }}
+                      >
+                        {social.name}
+                      </Button>
+                    ))}
+                  </Space>
+                </Col>
+              </Row>
               <Row gutter={16}>
-                {supportedSocials.map((social) => (
-                  <Col xs={24} lg={12} key={social.id}>
-                    <Form.Item
-                      label={social.name}
-                      name={["links", social.name.toLowerCase()]}
-                    >
-                      <Input
-                        addonBefore={social.icon || <GlobalOutlined />}
-                        placeholder={`Enter your ${social.name} profile link`}
-                      />
-                    </Form.Item>
-                  </Col>
-                ))}
+                {selectedSocials.map((socialKey) => {
+                  const social = supportedSocials.find(
+                    (s) => s.name.toLowerCase() === socialKey
+                  );
+                  return (
+                    <Col xs={24} lg={12} key={socialKey}>
+                      <Form.Item
+                        label={social.name}
+                        name={["links", socialKey]}
+                        rules={[
+                          {
+                            required: true,
+                            message: `Please enter your ${social.name} profile link`
+                          }
+                        ]}
+                      >
+                        <Input
+                          addonBefore={social.icon || <GlobalOutlined />}
+                          placeholder={`Enter your ${social.name} profile link`}
+                        />
+                      </Form.Item>
+                    </Col>
+                  );
+                })}
               </Row>
 
               <Space>
