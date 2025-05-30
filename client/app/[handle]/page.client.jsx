@@ -16,7 +16,8 @@ import {
   Col,
   Typography,
   Divider,
-  Spin
+  Spin,
+  Tabs
 } from "antd";
 import {
   GlobalOutlined,
@@ -274,213 +275,249 @@ export default function Profile({ params }) {
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto" }}>
       {mode === "edit" ? (
-        <Card
-          title={profile?.id ? "Edit Profile" : "Create Profile"}
-          variant="outlined"
-          loading={loading?.read}
-          extra={
-            <Space>
-              <Button
-                title="Preview"
-                shape="circle"
-                icon={<EyeOutlined />}
-                onClick={() => setMode("preview")}
-              />
-              {isProfileOwner && (
-                <Popconfirm
-                  title="Are you sure you want to delete this profile?"
-                  onConfirm={handleDeleteProfile}
-                >
-                  <Button
-                    title="Delete Profile"
-                    type="primary"
-                    shape="circle"
-                    danger
-                    icon={<DeleteOutlined />}
-                  />
-                </Popconfirm>
-              )}
-            </Space>
-          }
-        >
-          <Form
-            form={formData}
-            onFinish={onFinish}
-            initialValues={initialValues}
-            layout="vertical"
-            // size="large"
-            requiredMark
-          >
-            <Spin
-              spinning={loading?.write}
-              size="large"
-              tip="Transaction in progress..."
-              indicator={<LoadingOutlined spin />}
-            >
-              <Form.Item
-                label="Avatar"
-                name="avatar"
-                hasFeedback
-                help="Recommended 78x78, Max: 300KB"
-              >
-                <Upload
-                  name="avatar"
-                  multiple={false}
-                  showUploadList
-                  listType="picture-circle"
-                  fileList={avatarFile ? [avatarFile] : []}
-                  accept="image/*"
-                  maxCount={1}
-                  beforeUpload={() => false}
-                  onChange={({ fileList }) => {
-                    console.log("Avatar changed", fileList[0]);
-                    const file = fileList[0];
-                    if (!file) {
-                      setAvatarFile(null);
-                      return;
-                    }
-                    if (
-                      !file?.type?.startsWith("image/") ||
-                      file?.size > 300000
-                    ) {
-                      return message.error(
-                        "Invalid file type or size (Max 300KB)"
-                      );
-                    }
-                    setAvatarFile(file);
-                  }}
-                >
-                  {avatarFile ? null : (
-                    <Avatar
-                      src={
-                        profile?.avatar ||
-                        `https://api.dicebear.com/5.x/open-peeps/svg?seed=${handle}`
-                      }
-                      alt="Profile"
-                      size={100}
-                      shape="circle"
-                    />
-                  )}
-                </Upload>
-              </Form.Item>
-
-              <Row gutter={16}>
-                <Col xs={24} lg={12}>
-                  <Form.Item
-                    label="Name"
-                    name="name"
-                    rules={[
-                      { required: true, message: "Please enter your name" }
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} lg={12}>
-                  <Form.Item
-                    label="Handle"
-                    name="handle"
-                    hasFeedback
-                    help="Your unique handle, cannot be changed."
-                    rules={[
-                      { required: true, message: "Please enter your handle" }
-                    ]}
-                  >
-                    <Input readOnly />
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Row gutter={16}>
-                <Col xs={24} lg={24}>
-                  <Form.Item label="Bio" name="bio">
-                    <Input.TextArea />
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Divider>
-                <Title level={5}>Social Links</Title>
-              </Divider>
-              <Typography.Paragraph
-                type="secondary"
-                style={{ marginBottom: "10px" }}
-              >
-                Select the social platforms to include links in your profile.
-                Click to add or remove them.
-              </Typography.Paragraph>
-              <Row gutter={16} style={{ marginBottom: 16 }}>
-                <Col span={24}>
-                  <Space wrap>
-                    {supportedSocials.map((social) => (
+        <Tabs
+          defaultActiveKey="profile"
+          tabPosition="left"
+          animated
+          centered
+          items={[
+            {
+              key: "profile",
+              label: "Profile",
+              children: (
+                <Card
+                  title={profile?.id ? "Edit Profile" : "Create Profile"}
+                  variant="outlined"
+                  loading={loading?.read}
+                  extra={
+                    <Space>
                       <Button
-                        key={social.id}
-                        type={
-                          selectedSocials.includes(social.name.toLowerCase())
-                            ? "primary"
-                            : "default"
-                        }
-                        icon={social.icon || <GlobalOutlined />}
-                        shape="round"
-                        onClick={() => {
-                          setSelectedSocials((prev) =>
-                            prev.includes(social.name.toLowerCase())
-                              ? prev.filter(
-                                  (s) => s !== social.name.toLowerCase()
-                                )
-                              : [...prev, social.name.toLowerCase()]
-                          );
-                        }}
-                      >
-                        {social.name}
-                      </Button>
-                    ))}
-                  </Space>
-                </Col>
-              </Row>
-              <Row gutter={16}>
-                {selectedSocials.map((socialKey) => {
-                  const social = supportedSocials.find(
-                    (s) => s.name.toLowerCase() === socialKey
-                  );
-                  return (
-                    <Col xs={24} lg={12} key={socialKey}>
-                      <Form.Item
-                        label={social.name}
-                        name={["links", socialKey]}
-                        rules={[
-                          {
-                            required: true,
-                            message: `Please enter your ${social.name} profile link`
-                          }
-                        ]}
-                      >
-                        <Input
-                          addonBefore={social.icon || <GlobalOutlined />}
-                          placeholder={`Enter your ${social.name} profile link`}
-                        />
-                      </Form.Item>
-                    </Col>
-                  );
-                })}
-              </Row>
-
-              <Space>
-                <Button shape="round" onClick={() => setMode("view")}>
-                  Back
-                </Button>
-                <Button
-                  type="primary"
-                  shape="round"
-                  htmlType="submit"
-                  loading={loading?.write}
+                        title="Preview"
+                        shape="circle"
+                        icon={<EyeOutlined />}
+                        onClick={() => setMode("preview")}
+                      />
+                      {isProfileOwner && (
+                        <Popconfirm
+                          title="Are you sure you want to delete this profile?"
+                          onConfirm={handleDeleteProfile}
+                        >
+                          <Button
+                            title="Delete Profile"
+                            type="primary"
+                            shape="circle"
+                            danger
+                            icon={<DeleteOutlined />}
+                          />
+                        </Popconfirm>
+                      )}
+                    </Space>
+                  }
                 >
-                  Save
-                </Button>
-              </Space>
-            </Spin>
-          </Form>
-        </Card>
+                  <Form
+                    form={formData}
+                    onFinish={onFinish}
+                    initialValues={initialValues}
+                    layout="vertical"
+                    // size="large"
+                    requiredMark
+                  >
+                    <Spin
+                      spinning={loading?.write}
+                      size="large"
+                      tip="Transaction in progress..."
+                      indicator={<LoadingOutlined spin />}
+                    >
+                      <Form.Item
+                        label="Avatar"
+                        name="avatar"
+                        hasFeedback
+                        help="Recommended 78x78, Max: 300KB"
+                      >
+                        <Upload
+                          name="avatar"
+                          multiple={false}
+                          showUploadList
+                          listType="picture-circle"
+                          fileList={avatarFile ? [avatarFile] : []}
+                          accept="image/*"
+                          maxCount={1}
+                          beforeUpload={() => false}
+                          onChange={({ fileList }) => {
+                            console.log("Avatar changed", fileList[0]);
+                            const file = fileList[0];
+                            if (!file) {
+                              setAvatarFile(null);
+                              return;
+                            }
+                            if (
+                              !file?.type?.startsWith("image/") ||
+                              file?.size > 300000
+                            ) {
+                              return message.error(
+                                "Invalid file type or size (Max 300KB)"
+                              );
+                            }
+                            setAvatarFile(file);
+                          }}
+                        >
+                          {avatarFile ? null : (
+                            <Avatar
+                              src={
+                                profile?.avatar ||
+                                `https://api.dicebear.com/5.x/open-peeps/svg?seed=${handle}`
+                              }
+                              alt="Profile"
+                              size={100}
+                              shape="circle"
+                            />
+                          )}
+                        </Upload>
+                      </Form.Item>
+
+                      <Row gutter={16}>
+                        <Col xs={24} lg={12}>
+                          <Form.Item
+                            label="Name"
+                            name="name"
+                            rules={[
+                              {
+                                required: true,
+                                message: "Please enter your name"
+                              }
+                            ]}
+                          >
+                            <Input />
+                          </Form.Item>
+                        </Col>
+                        <Col xs={24} lg={12}>
+                          <Form.Item
+                            label="Handle"
+                            name="handle"
+                            hasFeedback
+                            help="Your unique handle, cannot be changed."
+                            rules={[
+                              {
+                                required: true,
+                                message: "Please enter your handle"
+                              }
+                            ]}
+                          >
+                            <Input readOnly />
+                          </Form.Item>
+                        </Col>
+                      </Row>
+
+                      <Row gutter={16}>
+                        <Col xs={24} lg={24}>
+                          <Form.Item label="Bio" name="bio">
+                            <Input.TextArea />
+                          </Form.Item>
+                        </Col>
+                      </Row>
+
+                      <Divider>
+                        <Title level={5}>Social Links</Title>
+                      </Divider>
+                      <Typography.Paragraph
+                        type="secondary"
+                        style={{ marginBottom: "10px" }}
+                      >
+                        Select the social platforms to include links in your
+                        profile. Click to add or remove them.
+                      </Typography.Paragraph>
+                      <Row gutter={16} style={{ marginBottom: 16 }}>
+                        <Col span={24}>
+                          <Space wrap>
+                            {supportedSocials.map((social) => (
+                              <Button
+                                key={social.id}
+                                type={
+                                  selectedSocials.includes(
+                                    social.name.toLowerCase()
+                                  )
+                                    ? "primary"
+                                    : "default"
+                                }
+                                icon={social.icon || <GlobalOutlined />}
+                                shape="round"
+                                onClick={() => {
+                                  setSelectedSocials((prev) =>
+                                    prev.includes(social.name.toLowerCase())
+                                      ? prev.filter(
+                                          (s) => s !== social.name.toLowerCase()
+                                        )
+                                      : [...prev, social.name.toLowerCase()]
+                                  );
+                                }}
+                              >
+                                {social.name}
+                              </Button>
+                            ))}
+                          </Space>
+                        </Col>
+                      </Row>
+                      <Row gutter={16}>
+                        {selectedSocials.map((socialKey) => {
+                          const social = supportedSocials.find(
+                            (s) => s.name.toLowerCase() === socialKey
+                          );
+                          return (
+                            <Col xs={24} lg={12} key={socialKey}>
+                              <Form.Item
+                                label={social.name}
+                                name={["links", socialKey]}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: `Please enter your ${social.name} profile link`
+                                  }
+                                ]}
+                              >
+                                <Input
+                                  addonBefore={
+                                    social.icon || <GlobalOutlined />
+                                  }
+                                  placeholder={`Enter your ${social.name} profile link`}
+                                />
+                              </Form.Item>
+                            </Col>
+                          );
+                        })}
+                      </Row>
+
+                      <Space>
+                        <Button shape="round" onClick={() => setMode("view")}>
+                          Back
+                        </Button>
+                        <Button
+                          type="primary"
+                          shape="round"
+                          htmlType="submit"
+                          loading={loading?.write}
+                        >
+                          Save
+                        </Button>
+                      </Space>
+                    </Spin>
+                  </Form>
+                </Card>
+              )
+            },
+            {
+              key: "Appearance",
+              label: "Appearance",
+              children: (
+                <Card title="Coming Soon" variant="outlined">
+                  <Text type="secondary">
+                    We are working on custom themes and appearance settings.
+                    Stay tuned!
+                  </Text>
+                </Card>
+              )
+            }
+          ]}
+        />
       ) : (
         <>
           <Card
