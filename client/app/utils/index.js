@@ -30,12 +30,12 @@ export const supportedSocials = [
 ];
 
 const linkFolioContractABI = [
-  "function createProfile(string _name, string _handle, string _bio, string _avatar, string[] _linkKeys, string[] _links)",
-  "function updateProfile(uint256 _tokenId, string _name, string _bio, string _avatar, string[] _linkKeys, string[] _links)",
+  "function createProfile(string _name, string _handle, uint8 _category, string _bio, string _avatar, string[] _linkKeys, string[] _links)",
+  "function updateProfile(uint256 _tokenId, string _name, uint8 _category, string _bio, string _avatar, string[] _linkKeys, string[] _links)",
   "function deleteProfile(uint256 _tokenId)",
   "function leaveNote(string _handle, string _content)",
   "function createPost(uint256 _tokenId, string _content)",
-  "function getProfileByHandle(string _handle) view returns (uint256 tokenId, string name, string handle, string bio, string avatar, address owner, string[] linkKeys, string[] links)",
+  "function getProfileByHandle(string _handle) view returns (uint256 tokenId, string name, string handle, uint8 category, string bio, string avatar, address owner, string[] linkKeys, string[] links)",
   "function handleToTokenId(string handle) view returns (uint256 tokenId)",
   "function tokenURI(uint256 tokenId) view returns (string uri)"
 ];
@@ -80,6 +80,7 @@ export const GET_PROFILES_QUERY = gql`
       tokenId
       name
       handle
+      category
       bio
       avatar
       owner {
@@ -108,6 +109,7 @@ export const GET_PROFILE_QUERY = gql`
       tokenId
       name
       handle
+      # category
       bio
       avatar
       owner {

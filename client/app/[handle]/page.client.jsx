@@ -17,7 +17,8 @@ import {
   Typography,
   Divider,
   Spin,
-  Tabs
+  Tabs,
+  Select
 } from "antd";
 import {
   GlobalOutlined,
@@ -74,6 +75,7 @@ export default function Profile({ params }) {
   const initialValues = {
     name: "",
     handle,
+    category: 0, // Default to Personal
     bio: "",
     avatar: "",
     links: {}
@@ -202,7 +204,15 @@ export default function Profile({ params }) {
           signer,
           linkFolioContract.target,
           "createProfile",
-          [dataObj.name, handle, dataObj.bio, dataObj.avatar, linkKeys, links]
+          [
+            dataObj.name,
+            handle,
+            dataObj.category,
+            dataObj.bio,
+            dataObj.avatar,
+            linkKeys,
+            links
+          ]
         );
         console.log("Create Profile Tx:", createOpTx);
         message.success(
@@ -219,7 +229,15 @@ export default function Profile({ params }) {
         signer,
         LINKFOLIO_CONTRACT_ADDRESS,
         "updateProfile",
-        [tokenId, dataObj.name, dataObj.bio, dataObj.avatar, linkKeys, links]
+        [
+          tokenId,
+          dataObj.name,
+          dataObj.category,
+          dataObj.bio,
+          dataObj.avatar,
+          linkKeys,
+          links
+        ]
       );
       console.log("Update Profile Tx:", updateOpTx);
       message.success(
@@ -379,6 +397,30 @@ export default function Profile({ params }) {
                         </Col>
                         <Col xs={24} lg={12}>
                           <Form.Item
+                            label="Category"
+                            name="category"
+                            rules={[
+                              {
+                                required: true,
+                                message: "Please select a category"
+                              }
+                            ]}
+                          >
+                            <Select
+                              placeholder="Select profile category"
+                              options={[
+                                { label: "Personal", value: 0 },
+                                { label: "Creator", value: 1 },
+                                { label: "Business", value: 2 }
+                              ]}
+                            />
+                          </Form.Item>
+                        </Col>
+                      </Row>
+
+                      <Row gutter={16}>
+                        <Col xs={24} lg={12}>
+                          <Form.Item
                             label="Name"
                             name="name"
                             rules={[
@@ -390,6 +432,8 @@ export default function Profile({ params }) {
                           >
                             <Input />
                           </Form.Item>
+                        </Col>
+                        <Col xs={24} lg={12}>
                           <Form.Item
                             label="Handle"
                             name="handle"

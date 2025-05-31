@@ -12,10 +12,17 @@ contract LinkFolio is ERC721 {
     // which causes inaccuracies in other functions and in the frontend
     uint256 public nextTokenId = 1;
 
+    enum ProfileCategory {
+        Personal,
+        Creator,
+        Business
+    }
+
     struct Profile {
         uint256 tokenId;
         string name;
         string handle;
+        ProfileCategory category;
         string bio;
         string avatar;
         address owner; // owner can be smart-account creating the profile
@@ -52,6 +59,7 @@ contract LinkFolio is ERC721 {
         uint256 indexed tokenId,
         string name,
         string handle,
+        ProfileCategory category,
         string bio,
         string avatar,
         address owner,
@@ -64,6 +72,7 @@ contract LinkFolio is ERC721 {
         uint256 indexed tokenId,
         string name,
         string handle,
+        ProfileCategory category,
         string bio,
         string avatar,
         address owner,
@@ -108,6 +117,7 @@ contract LinkFolio is ERC721 {
     function createProfile(
         string memory _name,
         string memory _handle,
+        ProfileCategory _category,
         string memory _bio,
         string memory _avatar,
         string[] memory _linkKeys,
@@ -132,6 +142,7 @@ contract LinkFolio is ERC721 {
         newProfile.tokenId = currentTokenId;
         newProfile.name = _name;
         newProfile.handle = _handle;
+        newProfile.category = _category;
         newProfile.bio = _bio;
         newProfile.avatar = _avatar;
         newProfile.linkKeys = _linkKeys;
@@ -146,6 +157,7 @@ contract LinkFolio is ERC721 {
             currentTokenId,
             _name,
             _handle,
+            _category,
             _bio,
             _avatar,
             msg.sender,
@@ -158,6 +170,7 @@ contract LinkFolio is ERC721 {
     function updateProfile(
         uint256 _tokenId,
         string memory _name,
+        ProfileCategory _category,
         string memory _bio,
         string memory _avatar,
         string[] memory _linkKeys,
@@ -170,6 +183,7 @@ contract LinkFolio is ERC721 {
 
         Profile storage profile = profiles[_tokenId];
         profile.name = _name;
+        profile.category = _category;
         profile.bio = _bio;
         profile.avatar = _avatar;
         profile.linkKeys = _linkKeys;
@@ -181,6 +195,7 @@ contract LinkFolio is ERC721 {
             _tokenId,
             _name,
             profile.handle,
+            _category,
             _bio,
             _avatar,
             msg.sender,
@@ -237,6 +252,7 @@ contract LinkFolio is ERC721 {
             uint256 tokenId,
             string memory name,
             string memory handle,
+            ProfileCategory category,
             string memory bio,
             string memory avatar,
             address owner,
@@ -262,6 +278,7 @@ contract LinkFolio is ERC721 {
             tokenId,
             profile.name,
             profile.handle,
+            profile.category,
             profile.bio,
             profile.avatar,
             profile.owner,
@@ -300,9 +317,10 @@ contract LinkFolio is ERC721 {
     ) internal view returns (string memory) {
         Profile storage profile = profiles[tokenId];
 
+        string memory category = categoryToString(profile.category);
         // Initialize attributes array with fixed attributes
         bytes[] memory attributesArray = new bytes[](
-            profile.linkKeys.length + 4
+            profile.linkKeys.length + 5
         );
         attributesArray[0] = abi.encodePacked(
             '{"trait_type":"name", "value":"',
@@ -322,6 +340,11 @@ contract LinkFolio is ERC721 {
         attributesArray[3] = abi.encodePacked(
             '{"trait_type":"tokenId", "value":"',
             tokenId.toString(),
+            '"}'
+        );
+        attributesArray[4] = abi.encodePacked(
+            '{"trait_type":"category", "value":"',
+            category,
             '"}'
         );
 
@@ -383,5 +406,15 @@ contract LinkFolio is ERC721 {
             output = abi.encodePacked(output, delimiter, parts[i]);
         }
         return output;
+    }
+
+    // category enum to string conversion
+    function categoryToString(
+        ProfileCategory category
+    ) internal pure returns (string memory) {
+        if (category == ProfileCategory.Personal) return "Personal";
+        if (category == ProfileCategory.Creator) return "Creator";
+        if (category == ProfileCategory.Business) return "Business";
+        return "Unknown";
     }
 }

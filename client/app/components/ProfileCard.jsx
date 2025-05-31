@@ -9,7 +9,8 @@ import {
   message,
   Space,
   Typography,
-  Divider
+  Divider,
+  Tag
 } from "antd";
 import { LinkOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
@@ -162,6 +163,19 @@ export default function ProfileCard({ profile, aaWalletAddress }) {
           style={{ border: "1px solid grey" }}
         />
         <h2>{profile?.name}</h2>
+        <Tag
+          color={
+            profile?.category === "Personal"
+              ? "magenta"
+              : profile?.category === "Business"
+              ? "blue"
+              : profile?.category === "Creator"
+              ? "green"
+              : "default"
+          }
+        >
+          {profile?.category}
+        </Tag>
         <p>@{profile?.handle}</p>
         <p>{profile?.bio}</p>
         {/* tabs with links, posts, notes */}

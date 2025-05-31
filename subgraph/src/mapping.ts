@@ -8,6 +8,8 @@ import {
 } from "../generated/LinkFolio/LinkFolio";
 import { User, Profile, Note, Post } from "../generated/schema";
 
+const ProfileCategories = ["Personal", "Creator", "Business", "Other"];
+
 export function handleProfileCreated(event: ProfileCreatedEvent): void {
   const blockTimestamp = event.block.timestamp;
   const tokenId = event.params.tokenId;
@@ -27,6 +29,7 @@ export function handleProfileCreated(event: ProfileCreatedEvent): void {
   profile.tokenId = tokenId;
   profile.name = event.params.name;
   profile.handle = handle;
+  profile.category = ProfileCategories[event.params.category];
   profile.bio = event.params.bio;
   profile.avatar = event.params.avatar;
   profile.owner = owner.toHex();
@@ -45,7 +48,9 @@ export function handleProfileUpdated(event: ProfileUpdatedEvent): void {
   if (profile == null) {
     profile = new Profile(handle);
     profile.tokenId = event.params.tokenId;
+    profile.name = event.params.name;
     profile.handle = handle;
+    profile.category = ProfileCategories[event.params.category];
     profile.owner = event.params.owner.toHex();
     profile.createdAt = event.block.timestamp;
   }
