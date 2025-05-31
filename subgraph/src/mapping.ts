@@ -8,7 +8,7 @@ import {
 } from "../generated/LinkFolio/LinkFolio";
 import { User, Profile, Note, Post } from "../generated/schema";
 
-const ProfileCategories = ["Personal", "Creator", "Business", "Other"];
+const ProfileCategories = ["Personal", "Creator", "Business"];
 
 export function handleProfileCreated(event: ProfileCreatedEvent): void {
   const blockTimestamp = event.block.timestamp;

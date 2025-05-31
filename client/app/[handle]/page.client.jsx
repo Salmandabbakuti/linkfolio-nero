@@ -397,6 +397,32 @@ export default function Profile({ params }) {
                         </Col>
                         <Col xs={24} lg={12}>
                           <Form.Item
+                            label="Name"
+                            name="name"
+                            rules={[
+                              {
+                                required: true,
+                                message: "Please enter your name"
+                              }
+                            ]}
+                          >
+                            <Input />
+                          </Form.Item>
+                          <Form.Item
+                            label="Handle"
+                            name="handle"
+                            hasFeedback
+                            help="Your unique handle, cannot be changed."
+                            rules={[
+                              {
+                                required: true,
+                                message: "Please enter your handle"
+                              }
+                            ]}
+                          >
+                            <Input readOnly />
+                          </Form.Item>
+                          <Form.Item
                             label="Category"
                             name="category"
                             rules={[
@@ -414,39 +440,6 @@ export default function Profile({ params }) {
                                 { label: "Business", value: 2 }
                               ]}
                             />
-                          </Form.Item>
-                        </Col>
-                      </Row>
-
-                      <Row gutter={16}>
-                        <Col xs={24} lg={12}>
-                          <Form.Item
-                            label="Name"
-                            name="name"
-                            rules={[
-                              {
-                                required: true,
-                                message: "Please enter your name"
-                              }
-                            ]}
-                          >
-                            <Input />
-                          </Form.Item>
-                        </Col>
-                        <Col xs={24} lg={12}>
-                          <Form.Item
-                            label="Handle"
-                            name="handle"
-                            hasFeedback
-                            help="Your unique handle, cannot be changed."
-                            rules={[
-                              {
-                                required: true,
-                                message: "Please enter your handle"
-                              }
-                            ]}
-                          >
-                            <Input readOnly />
                           </Form.Item>
                         </Col>
                       </Row>
