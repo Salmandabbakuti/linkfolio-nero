@@ -277,9 +277,9 @@ export default function Profile({ params }) {
       {mode === "edit" ? (
         <Tabs
           defaultActiveKey="profile"
-          tabPosition="left"
+          // tabPosition="left"
           animated
-          centered
+          // centered
           items={[
             {
               key: "profile",
@@ -328,54 +328,55 @@ export default function Profile({ params }) {
                       tip="Transaction in progress..."
                       indicator={<LoadingOutlined spin />}
                     >
-                      <Form.Item
-                        label="Avatar"
-                        name="avatar"
-                        hasFeedback
-                        help="Recommended 78x78, Max: 300KB"
-                      >
-                        <Upload
-                          name="avatar"
-                          multiple={false}
-                          showUploadList
-                          listType="picture-circle"
-                          fileList={avatarFile ? [avatarFile] : []}
-                          accept="image/*"
-                          maxCount={1}
-                          beforeUpload={() => false}
-                          onChange={({ fileList }) => {
-                            console.log("Avatar changed", fileList[0]);
-                            const file = fileList[0];
-                            if (!file) {
-                              setAvatarFile(null);
-                              return;
-                            }
-                            if (
-                              !file?.type?.startsWith("image/") ||
-                              file?.size > 300000
-                            ) {
-                              return message.error(
-                                "Invalid file type or size (Max 300KB)"
-                              );
-                            }
-                            setAvatarFile(file);
-                          }}
-                        >
-                          {avatarFile ? null : (
-                            <Avatar
-                              src={
-                                profile?.avatar ||
-                                `https://api.dicebear.com/5.x/open-peeps/svg?seed=${handle}`
-                              }
-                              alt="Profile"
-                              size={100}
-                              shape="circle"
-                            />
-                          )}
-                        </Upload>
-                      </Form.Item>
-
                       <Row gutter={16}>
+                        <Col xs={24} lg={12}>
+                          <Form.Item
+                            label="Avatar"
+                            name="avatar"
+                            hasFeedback
+                            help="Recommended 78x78, Max: 300KB"
+                          >
+                            <Upload
+                              name="avatar"
+                              multiple={false}
+                              showUploadList
+                              listType="picture-circle"
+                              fileList={avatarFile ? [avatarFile] : []}
+                              accept="image/*"
+                              maxCount={1}
+                              beforeUpload={() => false}
+                              onChange={({ fileList }) => {
+                                console.log("Avatar changed", fileList[0]);
+                                const file = fileList[0];
+                                if (!file) {
+                                  setAvatarFile(null);
+                                  return;
+                                }
+                                if (
+                                  !file?.type?.startsWith("image/") ||
+                                  file?.size > 300000
+                                ) {
+                                  return message.error(
+                                    "Invalid file type or size (Max 300KB)"
+                                  );
+                                }
+                                setAvatarFile(file);
+                              }}
+                            >
+                              {avatarFile ? null : (
+                                <Avatar
+                                  src={
+                                    profile?.avatar ||
+                                    `https://api.dicebear.com/5.x/open-peeps/svg?seed=${handle}`
+                                  }
+                                  alt="Profile"
+                                  size={100}
+                                  shape="circle"
+                                />
+                              )}
+                            </Upload>
+                          </Form.Item>
+                        </Col>
                         <Col xs={24} lg={12}>
                           <Form.Item
                             label="Name"
@@ -389,8 +390,6 @@ export default function Profile({ params }) {
                           >
                             <Input />
                           </Form.Item>
-                        </Col>
-                        <Col xs={24} lg={12}>
                           <Form.Item
                             label="Handle"
                             name="handle"
