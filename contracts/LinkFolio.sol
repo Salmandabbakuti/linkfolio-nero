@@ -4,12 +4,11 @@ pragma solidity 0.8.28;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
+import "./LinkFolioLib.sol";
 
 contract LinkFolio is ERC721 {
     using Strings for uint256;
 
-    // starts from 1 to prevent returning default value of 0 if profile not found by handle
-    // which causes inaccuracies in other functions and in the frontend
     uint256 public nextTokenId = 1;
 
     enum ProfileCategory {
@@ -309,46 +308,12 @@ contract LinkFolio is ERC721 {
             _ownerOf(tokenId) != address(0),
             "LinkFolio: URI query for nonexistent token"
         );
-        return _getTokenURI(tokenId);
-    }
-
-    function _getTokenURI(
-        uint256 tokenId
-    ) internal view returns (string memory) {
         Profile storage profile = profiles[tokenId];
-
-        string memory category = categoryToString(profile.category);
         // Initialize attributes array with fixed attributes
         bytes[] memory attributesArray = new bytes[](
             profile.linkKeys.length + 5
         );
-        attributesArray[0] = abi.encodePacked(
-            '{"trait_type":"name", "value":"',
-            profile.name,
-            '"}'
-        );
-        attributesArray[1] = abi.encodePacked(
-            '{"trait_type":"handle", "value":"',
-            profile.handle,
-            '"}'
-        );
-        attributesArray[2] = abi.encodePacked(
-            '{"trait_type":"bio", "value":"',
-            profile.bio,
-            '"}'
-        );
-        attributesArray[3] = abi.encodePacked(
-            '{"trait_type":"tokenId", "value":"',
-            tokenId.toString(),
-            '"}'
-        );
-        attributesArray[4] = abi.encodePacked(
-            '{"trait_type":"category", "value":"',
-            category,
-            '"}'
-        );
-
-        // Add links as additional attributes to the attributes array
+        // Use the library to generate the full tokenURI, passing all profile data
         for (uint256 i = 0; i < profile.linkKeys.length; i++) {
             string memory key = profile.linkKeys[i];
             string memory value = profile.links[key];
@@ -360,61 +325,19 @@ contract LinkFolio is ERC721 {
                     value,
                     '"}'
                 );
-                attributesArray[i + 4] = linkAttribute;
+                attributesArray[i + 5] = linkAttribute;
             }
         }
 
-        // Convert attributes array to JSON format
-        bytes memory attributesJson = abi.encodePacked(
-            "[",
-            bytesJoin(attributesArray, ","),
-            "]"
-        );
-
-        // Construct the entire JSON
-        bytes memory json = abi.encodePacked(
-            '{"name":"',
-            profile.name,
-            '", "description":"',
-            profile.bio,
-            '", "image":"',
-            profile.avatar,
-            '", "external_url":"",',
-            '"attributes":',
-            attributesJson,
-            "}"
-        );
-
-        // Concatenate Base64 with data URI
         return
-            string(
-                abi.encodePacked(
-                    "data:application/json;base64,",
-                    Base64.encode(json)
-                )
+            LinkFolioLib.generateTokenURI(
+                tokenId,
+                profile.name,
+                profile.handle,
+                profile.bio,
+                profile.avatar,
+                uint8(profile.category),
+                attributesArray
             );
-    }
-
-    // Helper function to join bytes in an array with a delimiter
-    function bytesJoin(
-        bytes[] memory parts,
-        bytes memory delimiter
-    ) internal pure returns (bytes memory) {
-        if (parts.length == 0) return "";
-        bytes memory output = parts[0];
-        for (uint256 i = 1; i < parts.length; i++) {
-            output = abi.encodePacked(output, delimiter, parts[i]);
-        }
-        return output;
-    }
-
-    // category enum to string conversion
-    function categoryToString(
-        ProfileCategory category
-    ) internal pure returns (string memory) {
-        if (category == ProfileCategory.Personal) return "Personal";
-        if (category == ProfileCategory.Creator) return "Creator";
-        if (category == ProfileCategory.Business) return "Business";
-        return "Unknown";
     }
 }
