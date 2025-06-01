@@ -243,51 +243,6 @@ contract LinkFolio is ERC721 {
         emit PostCreated(_tokenId, _handle, postId, _content, msg.sender);
     }
 
-    function getProfileByHandle(
-        string memory _handle
-    )
-        public
-        view
-        returns (
-            uint256 tokenId,
-            string memory name,
-            string memory handle,
-            ProfileCategory category,
-            string memory bio,
-            string memory avatar,
-            address owner,
-            address _eoa,
-            string[] memory linkKeys,
-            string[] memory links
-        )
-    {
-        tokenId = handleToTokenId[_handle];
-        require(
-            _ownerOf(tokenId) != address(0),
-            "LinkFolio: Profile not found by handle"
-        );
-        Profile storage profile = profiles[tokenId];
-        linkKeys = profile.linkKeys;
-        //  get links from mapping
-        links = new string[](linkKeys.length);
-        for (uint256 i = 0; i < linkKeys.length; i++) {
-            links[i] = profile.links[linkKeys[i]];
-        }
-
-        return (
-            tokenId,
-            profile.name,
-            profile.handle,
-            profile.category,
-            profile.bio,
-            profile.avatar,
-            profile.owner,
-            profile._eoa,
-            linkKeys,
-            links
-        );
-    }
-
     // override to prevent transfers
     function _update(
         address to,
@@ -360,7 +315,7 @@ contract LinkFolio is ERC721 {
                     value,
                     '"}'
                 );
-                attributesArray[i + 4] = linkAttribute;
+                attributesArray[i + 5] = linkAttribute;
             }
         }
 

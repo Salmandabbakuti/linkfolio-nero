@@ -211,7 +211,8 @@ export default function Profile({ params }) {
             dataObj.bio,
             dataObj.avatar,
             linkKeys,
-            links
+            links,
+            account
           ]
         );
         console.log("Create Profile Tx:", createOpTx);

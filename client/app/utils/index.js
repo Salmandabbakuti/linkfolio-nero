@@ -30,12 +30,12 @@ export const supportedSocials = [
 ];
 
 const linkFolioContractABI = [
-  "function createProfile(string _name, string _handle, uint8 _category, string _bio, string _avatar, string[] _linkKeys, string[] _links)",
+  "function createProfile(string _name, string _handle, uint8 _category, string _bio, string _avatar, string[] _linkKeys, string[] _links, address _eoa)",
   "function updateProfile(uint256 _tokenId, string _name, uint8 _category, string _bio, string _avatar, string[] _linkKeys, string[] _links)",
   "function deleteProfile(uint256 _tokenId)",
   "function leaveNote(string _handle, string _content)",
   "function createPost(uint256 _tokenId, string _content)",
-  "function getProfileByHandle(string _handle) view returns (uint256 tokenId, string name, string handle, uint8 category, string bio, string avatar, address owner, string[] linkKeys, string[] links)",
+  "function profiles(uint256 tokenId) view returns (uint256 tokenId, string name, string handle, uint8 category, string bio, string avatar, address owner, address _eoa)",
   "function handleToTokenId(string handle) view returns (uint256 tokenId)",
   "function tokenURI(uint256 tokenId) view returns (string uri)"
 ];
