@@ -42,6 +42,7 @@ export function handleProfileCreated(event: ProfileCreatedEvent): void {
 
 export function handleProfileUpdated(event: ProfileUpdatedEvent): void {
   const handle = event.params.handle;
+  const categoryString = ProfileCategories[event.params.category];
   let profile = Profile.load(handle);
 
   // Create profile if not exists with handle as id
@@ -50,7 +51,7 @@ export function handleProfileUpdated(event: ProfileUpdatedEvent): void {
     profile.tokenId = event.params.tokenId;
     profile.name = event.params.name;
     profile.handle = handle;
-    profile.category = ProfileCategories[event.params.category];
+    profile.category = categoryString;
     profile.owner = event.params.owner.toHex();
     profile.createdAt = event.block.timestamp;
   }
@@ -58,6 +59,7 @@ export function handleProfileUpdated(event: ProfileUpdatedEvent): void {
   // Update profile
   profile.name = event.params.name;
   profile.bio = event.params.bio;
+  profile.category = categoryString;
   profile.avatar = event.params.avatar;
   profile.linkKeys = event.params.linkKeys;
   profile.links = event.params.links;

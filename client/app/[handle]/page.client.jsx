@@ -50,6 +50,8 @@ import { executeOperation, getAAWalletAddress } from "@/app/utils/aaUtils";
 
 const { Title, Text } = Typography;
 
+const categoryArr = ["Personal", "Creator", "Business"];
+
 export default function Profile({ params }) {
   // State
   const [profile, setProfile] = useState(null);
@@ -75,7 +77,7 @@ export default function Profile({ params }) {
   const initialValues = {
     name: "",
     handle,
-    category: 0, // Default to Personal
+    category: "Personal", // Default to Personal
     bio: "",
     avatar: "",
     links: {}
@@ -170,6 +172,7 @@ export default function Profile({ params }) {
       return message.error("Please switch to NERO Testnet");
     const tokenId = profile?.id;
     setLoading({ ...loading, write: true });
+    const categoryVal = categoryArr.indexOf(dataObj?.category);
     try {
       // if avatar file is present, upload it to IPFS
       if (avatarFile) {
@@ -198,7 +201,12 @@ export default function Profile({ params }) {
       // get signer
       const ethersProvider = new BrowserProvider(walletProvider);
       const signer = await ethersProvider.getSigner();
-      console.log("create/update data:", { ...dataObj, linkKeys, links });
+      console.log("create/update data:", {
+        ...dataObj,
+        category: categoryVal,
+        linkKeys,
+        links
+      });
       if (!tokenId) {
         const createOpTx = await executeOperation(
           signer,
@@ -207,7 +215,7 @@ export default function Profile({ params }) {
           [
             dataObj.name,
             handle,
-            dataObj.category,
+            categoryVal,
             dataObj.bio,
             dataObj.avatar,
             linkKeys,
@@ -233,7 +241,7 @@ export default function Profile({ params }) {
         [
           tokenId,
           dataObj.name,
-          dataObj.category,
+          categoryVal,
           dataObj.bio,
           dataObj.avatar,
           linkKeys,
@@ -436,9 +444,9 @@ export default function Profile({ params }) {
                             <Select
                               placeholder="Select profile category"
                               options={[
-                                { label: "Personal", value: 0 },
-                                { label: "Creator", value: 1 },
-                                { label: "Business", value: 2 }
+                                { label: "Personal", value: "Personal" },
+                                { label: "Creator", value: "Creator" },
+                                { label: "Business", value: "Business" }
                               ]}
                             />
                           </Form.Item>

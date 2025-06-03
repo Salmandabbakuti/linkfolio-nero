@@ -164,27 +164,17 @@ export default function ProfileCard({ profile, aaWalletAddress }) {
         />
         <h2>{profile?.name}</h2>
         <Tag
-          color={(() => {
-            // Normalize category to string for comparison
-            const cat =
-              typeof profile?.category === "number"
-                ? ["Personal", "Business", "Creator"][profile.category]
-                : profile?.category;
-            switch (cat) {
-              case "Personal":
-                return "magenta";
-              case "Business":
-                return "blue";
-              case "Creator":
-                return "green";
-              default:
-                return "default";
-            }
-          })()}
+          color={
+            profile?.category === "Personal"
+              ? "magenta"
+              : profile?.category === "Business"
+              ? "blue"
+              : profile?.category === "Creator"
+              ? "green"
+              : "default"
+          }
         >
-          {typeof profile?.category === "number"
-            ? ["Personal", "Creator", "Business"][profile.category]
-            : profile?.category}
+          {profile?.category}
         </Tag>
         <p>@{profile?.handle}</p>
         <p>{profile?.bio}</p>
