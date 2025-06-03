@@ -59,6 +59,9 @@ export default function Explore() {
                         bio_contains_nocase: searchQuery
                       },
                       {
+                        category_contains_nocase: searchQuery
+                      },
+                      {
                         owner_contains_nocase: searchQuery
                       }
                     ]

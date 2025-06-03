@@ -46,6 +46,12 @@
       },
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "_eoa",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "string[]",
         "name": "linkKeys",
         "type": "string[]"

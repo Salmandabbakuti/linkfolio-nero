@@ -109,7 +109,7 @@ export const GET_PROFILE_QUERY = gql`
       tokenId
       name
       handle
-      # category
+      category
       bio
       avatar
       owner {

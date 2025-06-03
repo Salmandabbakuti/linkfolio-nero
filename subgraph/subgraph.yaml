@@ -24,7 +24,7 @@ dataSources:
         - name: LinkFolio
           file: ./abis/LinkFolio.json
       eventHandlers:
-        - event: ProfileCreated(indexed uint256,string,string,uint8,string,string,address,string[],string[])
+        - event: ProfileCreated(indexed uint256,string,string,uint8,string,string,address,address,string[],string[])
           handler: handleProfileCreated
         - event: ProfileDeleted(indexed uint256,string)
           handler: handleProfileDeleted
