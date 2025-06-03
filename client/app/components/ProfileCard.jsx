@@ -163,7 +163,10 @@ export default function ProfileCard({ profile, aaWalletAddress }) {
           style={{ border: "1px solid grey" }}
         />
         <h2>{profile?.name}</h2>
+        <p>@{profile?.handle}</p>
+        <p>{profile?.bio}</p>
         <Tag
+          bordered={false}
           color={
             profile?.category === "Personal"
               ? "magenta"
@@ -176,8 +179,6 @@ export default function ProfileCard({ profile, aaWalletAddress }) {
         >
           {profile?.category}
         </Tag>
-        <p>@{profile?.handle}</p>
-        <p>{profile?.bio}</p>
         {/* tabs with links, posts, notes */}
       </div>
       <Tabs

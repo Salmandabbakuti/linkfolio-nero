@@ -11,7 +11,8 @@ import {
   Select,
   Card,
   Avatar,
-  Empty
+  Empty,
+  Tag
 } from "antd";
 import Link from "next/link";
 import { useAppKitAccount, useAppKitProvider } from "@reown/appkit/react";
@@ -185,7 +186,7 @@ export default function Explore() {
                     alt="avatar"
                     size={80}
                     shape="circle"
-                    style={{ border: "1px solid #eee", marginBottom: 16 }}
+                    style={{ border: "1px solid grey", marginBottom: 16 }}
                   />
                   <Title level={4} style={{ marginBottom: 4 }}>
                     {item?.name}
@@ -193,9 +194,23 @@ export default function Explore() {
                   <Paragraph type="secondary" style={{ marginBottom: 8 }}>
                     @{item?.handle}
                   </Paragraph>
-                  <Paragraph ellipsis={{ rows: 2 }} style={{ color: "#666" }}>
+                  <Paragraph ellipsis={{ rows: 1 }} style={{ color: "#666" }}>
                     {item?.bio || "No bio available"}
                   </Paragraph>
+                  <Tag
+                    bordered={false}
+                    color={
+                      item?.category === "Personal"
+                        ? "magenta"
+                        : item?.category === "Business"
+                        ? "blue"
+                        : item?.category === "Creator"
+                        ? "green"
+                        : "default"
+                    }
+                  >
+                    {item?.category}
+                  </Tag>
                 </Card>
               </Col>
             ))
