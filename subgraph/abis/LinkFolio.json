@@ -47,7 +47,7 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "_eoa",
+        "name": "eoa",
         "type": "address"
       },
       {

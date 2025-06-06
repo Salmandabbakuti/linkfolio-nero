@@ -14,12 +14,14 @@ export function handleProfileCreated(event: ProfileCreatedEvent): void {
   const blockTimestamp = event.block.timestamp;
   const tokenId = event.params.tokenId;
   const owner = event.params.owner;
+  const eoa = event.params.eoa;
   const handle = event.params.handle;
-  // Create user if not exists
-  let user = User.load(owner.toHex());
+  // Create user if not exists with eoa as id
+  let user = User.load(eoa.toHex());
   if (user == null) {
-    user = new User(owner.toHex());
-    user.address = owner.toHex();
+    user = new User(eoa.toHex());
+    user.address = eoa.toHex();
+    user.scw = owner; // smart account address
     user.createdAt = blockTimestamp;
     user.save();
   }
@@ -32,7 +34,8 @@ export function handleProfileCreated(event: ProfileCreatedEvent): void {
   profile.category = ProfileCategories[event.params.category];
   profile.bio = event.params.bio;
   profile.avatar = event.params.avatar;
-  profile.owner = owner.toHex();
+  profile.owner = owner;
+  profile.eoa = eoa.toHex();
   profile.linkKeys = event.params.linkKeys;
   profile.links = event.params.links;
   profile.createdAt = blockTimestamp;
@@ -52,7 +55,8 @@ export function handleProfileUpdated(event: ProfileUpdatedEvent): void {
     profile.name = event.params.name;
     profile.handle = handle;
     profile.category = categoryString;
-    profile.owner = event.params.owner.toHex();
+    profile.owner = event.params.owner;
+    profile.eoa = event.params.owner.toHex(); // on update event we won't have access to eoa, so we use owner
     profile.createdAt = event.block.timestamp;
   }
 

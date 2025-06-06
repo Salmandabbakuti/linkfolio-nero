@@ -8,8 +8,6 @@ import "@openzeppelin/contracts/utils/Base64.sol";
 contract LinkFolio is ERC721 {
     using Strings for uint256;
 
-    // starts from 1 to prevent returning default value of 0 if profile not found by handle
-    // which causes inaccuracies in other functions and in the frontend
     uint256 public nextTokenId = 1;
 
     enum ProfileCategory {
@@ -26,7 +24,7 @@ contract LinkFolio is ERC721 {
         string bio;
         string avatar;
         address owner; // owner can be smart-account creating the profile
-        address _eoa; // actual address that owns the profile nft and can update/delete the profile
+        address eoa; // actual address that owns the profile nft and can update/delete the profile
         string[] linkKeys;
         mapping(string => string) links;
     }
@@ -63,7 +61,7 @@ contract LinkFolio is ERC721 {
         string bio,
         string avatar,
         address owner,
-        address _eoa,
+        address eoa,
         string[] linkKeys,
         string[] links
     );
@@ -147,7 +145,7 @@ contract LinkFolio is ERC721 {
         newProfile.avatar = _avatar;
         newProfile.linkKeys = _linkKeys;
         newProfile.owner = msg.sender;
-        newProfile._eoa = _eoa;
+        newProfile.eoa = _eoa;
 
         for (uint256 i = 0; i < _linkKeys.length; i++) {
             newProfile.links[_linkKeys[i]] = _links[i];
