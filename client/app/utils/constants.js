@@ -1,2 +1,3 @@
 export const LINKFOLIO_CONTRACT_ADDRESS =
   "0xb2eF0B385FcEE4a54F097c37761AAc4BB4D98C4A";
+export const EXPLORER_URL = "https://testnet.neroscan.io";

@@ -45,7 +45,10 @@ import {
   subgraphClient as client,
   GET_PROFILE_QUERY
 } from "@/app/utils";
-import { LINKFOLIO_CONTRACT_ADDRESS } from "@/app/utils/constants";
+import {
+  EXPLORER_URL,
+  LINKFOLIO_CONTRACT_ADDRESS
+} from "@/app/utils/constants";
 import { executeOperation, getAAWalletAddress } from "@/app/utils/aaUtils";
 
 const { Title, Text } = Typography;
@@ -626,7 +629,7 @@ export default function Profile({ params }) {
                       title="View on Explorer"
                       shape="circle"
                       icon={<ExportOutlined />}
-                      href={`https://testnet.neroscan.io/token/${LINKFOLIO_CONTRACT_ADDRESS}?a=${profile?.id}`}
+                      href={`${EXPLORER_URL}/token/${LINKFOLIO_CONTRACT_ADDRESS}?a=${profile?.id}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     />

@@ -106,6 +106,7 @@ export function handleNoteLeft(event: NoteLeftEvent): void {
   note.content = event.params.content;
   note.author = event.params.author;
   note.tipAmount = event.params.tipAmount;
+  note.txHash = event.transaction.hash.toHex();
   note.createdAt = event.block.timestamp;
   note.save();
 }

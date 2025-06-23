@@ -32,6 +32,7 @@ type Note @entity(immutable: true) {
   content: String!
   author: Bytes! # who created the note
   tipAmount: BigInt! # amount of tip sent with the note
+  txHash: String! # transaction hash of the note creation
   createdAt: BigInt!
 }
 
