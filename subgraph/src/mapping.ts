@@ -1,4 +1,4 @@
-import { store } from "@graphprotocol/graph-ts";
+import { BigInt, store } from "@graphprotocol/graph-ts";
 import {
   ProfileCreated as ProfileCreatedEvent,
   ProfileUpdated as ProfileUpdatedEvent,
@@ -80,6 +80,20 @@ export function handleProfileDeleted(event: ProfileDeletedEvent): void {
 }
 
 export function handleNoteLeft(event: NoteLeftEvent): void {
+  const tipAmount = event.params.tipAmount;
+  const profileId = event.params.handle;
+
+  // get the profile by handle
+  let profile = Profile.load(profileId);
+  // update tip amount if profile exists and tipAmount is greater than zero
+  if (profile && tipAmount.gt(BigInt.fromI32(0))) {
+    // update tip amount
+    profile.tipAmount = profile.tipAmount.plus(tipAmount);
+    profile.updatedAt = event.block.timestamp;
+    profile.save();
+  }
+
+  // create a new note
   let note = new Note(
     "note_" +
       event.params.tokenId.toString() +
@@ -91,6 +105,7 @@ export function handleNoteLeft(event: NoteLeftEvent): void {
   note.to = event.params.handle;
   note.content = event.params.content;
   note.author = event.params.author;
+  note.tipAmount = event.params.tipAmount;
   note.createdAt = event.block.timestamp;
   note.save();
 }

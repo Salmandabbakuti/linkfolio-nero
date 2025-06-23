@@ -18,6 +18,7 @@ type Profile @entity(immutable: false) {
   links: [String!]!
   owner: Bytes! # The address that created the profile
   eoa: User! # The user that owns the profile
+  tipAmount: BigInt! # total amount of tips received by the profile
   posts: [Post!]! @derivedFrom(field: "author")
   notes: [Note!]! @derivedFrom(field: "to")
   createdAt: BigInt!
@@ -30,6 +31,7 @@ type Note @entity(immutable: true) {
   to: Profile! # to which profile the note belongs
   content: String!
   author: Bytes! # who created the note
+  tipAmount: BigInt! # amount of tip sent with the note
   createdAt: BigInt!
 }
 

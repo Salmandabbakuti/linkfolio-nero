@@ -33,6 +33,7 @@ contract LinkFolio is ERC721 {
         uint256 id;
         string content;
         address author;
+        uint256 tipAmount;
     }
 
     struct Post {
@@ -85,7 +86,8 @@ contract LinkFolio is ERC721 {
         string handle,
         uint256 noteId,
         string content,
-        address author
+        address author,
+        uint256 tipAmount
     );
 
     event PostCreated(
@@ -212,7 +214,10 @@ contract LinkFolio is ERC721 {
         emit ProfileDeleted(_tokenId, handle);
     }
 
-    function leaveNote(string memory _handle, string memory _content) external {
+    function leaveNote(
+        string memory _handle,
+        string memory _content
+    ) external payable {
         uint256 tokenId = handleToTokenId[_handle];
         require(
             _ownerOf(tokenId) != address(0),
@@ -223,8 +228,28 @@ contract LinkFolio is ERC721 {
             "LinkFolio: content must be between 1-280 characters"
         );
         uint256 noteId = profileNoteCount[tokenId]++;
-        notesByHandle[_handle][noteId] = Note(noteId, _content, msg.sender);
-        emit NoteLeft(tokenId, _handle, noteId, _content, msg.sender);
+        notesByHandle[_handle][noteId] = Note(
+            noteId,
+            _content,
+            msg.sender,
+            msg.value
+        );
+
+        // If tip amount is provided, transfer it to the profile owner
+        if (msg.value > 0) {
+            address profileOwner = _ownerOf(tokenId);
+            (bool success, ) = payable(profileOwner).call{value: msg.value}("");
+            require(success, "LinkFolio: Failed to transfer tip");
+        }
+
+        emit NoteLeft(
+            tokenId,
+            _handle,
+            noteId,
+            _content,
+            msg.sender,
+            msg.value
+        );
     }
 
     function createPost(

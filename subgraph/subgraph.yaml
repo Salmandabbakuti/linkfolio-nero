@@ -30,7 +30,7 @@ dataSources:
           handler: handleProfileDeleted
         - event: ProfileUpdated(indexed uint256,string,string,uint8,string,string,address,string[],string[])
           handler: handleProfileUpdated
-        - event: NoteLeft(indexed uint256,string,uint256,string,address)
+        - event: NoteLeft(indexed uint256,string,uint256,string,address,uint256)
           handler: handleNoteLeft
         - event: PostCreated(indexed uint256,string,uint256,string,address)
           handler: handlePostCreated

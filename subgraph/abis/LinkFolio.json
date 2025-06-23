@@ -215,6 +215,12 @@
         "internalType": "address",
         "name": "author",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tipAmount",
+        "type": "uint256"
       }
     ],
     "name": "NoteLeft",
