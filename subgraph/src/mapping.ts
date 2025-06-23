@@ -9,6 +9,7 @@ import {
 import { User, Profile, Note, Post } from "../generated/schema";
 
 const ProfileCategories = ["Personal", "Creator", "Business"];
+const ZERO_BI = BigInt.fromI32(0);
 
 export function handleProfileCreated(event: ProfileCreatedEvent): void {
   const blockTimestamp = event.block.timestamp;
@@ -36,6 +37,7 @@ export function handleProfileCreated(event: ProfileCreatedEvent): void {
   profile.avatar = event.params.avatar;
   profile.owner = owner;
   profile.eoa = eoa.toHex();
+  profile.tipAmount = ZERO_BI; // Initialize tip amount to zero
   profile.linkKeys = event.params.linkKeys;
   profile.links = event.params.links;
   profile.createdAt = blockTimestamp;
@@ -57,6 +59,7 @@ export function handleProfileUpdated(event: ProfileUpdatedEvent): void {
     profile.category = categoryString;
     profile.owner = event.params.owner;
     profile.eoa = event.params.owner.toHex(); // on update event we won't have access to eoa, so we use owner
+    profile.tipAmount = ZERO_BI; // Initialize tip amount to zero
     profile.createdAt = event.block.timestamp;
   }
 
@@ -86,7 +89,7 @@ export function handleNoteLeft(event: NoteLeftEvent): void {
   // get the profile by handle
   let profile = Profile.load(profileId);
   // update tip amount if profile exists and tipAmount is greater than zero
-  if (profile && tipAmount.gt(BigInt.fromI32(0))) {
+  if (profile && tipAmount.gt(ZERO_BI)) {
     // update tip amount
     profile.tipAmount = profile.tipAmount.plus(tipAmount);
     profile.updatedAt = event.block.timestamp;
