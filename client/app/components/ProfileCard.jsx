@@ -325,6 +325,7 @@ export default function ProfileCard({ profile, aaWalletAddress }) {
                 <Space wrap style={{ marginBottom: "0.5em" }}>
                   {suggestedTips.map((tip) => (
                     <Button
+                      key={tip.label}
                       size="small"
                       type={tipAmount === tip.value ? "primary" : "default"}
                       onClick={() => setTipAmount(tip.value)}

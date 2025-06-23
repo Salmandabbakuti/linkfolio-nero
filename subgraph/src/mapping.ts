@@ -1,4 +1,4 @@
-import { BigInt, store } from "@graphprotocol/graph-ts";
+import { BigInt as GraphBigInt, store } from "@graphprotocol/graph-ts";
 import {
   ProfileCreated as ProfileCreatedEvent,
   ProfileUpdated as ProfileUpdatedEvent,
@@ -9,7 +9,7 @@ import {
 import { User, Profile, Note, Post } from "../generated/schema";
 
 const ProfileCategories = ["Personal", "Creator", "Business"];
-const ZERO_BI = BigInt.fromI32(0);
+const ZERO_BI = GraphBigInt.fromI32(0);
 
 export function handleProfileCreated(event: ProfileCreatedEvent): void {
   const blockTimestamp = event.block.timestamp;
@@ -58,7 +58,7 @@ export function handleProfileUpdated(event: ProfileUpdatedEvent): void {
     profile.handle = handle;
     profile.category = categoryString;
     profile.owner = event.params.owner;
-    profile.eoa = event.params.owner.toHex(); // on update event we won't have access to eoa, so we use owner
+    profile.eoa = event.params.owner.toHex(); // FIXME: Using owner as EOA fallback. on update event, we won't have access to eoa, so we use owner
     profile.tipAmount = ZERO_BI; // Initialize tip amount to zero
     profile.createdAt = event.block.timestamp;
   }
