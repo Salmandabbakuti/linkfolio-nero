@@ -25,6 +25,7 @@ contract LinkFolio is ERC721 {
         string avatar;
         address owner; // owner can be smart-account creating the profile
         address eoa; // actual address that owns the profile nft and can update/delete the profile
+        string settingsHash; // ipfs hash of the profile appearance settings json
         string[] linkKeys;
         mapping(string => string) links;
     }
@@ -64,7 +65,8 @@ contract LinkFolio is ERC721 {
         address owner,
         address eoa,
         string[] linkKeys,
-        string[] links
+        string[] links,
+        string settingsHash
     );
 
     event ProfileUpdated(
@@ -76,7 +78,8 @@ contract LinkFolio is ERC721 {
         string avatar,
         address owner,
         string[] linkKeys,
-        string[] links
+        string[] links,
+        string settingsHash
     );
 
     event ProfileDeleted(uint256 indexed tokenId, string handle);
@@ -122,7 +125,8 @@ contract LinkFolio is ERC721 {
         string memory _avatar,
         string[] memory _linkKeys,
         string[] memory _links,
-        address _eoa
+        address _eoa,
+        string memory _settingsHash
     ) external {
         require(
             _linkKeys.length == _links.length,
@@ -148,6 +152,7 @@ contract LinkFolio is ERC721 {
         newProfile.linkKeys = _linkKeys;
         newProfile.owner = msg.sender;
         newProfile.eoa = _eoa;
+        newProfile.settingsHash = _settingsHash;
 
         for (uint256 i = 0; i < _linkKeys.length; i++) {
             newProfile.links[_linkKeys[i]] = _links[i];
@@ -163,7 +168,8 @@ contract LinkFolio is ERC721 {
             msg.sender,
             _eoa,
             _linkKeys,
-            _links
+            _links,
+            _settingsHash
         );
     }
 
@@ -174,7 +180,8 @@ contract LinkFolio is ERC721 {
         string memory _bio,
         string memory _avatar,
         string[] memory _linkKeys,
-        string[] memory _links
+        string[] memory _links,
+        string memory _settingsHash
     ) external onlyProfileOwner(_tokenId) {
         require(
             _linkKeys.length == _links.length,
@@ -186,6 +193,7 @@ contract LinkFolio is ERC721 {
         profile.category = _category;
         profile.bio = _bio;
         profile.avatar = _avatar;
+        profile.settingsHash = _settingsHash;
         profile.linkKeys = _linkKeys;
 
         for (uint256 i = 0; i < _linkKeys.length; i++) {
@@ -200,7 +208,8 @@ contract LinkFolio is ERC721 {
             _avatar,
             msg.sender,
             _linkKeys,
-            _links
+            _links,
+            _settingsHash
         );
     }
 

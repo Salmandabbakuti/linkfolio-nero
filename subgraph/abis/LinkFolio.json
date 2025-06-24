@@ -61,6 +61,12 @@
         "internalType": "string[]",
         "name": "links",
         "type": "string[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "settingsHash",
+        "type": "string"
       }
     ],
     "name": "ProfileCreated",
@@ -141,6 +147,12 @@
         "internalType": "string[]",
         "name": "links",
         "type": "string[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "settingsHash",
+        "type": "string"
       }
     ],
     "name": "ProfileUpdated",

@@ -40,6 +40,7 @@ export function handleProfileCreated(event: ProfileCreatedEvent): void {
   profile.tipAmount = ZERO_BI; // Initialize tip amount to zero
   profile.linkKeys = event.params.linkKeys;
   profile.links = event.params.links;
+  profile.settingsHash = event.params.settingsHash;
   profile.createdAt = blockTimestamp;
   profile.updatedAt = blockTimestamp;
   profile.save();
@@ -54,9 +55,7 @@ export function handleProfileUpdated(event: ProfileUpdatedEvent): void {
   if (profile == null) {
     profile = new Profile(handle);
     profile.tokenId = event.params.tokenId;
-    profile.name = event.params.name;
     profile.handle = handle;
-    profile.category = categoryString;
     profile.owner = event.params.owner;
     profile.eoa = event.params.owner.toHex(); // FIXME: Using owner as EOA fallback. on update event, we won't have access to eoa, so we use owner
     profile.tipAmount = ZERO_BI; // Initialize tip amount to zero
@@ -70,6 +69,7 @@ export function handleProfileUpdated(event: ProfileUpdatedEvent): void {
   profile.avatar = event.params.avatar;
   profile.linkKeys = event.params.linkKeys;
   profile.links = event.params.links;
+  profile.settingsHash = event.params.settingsHash;
   profile.updatedAt = event.block.timestamp;
   profile.save();
 }

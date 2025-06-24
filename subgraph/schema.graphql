@@ -16,6 +16,7 @@ type Profile @entity(immutable: false) {
   avatar: String
   linkKeys: [String!]!
   links: [String!]!
+  settingsHash: String! # hash of the appearance settings
   owner: Bytes! # The address that created the profile
   eoa: User! # The user that owns the profile
   tipAmount: BigInt! # total amount of tips received by the profile
