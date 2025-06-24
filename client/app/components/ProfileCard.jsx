@@ -596,24 +596,22 @@ export default function ProfileCard({
                         value={tipAmount}
                         onChange={(value) => setTipAmount(value)}
                         min={0}
-                        step={0.1}
+                        step={0.5}
                         precision={2}
                         style={{ maxWidth: 170, verticalAlign: "middle" }}
                         addonAfter="NERO"
                       />
-                      {tipAmount && parseFloat(tipAmount) > 0 ? (
-                        <Typography.Text
-                          type="secondary"
-                          style={{
-                            fontSize: "12px",
-                            display: "block",
-                            marginTop: "8px"
-                          }}
-                        >
-                          💡 Tip will be sent directly to the profile owner
-                        </Typography.Text>
-                      ) : null}
                     </Space>
+                    <Typography.Text
+                      type="secondary"
+                      style={{
+                        fontSize: "12px",
+                        display: "block",
+                        marginBottom: "16px"
+                      }}
+                    >
+                      💡 Tip will be sent directly to the profile owner
+                    </Typography.Text>
                     <Button
                       type="primary"
                       shape={
