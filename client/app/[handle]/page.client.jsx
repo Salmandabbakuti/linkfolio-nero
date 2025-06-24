@@ -53,6 +53,10 @@ import {
   LINKFOLIO_CONTRACT_ADDRESS
 } from "@/app/utils/constants";
 import { executeOperation, getAAWalletAddress } from "@/app/utils/aaUtils";
+import {
+  uploadProfileSettingsToIpfs,
+  uploadFileToIpfs
+} from "@/app/actions/pinata";
 
 const { Title, Text } = Typography;
 
@@ -195,12 +199,29 @@ export default function Profile({ params }) {
     setLoading({ ...loading, write: true });
     const categoryVal = categoryArr.indexOf(dataObj?.category);
     try {
+      // upload settings to IPFS
+      console.log("Uploading profile settings to IPFS...");
+      message.info("Uploading profile settings to IPFS...");
+      const uploadRes = await uploadProfileSettingsToIpfs(appearanceSettings);
+      if (uploadRes?.error) {
+        return message.error(
+          `Failed to upload profile settings: ${uploadRes?.error}`
+        );
+      }
+      dataObj.settingsHash = uploadRes?.cid; // remove this line
       // if avatar file is present, upload it to IPFS
       if (avatarFile) {
-        message.info("Avatar upload is coming soon!");
-        dataObj.avatar = profile?.avatar || ""; // remove this line
-        // const ipfsHash = await uploadImageToIpfs(avatarFile);
-        // dataObj.avatar = ipfsHash;
+        message.info("Uploading avatar file to IPFS...");
+        const formData = new FormData();
+        formData.append("file", avatarFile);
+        const uploadRes = await uploadFileToIpfs(formData);
+        if (uploadRes?.error) {
+          return message.error(
+            `Failed to upload avatar file: ${uploadRes?.error}`
+          );
+        }
+        dataObj.avatar = `https://ipfs.io/ipfs/${uploadRes?.cid}`;
+        console.log("Avatar uploaded to IPFS:", dataObj.avatar);
       } else {
         dataObj.avatar = profile?.avatar || "";
       }
@@ -241,7 +262,8 @@ export default function Profile({ params }) {
             dataObj.avatar,
             linkKeys,
             links,
-            account
+            account,
+            dataObj.settingsHash || "" // settingsHash is optional
           ]
         );
         console.log("Create Profile Tx:", createOpTx);
@@ -266,7 +288,8 @@ export default function Profile({ params }) {
           dataObj.bio,
           dataObj.avatar,
           linkKeys,
-          links
+          links,
+          dataObj.settingsHash || "" // settingsHash is optional
         ]
       );
       console.log("Update Profile Tx:", updateOpTx);
