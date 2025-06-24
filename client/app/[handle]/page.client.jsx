@@ -18,7 +18,10 @@ import {
   Divider,
   Spin,
   Tabs,
-  Select
+  Select,
+  ColorPicker,
+  InputNumber,
+  theme
 } from "antd";
 import {
   GlobalOutlined,
@@ -67,6 +70,22 @@ export default function Profile({ params }) {
   });
   const [aaWalletAddress, setAAWalletAddress] = useState(null);
   const [selectedSocials, setSelectedSocials] = useState([]);
+  const [appearanceSettings, setAppearanceSettings] = useState({
+    fontFamily: "Inter, sans-serif",
+    fontSize: 16, // Changed to number for InputNumber
+    background: "#fff", // Default background color
+    accentColor: "#ff9900",
+    cardStyle: "glass",
+    buttonShape: "round",
+    linkStyle: "bold",
+    textColor: "#222",
+    avatarShape: "circle",
+    profileCardShadow: "0 4px 24px #ff990055",
+    profileCardBorder: "2px solid #ff9900",
+    banner: "",
+    customCSS: ""
+  });
+  const [formValues, setFormValues] = useState({});
 
   const { handle } = use(params);
   const router = useRouter();
@@ -98,7 +117,6 @@ export default function Profile({ params }) {
     fetchProfile();
     resolveAAWalletAddress();
   }, [walletProvider]);
-
   // On edit mode, preselect socials with existing links
   useEffect(() => {
     if (mode === "edit" && profile?.links) {
@@ -301,185 +319,186 @@ export default function Profile({ params }) {
       setLoading({ ...loading, write: false });
     }
   };
-
   return (
-    <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+    <div>
       {mode === "edit" ? (
-        <Tabs
-          defaultActiveKey="profile"
-          // tabPosition="left"
-          animated
-          // centered
-          items={[
-            {
-              key: "profile",
-              label: "Profile",
-              children: (
-                <Card
-                  title={profile?.id ? "Edit Profile" : "Create Profile"}
-                  variant="outlined"
-                  loading={loading?.read}
-                  extra={
-                    <Space>
-                      <Button
-                        title="Preview"
-                        shape="circle"
-                        icon={<EyeOutlined />}
-                        onClick={() => setMode("preview")}
-                      />
-                      {isProfileOwner && (
-                        <Popconfirm
-                          title="Are you sure you want to delete this profile?"
-                          onConfirm={handleDeleteProfile}
-                        >
-                          <Button
-                            title="Delete Profile"
-                            type="primary"
-                            shape="circle"
-                            danger
-                            icon={<DeleteOutlined />}
-                          />
-                        </Popconfirm>
-                      )}
-                    </Space>
-                  }
-                >
-                  <Form
-                    form={formData}
-                    onFinish={onFinish}
-                    initialValues={initialValues}
-                    layout="vertical"
-                    // size="large"
-                    requiredMark
-                  >
-                    <Spin
-                      spinning={loading?.write}
-                      size="large"
-                      tip="Transaction in progress..."
-                      indicator={<LoadingOutlined spin />}
+        <Row gutter={32}>
+          {/* Left: Editing Section */}
+          <Col xs={24} lg={16} xl={18}>
+            <Card
+              title={profile?.id ? "Edit Profile" : "Create Profile"}
+              variant="outlined"
+              loading={loading?.read}
+              extra={
+                <Space>
+                  <Button
+                    title="Preview"
+                    shape="circle"
+                    icon={<EyeOutlined />}
+                    onClick={() => setMode("preview")}
+                  />
+                  {isProfileOwner && (
+                    <Popconfirm
+                      title="Are you sure you want to delete this profile?"
+                      onConfirm={handleDeleteProfile}
                     >
-                      <Row gutter={16}>
-                        <Col xs={24} lg={12}>
-                          <Form.Item
-                            label="Avatar"
-                            name="avatar"
-                            hasFeedback
-                            help="Recommended 78x78, Max: 300KB"
-                          >
-                            <Upload
-                              name="avatar"
-                              multiple={false}
-                              showUploadList
-                              listType="picture-circle"
-                              fileList={avatarFile ? [avatarFile] : []}
-                              accept="image/*"
-                              maxCount={1}
-                              beforeUpload={() => false}
-                              onChange={({ fileList }) => {
-                                console.log("Avatar changed", fileList[0]);
-                                const file = fileList[0];
-                                if (!file) {
-                                  setAvatarFile(null);
-                                  return;
-                                }
-                                if (
-                                  !file?.type?.startsWith("image/") ||
-                                  file?.size > 300000
-                                ) {
-                                  return message.error(
-                                    "Invalid file type or size (Max 300KB)"
-                                  );
-                                }
-                                setAvatarFile(file);
-                              }}
-                            >
-                              {avatarFile ? null : (
-                                <Avatar
-                                  src={
-                                    profile?.avatar ||
-                                    `https://api.dicebear.com/5.x/open-peeps/svg?seed=${handle}`
-                                  }
-                                  alt="Profile"
-                                  size={100}
-                                  shape="circle"
-                                />
-                              )}
-                            </Upload>
-                          </Form.Item>
-                        </Col>
-                        <Col xs={24} lg={12}>
-                          <Form.Item
-                            label="Name"
-                            name="name"
-                            rules={[
-                              {
-                                required: true,
-                                message: "Please enter your name"
-                              }
-                            ]}
-                          >
-                            <Input />
-                          </Form.Item>
-                          <Form.Item
-                            label="Handle"
-                            name="handle"
-                            hasFeedback
-                            help="Your unique handle, cannot be changed."
-                            rules={[
-                              {
-                                required: true,
-                                message: "Please enter your handle"
-                              }
-                            ]}
-                          >
-                            <Input readOnly />
-                          </Form.Item>
-                          <Form.Item
-                            label="Category"
-                            name="category"
-                            rules={[
-                              {
-                                required: true,
-                                message: "Please select a category"
-                              }
-                            ]}
-                          >
-                            <Select
-                              placeholder="Select profile category"
-                              options={[
-                                { label: "Personal", value: "Personal" },
-                                { label: "Creator", value: "Creator" },
-                                { label: "Business", value: "Business" }
-                              ]}
-                            />
-                          </Form.Item>
-                        </Col>
-                      </Row>
-
-                      <Row gutter={16}>
-                        <Col xs={24} lg={24}>
-                          <Form.Item label="Bio" name="bio">
-                            <Input.TextArea />
-                          </Form.Item>
-                        </Col>
-                      </Row>
-
-                      <Divider>
-                        <Title level={5}>Social Links</Title>
-                      </Divider>
-                      <Typography.Paragraph
-                        type="secondary"
-                        style={{ marginBottom: "10px" }}
+                      <Button
+                        title="Delete Profile"
+                        type="primary"
+                        shape="circle"
+                        danger
+                        icon={<DeleteOutlined />}
+                      />
+                    </Popconfirm>
+                  )}
+                </Space>
+              }
+            >
+              <Tabs
+                defaultActiveKey="profile"
+                tabPosition="top"
+                items={[
+                  {
+                    key: "profile",
+                    label: "Profile",
+                    children: (
+                      <Form
+                        form={formData}
+                        onFinish={onFinish}
+                        initialValues={initialValues}
+                        layout="vertical"
+                        requiredMark
+                        onValuesChange={(changedValues, allValues) => {
+                          setFormValues(allValues);
+                        }}
                       >
-                        Select the social platforms to include links in your
-                        profile. Click to add or remove them.
-                      </Typography.Paragraph>
-                      <Row gutter={16} style={{ marginBottom: 16 }}>
-                        <Col span={24}>
-                          <Space wrap>
+                        <Spin
+                          spinning={loading?.write}
+                          size="large"
+                          tip="Transaction in progress..."
+                          indicator={<LoadingOutlined spin />}
+                        >
+                          <Row gutter={16}>
+                            <Col xs={24} lg={12}>
+                              <Form.Item
+                                label="Avatar"
+                                name="avatar"
+                                hasFeedback
+                                help="Recommended 78x78, Max: 300KB"
+                              >
+                                <Upload
+                                  name="avatar"
+                                  multiple={false}
+                                  showUploadList
+                                  listType="picture-circle"
+                                  fileList={avatarFile ? [avatarFile] : []}
+                                  accept="image/*"
+                                  maxCount={1}
+                                  beforeUpload={() => false}
+                                  onChange={({ fileList }) => {
+                                    console.log("Avatar changed", fileList[0]);
+                                    const file = fileList[0];
+                                    if (!file) {
+                                      setAvatarFile(null);
+                                      return;
+                                    }
+                                    if (
+                                      !file?.type?.startsWith("image/") ||
+                                      file?.size > 300000
+                                    ) {
+                                      return message.error(
+                                        "Invalid file type or size (Max 300KB)"
+                                      );
+                                    }
+                                    setAvatarFile(file);
+                                  }}
+                                >
+                                  {avatarFile ? null : (
+                                    <Avatar
+                                      src={
+                                        profile?.avatar ||
+                                        `https://api.dicebear.com/5.x/open-peeps/svg?seed=${handle}`
+                                      }
+                                      alt="Profile"
+                                      size={100}
+                                      shape="circle"
+                                    />
+                                  )}
+                                </Upload>
+                              </Form.Item>
+                            </Col>
+                            <Col xs={24} lg={12}>
+                              <Form.Item
+                                label="Name"
+                                name="name"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "Please enter your name"
+                                  }
+                                ]}
+                              >
+                                <Input />
+                              </Form.Item>
+                              <Form.Item
+                                label="Handle"
+                                name="handle"
+                                hasFeedback
+                                help="Your unique handle, cannot be changed."
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "Please enter your handle"
+                                  }
+                                ]}
+                              >
+                                <Input readOnly />
+                              </Form.Item>
+                              <Form.Item
+                                label="Category"
+                                name="category"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "Please select a category"
+                                  }
+                                ]}
+                              >
+                                <Select
+                                  placeholder="Select profile category"
+                                  options={[
+                                    { label: "Personal", value: "Personal" },
+                                    { label: "Creator", value: "Creator" },
+                                    { label: "Business", value: "Business" }
+                                  ]}
+                                />
+                              </Form.Item>
+                            </Col>
+                          </Row>
+
+                          <Row gutter={16}>
+                            <Col xs={24} lg={24}>
+                              <Form.Item label="Bio" name="bio">
+                                <Input.TextArea />
+                              </Form.Item>
+                            </Col>
+                          </Row>
+
+                          <Divider>
+                            <Title level={5}>Social Links</Title>
+                          </Divider>
+                          <Typography.Paragraph
+                            type="secondary"
+                            style={{ marginBottom: "10px" }}
+                          >
+                            Select the social platforms to include links in your
+                            profile. Click to add or remove them.
+                          </Typography.Paragraph>
+                          <Space wrap style={{ marginBottom: 16 }}>
                             {supportedSocials.map((social) => (
                               <Button
                                 key={social.id}
+                                size="small"
                                 type={
                                   selectedSocials.includes(
                                     social.name.toLowerCase()
@@ -488,7 +507,6 @@ export default function Profile({ params }) {
                                     : "default"
                                 }
                                 icon={social.icon || <GlobalOutlined />}
-                                shape="round"
                                 onClick={() => {
                                   setSelectedSocials((prev) =>
                                     prev.includes(social.name.toLowerCase())
@@ -503,69 +521,344 @@ export default function Profile({ params }) {
                               </Button>
                             ))}
                           </Space>
-                        </Col>
-                      </Row>
-                      <Row gutter={16}>
-                        {selectedSocials.map((socialKey) => {
-                          const social = supportedSocials.find(
-                            (s) => s.name.toLowerCase() === socialKey
+
+                          <Row gutter={16}>
+                            {selectedSocials.map((socialKey) => {
+                              const social = supportedSocials.find(
+                                (s) => s.name.toLowerCase() === socialKey
+                              );
+                              return (
+                                <Col xs={24} lg={12} key={socialKey}>
+                                  <Form.Item
+                                    label={social.name}
+                                    name={["links", socialKey]}
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message: `Please enter your ${social.name} profile link`
+                                      }
+                                    ]}
+                                  >
+                                    <Input
+                                      addonBefore={
+                                        social.icon || <GlobalOutlined />
+                                      }
+                                      placeholder={`Enter your ${social.name} profile link`}
+                                    />
+                                  </Form.Item>
+                                </Col>
+                              );
+                            })}
+                          </Row>
+
+                          <Space>
+                            <Button
+                              shape="round"
+                              onClick={() => setMode("view")}
+                            >
+                              Back
+                            </Button>
+                            <Button
+                              type="primary"
+                              shape="round"
+                              htmlType="submit"
+                              loading={loading?.write}
+                            >
+                              Save
+                            </Button>
+                          </Space>
+                        </Spin>
+                      </Form>
+                    )
+                  },
+                  {
+                    key: "appearance",
+                    label: "Appearance",
+                    children: (
+                      <Form
+                        layout="vertical"
+                        initialValues={appearanceSettings}
+                        onValuesChange={(changedValues, allValues) => {
+                          // Handle ColorPicker values which return objects
+                          console.log(
+                            "Appearance settings changed:",
+                            allValues
                           );
-                          return (
-                            <Col xs={24} lg={12} key={socialKey}>
-                              <Form.Item
-                                label={social.name}
-                                name={["links", socialKey]}
-                                rules={[
+
+                          const processedValues = { ...allValues };
+
+                          // Convert ColorPicker values to strings
+                          if (
+                            processedValues.accentColor &&
+                            typeof processedValues.accentColor === "object"
+                          ) {
+                            processedValues.accentColor =
+                              processedValues.accentColor.toHexString();
+                          }
+                          if (
+                            processedValues.textColor &&
+                            typeof processedValues.textColor === "object"
+                          ) {
+                            processedValues.textColor =
+                              processedValues.textColor.toHexString();
+                          }
+                          if (
+                            processedValues.background &&
+                            typeof processedValues.background === "object"
+                          ) {
+                            // Handle both solid colors and gradients
+                            processedValues.background =
+                              processedValues.background.toHexString();
+                          }
+
+                          setAppearanceSettings(processedValues);
+                        }}
+                      >
+                        <Row gutter={16}>
+                          <Col xs={24} lg={12}>
+                            {/* Font Settings Row */}
+                            <Row gutter={8}>
+                              <Col span={16}>
+                                <Form.Item
+                                  label="Font Family"
+                                  name="fontFamily"
+                                >
+                                  <Select
+                                    options={[
+                                      {
+                                        label: "Inter",
+                                        value: "Inter, sans-serif"
+                                      },
+                                      {
+                                        label: "Roboto",
+                                        value: "Roboto, sans-serif"
+                                      },
+                                      {
+                                        label: "Montserrat",
+                                        value: "Montserrat, sans-serif"
+                                      },
+                                      {
+                                        label: "Poppins",
+                                        value: "Poppins, sans-serif"
+                                      },
+                                      {
+                                        label: "Lato",
+                                        value: "Lato, sans-serif"
+                                      },
+                                      {
+                                        label: "Merriweather",
+                                        value: "Merriweather, serif"
+                                      }
+                                    ]}
+                                  />
+                                </Form.Item>
+                              </Col>
+                              <Col span={8}>
+                                <Form.Item label="Font Size" name="fontSize">
+                                  <InputNumber
+                                    min={12}
+                                    max={32}
+                                    formatter={(value) => `${value}px`}
+                                    parser={(value) => value.replace("px", "")}
+                                    // style={{ width: "100%" }}
+                                  />
+                                </Form.Item>
+                              </Col>
+                            </Row>
+                            {/* Color Settings Row */}
+                            <Row gutter={8}>
+                              <Col span={12}>
+                                <Form.Item
+                                  label="Accent Color"
+                                  name="accentColor"
+                                >
+                                  <ColorPicker
+                                    showText
+                                    format="hex"
+                                    presets={[
+                                      {
+                                        label: "Recommended",
+                                        colors: [
+                                          "#F5222D",
+                                          "#FA8C16",
+                                          "#FADB14",
+                                          "#8BBB11",
+                                          "#52C41A",
+                                          "#13A8A8",
+                                          "#1677FF",
+                                          "#2F54EB",
+                                          "#722ED1",
+                                          "#EB2F96"
+                                        ]
+                                      }
+                                    ]}
+                                  />
+                                </Form.Item>
+                              </Col>
+                              <Col span={12}>
+                                <Form.Item label="Text Color" name="textColor">
+                                  <ColorPicker
+                                    showText
+                                    format="hex"
+                                    presets={[
+                                      {
+                                        label: "Text Colors",
+                                        colors: [
+                                          "#000000",
+                                          "#262626",
+                                          "#434343",
+                                          "#595959",
+                                          "#8C8C8C",
+                                          "#FFFFFF",
+                                          "#F5F5F5",
+                                          "#FAFAFA"
+                                        ]
+                                      }
+                                    ]}
+                                  />
+                                </Form.Item>
+                              </Col>
+                            </Row>
+                            <Form.Item label="Background" name="background">
+                              <ColorPicker
+                                showText
+                                format="hex" // Use CSS format for gradients
+                                allowClear
+                                mode={["single", "gradient"]}
+                                presets={[
                                   {
-                                    required: true,
-                                    message: `Please enter your ${social.name} profile link`
+                                    label: "Solid Colors",
+                                    colors: [
+                                      "#FFFFFF",
+                                      "#F5F5F5",
+                                      "#E8F4FD",
+                                      "#FFF7E6",
+                                      "#F6FFED",
+                                      "#F9F0FF"
+                                    ]
                                   }
                                 ]}
-                              >
-                                <Input
-                                  addonBefore={
-                                    social.icon || <GlobalOutlined />
-                                  }
-                                  placeholder={`Enter your ${social.name} profile link`}
-                                />
-                              </Form.Item>
-                            </Col>
-                          );
-                        })}
-                      </Row>
+                              />
+                            </Form.Item>
+                          </Col>
 
-                      <Space>
-                        <Button shape="round" onClick={() => setMode("view")}>
-                          Back
-                        </Button>
-                        <Button
-                          type="primary"
-                          shape="round"
-                          htmlType="submit"
-                          loading={loading?.write}
-                        >
-                          Save
-                        </Button>
-                      </Space>
-                    </Spin>
-                  </Form>
-                </Card>
-              )
-            },
-            {
-              key: "Appearance",
-              label: "Appearance",
-              children: (
-                <Card title="Coming Soon" variant="outlined">
-                  <Text type="secondary">
-                    We are working on custom themes and appearance settings.
-                    Stay tuned!
-                  </Text>
-                </Card>
-              )
-            }
-          ]}
-        />
+                          <Col xs={24} lg={12}>
+                            <Form.Item label="Banner Image URL" name="banner">
+                              <Input placeholder="Paste image URL or leave blank" />
+                            </Form.Item>
+
+                            {/* Card & Style Settings Row */}
+                            <Row gutter={8}>
+                              <Col span={12}>
+                                <Form.Item label="Card Style" name="cardStyle">
+                                  <Select
+                                    options={[
+                                      { label: "Glassmorphic", value: "glass" },
+                                      { label: "Solid", value: "solid" },
+                                      { label: "Bordered", value: "bordered" }
+                                    ]}
+                                  />
+                                </Form.Item>
+                              </Col>
+                              <Col span={12}>
+                                <Form.Item
+                                  label="Avatar Shape"
+                                  name="avatarShape"
+                                >
+                                  <Select
+                                    options={[
+                                      { label: "Circle", value: "circle" },
+                                      { label: "Rounded", value: "rounded" },
+                                      { label: "Square", value: "square" }
+                                    ]}
+                                  />
+                                </Form.Item>
+                              </Col>
+                            </Row>
+
+                            {/* Button & Link Settings Row */}
+                            <Row gutter={8}>
+                              <Col span={12}>
+                                <Form.Item
+                                  label="Button Shape"
+                                  name="buttonShape"
+                                >
+                                  <Select
+                                    options={[
+                                      { label: "Round", value: "round" },
+                                      { label: "Pill", value: "pill" },
+                                      { label: "Square", value: "square" }
+                                    ]}
+                                  />
+                                </Form.Item>
+                              </Col>
+                              <Col span={12}>
+                                <Form.Item label="Link Style" name="linkStyle">
+                                  <Select
+                                    options={[
+                                      { label: "Bold", value: "bold" },
+                                      {
+                                        label: "Underline",
+                                        value: "underline"
+                                      },
+                                      { label: "Normal", value: "normal" }
+                                    ]}
+                                  />
+                                </Form.Item>
+                              </Col>
+                            </Row>
+                          </Col>
+                        </Row>
+                      </Form>
+                    )
+                  }
+                ]}
+              />
+            </Card>
+          </Col>
+
+          {/* Right: Live Preview Section */}
+          <Col
+            xs={24}
+            lg={8}
+            xl={6}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "16px"
+            }}
+          >
+            <Card
+              title="Live Preview"
+              hoverable
+              style={{
+                position: "sticky",
+                top: "20px"
+              }}
+            >
+              <ProfileCard
+                profile={{
+                  ...profile,
+                  ...formValues,
+                  name: formValues.name || profile?.name || "Your Name",
+                  handle: formValues.handle || profile?.handle || "yourhandle",
+                  bio: formValues.bio || profile?.bio || "Your bio goes here.",
+                  category:
+                    formValues.category || profile?.category || "Personal",
+                  links: formValues.links ||
+                    profile?.links || { website: "https://yourwebsite.com" },
+                  avatar: avatarFile
+                    ? URL.createObjectURL(avatarFile)
+                    : formValues.avatar ||
+                      profile?.avatar ||
+                      `https://api.dicebear.com/5.x/open-peeps/svg?seed=${handle}`
+                }}
+                aaWalletAddress={aaWalletAddress}
+                appearanceSettings={appearanceSettings}
+              />
+            </Card>
+          </Col>
+        </Row>
       ) : (
         <>
           <Card
@@ -681,6 +974,7 @@ export default function Profile({ params }) {
                       }
                     : profile
                 }
+                appearanceSettings={appearanceSettings}
               />
             )}
           </Card>

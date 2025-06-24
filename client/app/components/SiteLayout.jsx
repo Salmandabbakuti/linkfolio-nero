@@ -57,6 +57,7 @@ export default function SiteLayout({ children }) {
           href="https://github.com/Salmandabbakuti"
           target="_blank"
           rel="noopener noreferrer"
+          style={{ color: "inherit", textDecoration: "none" }}
         >
           ©{new Date().getFullYear()} LinkFolio. Powered by NERO Chain & Reown
         </a>
