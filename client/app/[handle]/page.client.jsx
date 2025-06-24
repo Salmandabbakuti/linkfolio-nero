@@ -21,6 +21,7 @@ import {
   Select,
   ColorPicker,
   InputNumber,
+  Collapse,
   theme
 } from "antd";
 import {
@@ -46,8 +47,13 @@ import {
   linkFolioContract,
   supportedSocials,
   subgraphClient as client,
-  GET_PROFILE_QUERY
+  GET_PROFILE_QUERY,
+  DEFAULT_APPEARANCE_SETTINGS
 } from "@/app/utils";
+import {
+  profileTemplates,
+  getTemplateById
+} from "@/app/utils/profileTemplates";
 import {
   EXPLORER_URL,
   LINKFOLIO_CONTRACT_ADDRESS,
@@ -76,21 +82,9 @@ export default function Profile({ params }) {
   });
   const [aaWalletAddress, setAAWalletAddress] = useState(null);
   const [selectedSocials, setSelectedSocials] = useState([]);
-  const [appearanceSettings, setAppearanceSettings] = useState({
-    fontFamily: "Inter, sans-serif",
-    fontSize: 16, // Changed to number for InputNumber
-    background: "#fff", // Default background color
-    accentColor: "#ff9900",
-    cardStyle: "glass",
-    buttonShape: "round",
-    linkStyle: "bold",
-    textColor: "#222",
-    avatarShape: "circle",
-    profileCardShadow: "0 4px 24px #ff990055",
-    profileCardBorder: "2px solid #ff9900",
-    banner: "",
-    customCSS: ""
-  });
+  const [appearanceSettings, setAppearanceSettings] = useState(
+    DEFAULT_APPEARANCE_SETTINGS
+  );
   const [formValues, setFormValues] = useState({});
 
   const { handle } = use(params);
@@ -232,6 +226,7 @@ export default function Profile({ params }) {
         console.log("Uploading avatar file to IPFS:", avatarFile);
         const uploadRes = await uploadFileToIpfs(formData);
         if (uploadRes?.error) {
+          console.error("Avatar upload failed:", uploadRes.error);
           return message.error(
             `Failed to upload avatar file: ${uploadRes?.error}`
           );
@@ -361,9 +356,9 @@ export default function Profile({ params }) {
   return (
     <div>
       {mode === "edit" ? (
-        <Row gutter={32}>
-          {/* Left: Editing Section */}
-          <Col xs={24} lg={16} xl={18}>
+        <Row gutter={16}>
+          {/* Left: Editing Section (made smaller) */}
+          <Col xs={24} lg={14} xl={16}>
             <Card
               title={profile?.id ? "Edit Profile" : "Create Profile"}
               variant="outlined"
@@ -617,42 +612,211 @@ export default function Profile({ params }) {
                       <Form
                         layout="vertical"
                         initialValues={appearanceSettings}
+                        key={JSON.stringify(appearanceSettings)} // Force re-render when settings change
                         onValuesChange={(changedValues, allValues) => {
-                          // Handle ColorPicker values which return objects
                           console.log(
                             "Appearance settings changed:",
                             allValues
                           );
-
-                          const processedValues = { ...allValues };
-
-                          // Convert ColorPicker values to strings
-                          if (
-                            processedValues.accentColor &&
-                            typeof processedValues.accentColor === "object"
-                          ) {
-                            processedValues.accentColor =
-                              processedValues.accentColor.toHexString();
-                          }
-                          if (
-                            processedValues.textColor &&
-                            typeof processedValues.textColor === "object"
-                          ) {
-                            processedValues.textColor =
-                              processedValues.textColor.toHexString();
-                          }
-                          if (
-                            processedValues.background &&
-                            typeof processedValues.background === "object"
-                          ) {
-                            // Handle both solid colors and gradients
-                            processedValues.background =
-                              processedValues.background.toHexString();
-                          }
-
-                          setAppearanceSettings(processedValues);
+                          const colorFields = [
+                            "accentColor",
+                            "textColor",
+                            "background"
+                          ];
+                          // Handle ColorPicker values which return objects
+                          colorFields.forEach((field) => {
+                            if (
+                              allValues[field] &&
+                              typeof allValues[field] === "object"
+                            ) {
+                              allValues[field] = allValues[field].toHexString();
+                            }
+                          });
+                          setAppearanceSettings(allValues);
                         }}
                       >
+                        {/* Template Selection Section with Collapse */}
+                        <Collapse
+                          style={{ marginBottom: "24px" }}
+                          items={[
+                            {
+                              key: "templates",
+                              label: (
+                                <Typography.Text strong>
+                                  🎨 Quick Templates
+                                </Typography.Text>
+                              ),
+                              children: (
+                                <div>
+                                  <Typography.Paragraph
+                                    type="secondary"
+                                    style={{ marginBottom: "16px" }}
+                                  >
+                                    Choose from our curated templates or
+                                    customize your own style below.
+                                  </Typography.Paragraph>
+                                  <div
+                                    style={{
+                                      display: "grid",
+                                      gridTemplateColumns:
+                                        "repeat(auto-fit, minmax(200px, 1fr))",
+                                      gap: "12px"
+                                    }}
+                                  >
+                                    {profileTemplates.map((template) => (
+                                      <Card
+                                        key={template.id}
+                                        size="small"
+                                        hoverable
+                                        onClick={() => {
+                                          setAppearanceSettings(
+                                            template.settings
+                                          );
+                                          message.success(
+                                            `Applied ${template.name} template!`
+                                          );
+                                        }}
+                                        style={{
+                                          cursor: "pointer",
+                                          border:
+                                            appearanceSettings.fontFamily ===
+                                              template.settings.fontFamily &&
+                                            appearanceSettings.accentColor ===
+                                              template.settings.accentColor
+                                              ? "2px solid #1677ff"
+                                              : "1px solid #d9d9d9",
+                                          transition: "all 0.2s ease"
+                                        }}
+                                        styles={{
+                                          body: { padding: "8px" }
+                                        }}
+                                      >
+                                        <div
+                                          style={{
+                                            height: "60px",
+                                            backgroundColor: "#f0f0f0", // Fallback color
+                                            background:
+                                              template.preview.background,
+                                            borderRadius: "6px",
+                                            marginBottom: "8px",
+                                            position: "relative",
+                                            overflow: "hidden",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            paddingLeft: "8px"
+                                          }}
+                                        >
+                                          {/* Text Color and Style Indicator */}
+                                          <div
+                                            style={{
+                                              fontSize: `${Math.max(
+                                                14,
+                                                template.settings.fontSize - 4
+                                              )}px`,
+                                              color:
+                                                template.settings.textColor,
+                                              fontFamily:
+                                                template.settings.fontFamily,
+                                              fontWeight:
+                                                template.settings.linkStyle ===
+                                                "bold"
+                                                  ? "bold"
+                                                  : "normal",
+                                              textDecoration:
+                                                template.settings.linkStyle ===
+                                                "underline"
+                                                  ? "underline"
+                                                  : "none",
+                                              textShadow:
+                                                template.settings.textColor ===
+                                                  "#FFFFFF" ||
+                                                template.settings.textColor ===
+                                                  "#F5F5F5"
+                                                  ? "0 1px 2px rgba(0,0,0,0.5)"
+                                                  : "none",
+                                              letterSpacing: "0.5px"
+                                            }}
+                                          >
+                                            T{template.settings.fontSize}
+                                          </div>
+
+                                          {/* Accent Color Button Indicator */}
+                                          <div
+                                            style={{
+                                              position: "absolute",
+                                              bottom: "4px",
+                                              right: "4px",
+                                              width: "20px",
+                                              height: "20px",
+                                              backgroundColor:
+                                                template.settings.accentColor,
+                                              borderRadius:
+                                                template.settings
+                                                  .buttonShape === "pill"
+                                                  ? "50%"
+                                                  : template.settings
+                                                      .buttonShape === "square"
+                                                  ? "2px"
+                                                  : "4px",
+                                              border:
+                                                template.settings.cardStyle ===
+                                                "bordered"
+                                                  ? "1px solid #fff"
+                                                  : "none",
+                                              backdropFilter:
+                                                template.settings.cardStyle ===
+                                                "glass"
+                                                  ? "blur(4px)"
+                                                  : "none"
+                                            }}
+                                          />
+
+                                          {/* Avatar Shape Indicator */}
+                                          <div
+                                            style={{
+                                              position: "absolute",
+                                              top: "4px",
+                                              right: "4px",
+                                              width: "12px",
+                                              height: "12px",
+                                              backgroundColor:
+                                                template.settings.textColor,
+                                              borderRadius:
+                                                template.settings
+                                                  .avatarShape === "circle"
+                                                  ? "50%"
+                                                  : template.settings
+                                                      .avatarShape === "rounded"
+                                                  ? "3px"
+                                                  : "0px",
+                                              opacity: 0.8
+                                            }}
+                                          />
+                                        </div>
+                                        <Typography.Text
+                                          strong
+                                          style={{
+                                            fontSize: "12px",
+                                            display: "block"
+                                          }}
+                                        >
+                                          {template.name}
+                                        </Typography.Text>
+                                        <Typography.Text
+                                          type="secondary"
+                                          style={{ fontSize: "11px" }}
+                                        >
+                                          {template.description}
+                                        </Typography.Text>
+                                      </Card>
+                                    ))}
+                                  </div>
+                                </div>
+                              )
+                            }
+                          ]}
+                        />
                         <Row gutter={16}>
                           <Col xs={24} lg={12}>
                             {/* Font Settings Row */}
@@ -877,12 +1041,11 @@ export default function Profile({ params }) {
               />
             </Card>
           </Col>
-
-          {/* Right: Live Preview Section */}
+          {/* Right: Live Preview Section (made larger) */}
           <Col
             xs={24}
-            lg={8}
-            xl={6}
+            lg={10}
+            xl={8}
             style={{
               display: "flex",
               flexDirection: "column",

@@ -29,6 +29,22 @@ export const supportedSocials = [
   { id: "other", name: "Other", icon: <GlobalOutlined /> }
 ];
 
+export const DEFAULT_APPEARANCE_SETTINGS = {
+  fontFamily: "Inter, sans-serif",
+  fontSize: 16, // Changed to number for InputNumber
+  background: "#fff", // Default background color
+  accentColor: "#ff9900",
+  cardStyle: "glass",
+  buttonShape: "round",
+  linkStyle: "bold",
+  textColor: "#222",
+  avatarShape: "circle",
+  profileCardShadow: "0 4px 24px #ff990055",
+  profileCardBorder: "2px solid #ff9900",
+  banner: "",
+  customCSS: ""
+};
+
 const linkFolioContractABI = [
   "function createProfile(string _name, string _handle, uint8 _category, string _bio, string _avatar, string[] _linkKeys, string[] _links, address _eoa, string _settingsHash)",
   "function updateProfile(uint256 _tokenId, string _name, uint8 _category, string _bio, string _avatar, string[] _linkKeys, string[] _links, string _settingsHash)",
