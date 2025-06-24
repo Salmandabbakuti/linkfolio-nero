@@ -99,11 +99,11 @@ export const GET_PROFILES_QUERY = gql`
       category
       bio
       avatar
-      eoa
-      tipAmount
-      owner {
+      eoa {
         id
       }
+      tipAmount
+      owner
     }
   }
 `;
@@ -130,10 +130,10 @@ export const GET_PROFILE_QUERY = gql`
       category
       bio
       avatar
-      eoa
-      owner {
+      eoa {
         id
       }
+      owner
       tipAmount
       linkKeys
       links
@@ -149,6 +149,7 @@ export const GET_PROFILE_QUERY = gql`
         content
         author
         tipAmount
+        txHash
         createdAt
       }
       posts(
