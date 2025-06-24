@@ -214,8 +214,6 @@ export default function ProfileCard({
       linkStyle = "bold",
       textColor = "#222",
       avatarShape = "circle",
-      profileCardShadow = "0 4px 24px #ff990055",
-      profileCardBorder = "2px solid #ff9900",
       banner = "",
       customCSS = ""
     } = appearanceSettings; // Helper function to convert hex to rgba

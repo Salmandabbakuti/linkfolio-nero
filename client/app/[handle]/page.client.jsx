@@ -50,12 +50,14 @@ import {
 } from "@/app/utils";
 import {
   EXPLORER_URL,
-  LINKFOLIO_CONTRACT_ADDRESS
+  LINKFOLIO_CONTRACT_ADDRESS,
+  PINATA_GATEWAY_URL
 } from "@/app/utils/constants";
 import { executeOperation, getAAWalletAddress } from "@/app/utils/aaUtils";
 import {
   uploadProfileSettingsToIpfs,
-  uploadFileToIpfs
+  uploadFileToIpfs,
+  getProfileSettingsFromIpfs
 } from "@/app/actions/pinata";
 
 const { Title, Text } = Typography;
@@ -139,7 +141,7 @@ export default function Profile({ params }) {
       console.log(
         `Resolved AA Wallet Address for account ${account}: ${aaWalletAddress}`
       );
-      setAAWalletAddress(aaWalletAddress);
+      setAAWalletAddress(aaWalletAddress?.toLowerCase());
     } catch (err) {
       console.error("Error resolving AA Wallet Address:", err);
     }
@@ -148,8 +150,8 @@ export default function Profile({ params }) {
   // Functions
   const fetchProfile = async () => {
     setLoading({ ...loading, read: true });
-    client
-      .request(GET_PROFILE_QUERY, {
+    try {
+      const data = await client.request(GET_PROFILE_QUERY, {
         id: handle,
         notes_first: 100,
         notes_skip: 0,
@@ -161,34 +163,47 @@ export default function Profile({ params }) {
         posts_orderBy: "createdAt",
         posts_orderDirection: "desc",
         posts_where: {}
-      })
-      .then((data) => {
-        console.log("Fetched profile:", data);
-        const profile = data?.profile;
-        if (!profile && modeParam === "claim") setMode("edit");
-        if (!profile) return;
-        const { tokenId, linkKeys, links, owner, ...profileObj } = profile;
-        // parse links as key value pairs from arrays of keys and links
-        const linksObj = {};
-        linkKeys.forEach((key, i) => {
-          linksObj[key] = links[i];
-        });
-        const parsedProfile = {
-          ...profileObj,
-          tokenId,
-          links: linksObj,
-          id: tokenId,
-          owner: owner?.id
-        };
-        console.log("parsed profile:", parsedProfile);
-        setProfile(parsedProfile);
-        formData.setFieldsValue(parsedProfile);
-      })
-      .catch((err) => {
-        console.error("Failed to fetch profile:", err);
-        message.error("Failed to fetch profile. Please try again.");
-      })
-      .finally(() => setLoading({ ...loading, read: false }));
+      });
+      console.log("Fetched profile:", data);
+      const profile = data?.profile;
+      if (!profile && modeParam === "claim") setMode("edit");
+      if (!profile) return;
+      const { tokenId, linkKeys, links, ...profileObj } = profile;
+      // parse links as key value pairs from arrays of keys and links
+      const linksObj = {};
+      linkKeys.forEach((key, i) => {
+        linksObj[key] = links[i];
+      });
+      const parsedProfile = {
+        ...profileObj,
+        tokenId,
+        links: linksObj,
+        id: tokenId
+      };
+      console.log("parsed profile:", parsedProfile);
+      setProfile(parsedProfile);
+      formData.setFieldsValue(parsedProfile);
+      // get profile settings from IPFS if settingsHash is present
+      if (parsedProfile?.settingsHash) {
+        message.info("Fetching profile settings from IPFS...");
+        const profileSettingsRes = await getProfileSettingsFromIpfs(
+          parsedProfile?.settingsHash
+        );
+        console.log("Fetched profile settings from IPFS:", profileSettingsRes);
+        if (profileSettingsRes?.error) {
+          return message.error(
+            `Failed to fetch profile settings: ${profileSettingsRes?.error}`
+          );
+        }
+        console.log("Parsed settings:", profileSettingsRes);
+        setAppearanceSettings(profileSettingsRes);
+      }
+    } catch (err) {
+      console.error("Failed to fetch profile:", err);
+      message.error("Failed to fetch profile. Please try again.");
+    } finally {
+      setLoading({ ...loading, read: false });
+    }
   };
 
   const onFinish = async (dataObj) => {
@@ -213,14 +228,15 @@ export default function Profile({ params }) {
       if (avatarFile) {
         message.info("Uploading avatar file to IPFS...");
         const formData = new FormData();
-        formData.append("file", avatarFile);
+        formData.append("file", avatarFile?.originFileObj);
+        console.log("Uploading avatar file to IPFS:", avatarFile);
         const uploadRes = await uploadFileToIpfs(formData);
         if (uploadRes?.error) {
           return message.error(
             `Failed to upload avatar file: ${uploadRes?.error}`
           );
         }
-        dataObj.avatar = `https://ipfs.io/ipfs/${uploadRes?.cid}`;
+        dataObj.avatar = `${PINATA_GATEWAY_URL}/ipfs/${uploadRes?.cid}`;
         console.log("Avatar uploaded to IPFS:", dataObj.avatar);
       } else {
         dataObj.avatar = profile?.avatar || "";
@@ -657,20 +673,42 @@ export default function Profile({ params }) {
                                         value: "Roboto, sans-serif"
                                       },
                                       {
-                                        label: "Montserrat",
-                                        value: "Montserrat, sans-serif"
+                                        label: "Arial",
+                                        value: "Arial, Helvetica, sans-serif"
                                       },
                                       {
-                                        label: "Poppins",
-                                        value: "Poppins, sans-serif"
+                                        label: "Helvetica",
+                                        value: "Helvetica, Arial, sans-serif"
                                       },
                                       {
-                                        label: "Lato",
-                                        value: "Lato, sans-serif"
+                                        label: "Times New Roman",
+                                        value: "'Times New Roman', Times, serif"
                                       },
                                       {
-                                        label: "Merriweather",
-                                        value: "Merriweather, serif"
+                                        label: "Courier New",
+                                        value:
+                                          "'Courier New', Courier, monospace"
+                                      },
+                                      {
+                                        label: "Verdana",
+                                        value: "Verdana, Geneva, sans-serif"
+                                      },
+                                      {
+                                        label: "Georgia",
+                                        value: "Georgia, serif"
+                                      },
+                                      {
+                                        label: "Tahoma",
+                                        value: "Tahoma, Geneva, sans-serif"
+                                      },
+                                      {
+                                        label: "Trebuchet MS",
+                                        value:
+                                          "'Trebuchet MS', Helvetica, sans-serif"
+                                      },
+                                      {
+                                        label: "System UI",
+                                        value: "system-ui, sans-serif"
                                       }
                                     ]}
                                   />
@@ -863,15 +901,8 @@ export default function Profile({ params }) {
                 profile={{
                   ...profile,
                   ...formValues,
-                  name: formValues.name || profile?.name || "Your Name",
-                  handle: formValues.handle || profile?.handle || "yourhandle",
-                  bio: formValues.bio || profile?.bio || "Your bio goes here.",
-                  category:
-                    formValues.category || profile?.category || "Personal",
-                  links: formValues.links ||
-                    profile?.links || { website: "https://yourwebsite.com" },
                   avatar: avatarFile
-                    ? URL.createObjectURL(avatarFile)
+                    ? URL.createObjectURL(avatarFile?.originFileObj)
                     : formValues.avatar ||
                       profile?.avatar ||
                       `https://api.dicebear.com/5.x/open-peeps/svg?seed=${handle}`

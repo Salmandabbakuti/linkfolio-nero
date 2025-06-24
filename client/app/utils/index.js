@@ -30,8 +30,8 @@ export const supportedSocials = [
 ];
 
 const linkFolioContractABI = [
-  "function createProfile(string _name, string _handle, uint8 _category, string _bio, string _avatar, string[] _linkKeys, string[] _links, address _eoa)",
-  "function updateProfile(uint256 _tokenId, string _name, uint8 _category, string _bio, string _avatar, string[] _linkKeys, string[] _links)",
+  "function createProfile(string _name, string _handle, uint8 _category, string _bio, string _avatar, string[] _linkKeys, string[] _links, address _eoa, string _settingsHash)",
+  "function updateProfile(uint256 _tokenId, string _name, uint8 _category, string _bio, string _avatar, string[] _linkKeys, string[] _links, string _settingsHash)",
   "function deleteProfile(uint256 _tokenId)",
   "function leaveNote(string _handle, string _content) payable",
   "function createPost(uint256 _tokenId, string _content)",
@@ -83,6 +83,8 @@ export const GET_PROFILES_QUERY = gql`
       category
       bio
       avatar
+      eoa
+      tipAmount
       owner {
         id
       }
@@ -112,11 +114,14 @@ export const GET_PROFILE_QUERY = gql`
       category
       bio
       avatar
+      eoa
       owner {
         id
       }
+      tipAmount
       linkKeys
       links
+      settingsHash
       notes(
         first: $notes_first
         skip: $notes_skip
@@ -127,6 +132,7 @@ export const GET_PROFILE_QUERY = gql`
         id
         content
         author
+        tipAmount
         createdAt
       }
       posts(
