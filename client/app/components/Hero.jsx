@@ -1,5 +1,5 @@
 "use client";
-import { Typography, Button, Space, Row, Col, Carousel } from "antd";
+import { Typography, Button, Space, Row, Col, Carousel, Image } from "antd";
 import {
   RocketOutlined,
   CrownOutlined,
@@ -17,36 +17,35 @@ const { Title, Paragraph } = Typography;
 
 export default function Hero({ onGetStarted }) {
   const carouselRef = useRef(null);
-
   const showcaseItems = [
     {
       title: "Professional Profiles",
       description: "Create stunning profiles with custom themes and layouts",
-      image: "/api/placeholder/600/400", // Replace with actual screenshot
+      image: "/lfv0.4-edit-profile-sc.png",
       category: "Profiles"
     },
     {
       title: "Ready-Made Templates",
       description: "Choose from professionally designed templates",
-      image: "/api/placeholder/600/400", // Replace with actual screenshot
+      image: "/lfv0.4-appearance-settings-sc.png",
       category: "Templates"
     },
     {
       title: "Live Customization",
       description: "Real-time preview as you customize your profile",
-      image: "/api/placeholder/600/400", // Replace with actual screenshot
+      image: "/lfv0.4-edit-profile-sc.png",
       category: "Customization"
     },
     {
-      title: "Dynamic Posts",
+      title: "Posts",
       description: "Share updates and announcements with your audience",
-      image: "/api/placeholder/600/400", // Replace with actual screenshot
+      image: "/lfv0.4-posts-sc.png", // Update with actual posts screenshot
       category: "Posts"
     },
     {
       title: "Community Notes & Tips",
       description: "Receive messages and tips from your community",
-      image: "/api/placeholder/600/400", // Replace with actual screenshot
+      image: "/lfv0.4-notes-tips-sc.png",
       category: "Notes"
     }
   ];
@@ -198,11 +197,26 @@ export default function Hero({ onGetStarted }) {
                 <div key={index}>
                   <div className={styles.carouselSlide}>
                     <div className={styles.carouselSlideContent}>
+                      {/* Screenshot Image */}
+                      <div className={styles.carouselImageContainer}>
+                        <Image
+                          src={item.image}
+                          alt={item.title}
+                          style={{
+                            width: "100%",
+                            height: "400px",
+                            objectFit: "contain",
+                            borderRadius: "12px",
+                            border: "1px solid rgba(255, 255, 255, 0.1)",
+                            background: "rgba(255, 255, 255, 0.02)",
+                            cursor: "pointer"
+                          }}
+                        />
+                      </div>
                       {/* Category badge */}
                       <div className={styles.carouselCategoryBadge}>
                         {item.category}
                       </div>
-
                       {/* Content overlay */}
                       <div className={styles.carouselContentOverlay}>
                         <Title level={3} className={styles.carouselTitle}>
@@ -211,15 +225,6 @@ export default function Hero({ onGetStarted }) {
                         <Paragraph className={styles.carouselDescription}>
                           {item.description}
                         </Paragraph>
-                      </div>
-
-                      {/* Placeholder icon */}
-                      <div className={styles.carouselIcon}>
-                        {item.category === "Profiles" && "👤"}
-                        {item.category === "Templates" && "🎨"}
-                        {item.category === "Customization" && "⚙️"}
-                        {item.category === "Posts" && "📝"}
-                        {item.category === "Notes" && "💬"}
                       </div>
                     </div>
                   </div>
