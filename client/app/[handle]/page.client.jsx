@@ -93,9 +93,11 @@ export default function Profile({ params }) {
     DEFAULT_APPEARANCE_SETTINGS
   );
   const [formValues, setFormValues] = useState(initialValues);
-  const [templateCollapseActiveKey, setTemplateCollapseActiveKey] = useState([
-    "templates"
-  ]);
+  // const [templateCollapseActiveKey, setTemplateCollapseActiveKey] = useState([
+  //   "templates"
+  // ]);
+
+  const [settingsFormData] = Form.useForm();
 
   const router = useRouter();
   const { address: account } = useAppKitAccount();
@@ -603,35 +605,11 @@ export default function Profile({ params }) {
                     key: "appearance",
                     label: "Appearance",
                     children: (
-                      <Form
-                        layout="vertical"
-                        initialValues={appearanceSettings}
-                        onValuesChange={(changedValues, allValues) => {
-                          console.log(
-                            "Appearance settings changed:",
-                            allValues
-                          );
-                          const colorFields = [
-                            "accentColor",
-                            "textColor",
-                            "background"
-                          ];
-                          // Handle ColorPicker values which return objects
-                          colorFields.forEach((field) => {
-                            if (
-                              allValues[field] &&
-                              typeof allValues[field] === "object"
-                            ) {
-                              allValues[field] = allValues[field].toHexString();
-                            }
-                          });
-                          setAppearanceSettings(allValues);
-                        }}
-                      >
-                        {/* Template Selection Section with Collapse */}
+                      <>
                         <Collapse
-                          activeKey={templateCollapseActiveKey}
-                          onChange={setTemplateCollapseActiveKey}
+                          defaultActiveKey={["templates"]}
+                          // activeKey={["templates"]}
+                          // onChange={setTemplateCollapseActiveKey}
                           style={{ marginBottom: "16px" }}
                           expandIconPosition="end"
                           items={[
@@ -663,6 +641,9 @@ export default function Profile({ params }) {
                                       size="small"
                                       hoverable
                                       onClick={() => {
+                                        settingsFormData.setFieldsValue(
+                                          template.settings
+                                        );
                                         setAppearanceSettings(
                                           template.settings
                                         );
@@ -809,228 +790,272 @@ export default function Profile({ params }) {
                             }
                           ]}
                         />
-                        <Row gutter={16}>
-                          <Col xs={24} lg={12}>
-                            {/* Font Settings Row */}
-                            <Row gutter={8}>
-                              <Col span={16}>
-                                <Form.Item
-                                  label="Font Family"
-                                  name="fontFamily"
-                                >
-                                  <Select
-                                    options={[
-                                      {
-                                        label: "Inter",
-                                        value: "Inter, sans-serif"
-                                      },
-                                      {
-                                        label: "Roboto",
-                                        value: "Roboto, sans-serif"
-                                      },
-                                      {
-                                        label: "Arial",
-                                        value: "Arial, Helvetica, sans-serif"
-                                      },
-                                      {
-                                        label: "Helvetica",
-                                        value: "Helvetica, Arial, sans-serif"
-                                      },
-                                      {
-                                        label: "Times New Roman",
-                                        value: "'Times New Roman', Times, serif"
-                                      },
-                                      {
-                                        label: "Courier New",
-                                        value:
-                                          "'Courier New', Courier, monospace"
-                                      },
-                                      {
-                                        label: "Verdana",
-                                        value: "Verdana, Geneva, sans-serif"
-                                      },
-                                      {
-                                        label: "Georgia",
-                                        value: "Georgia, serif"
-                                      },
-                                      {
-                                        label: "Tahoma",
-                                        value: "Tahoma, Geneva, sans-serif"
-                                      },
-                                      {
-                                        label: "Trebuchet MS",
-                                        value:
-                                          "'Trebuchet MS', Helvetica, sans-serif"
-                                      },
-                                      {
-                                        label: "System UI",
-                                        value: "system-ui, sans-serif"
+                        <Form
+                          layout="vertical"
+                          // id={JSON.stringify(appearanceSettings)} // force re-render on settings change
+                          form={settingsFormData}
+                          initialValues={appearanceSettings}
+                          onValuesChange={(changedValues, allValues) => {
+                            console.log(
+                              "Appearance settings changed:",
+                              allValues
+                            );
+                            const colorFields = [
+                              "accentColor",
+                              "textColor",
+                              "background"
+                            ];
+                            // Handle ColorPicker values which return objects
+                            colorFields.forEach((field) => {
+                              if (
+                                allValues[field] &&
+                                typeof allValues[field] === "object"
+                              ) {
+                                allValues[field] =
+                                  allValues[field].toHexString();
+                              }
+                            });
+                            setAppearanceSettings(allValues);
+                          }}
+                        >
+                          <Row gutter={16}>
+                            <Col xs={24} lg={12}>
+                              {/* Font Settings Row */}
+                              <Row gutter={8}>
+                                <Col span={16}>
+                                  <Form.Item
+                                    label="Font Family"
+                                    name="fontFamily"
+                                  >
+                                    <Select
+                                      options={[
+                                        {
+                                          label: "Inter",
+                                          value: "Inter, sans-serif"
+                                        },
+                                        {
+                                          label: "Roboto",
+                                          value: "Roboto, sans-serif"
+                                        },
+                                        {
+                                          label: "Arial",
+                                          value: "Arial, Helvetica, sans-serif"
+                                        },
+                                        {
+                                          label: "Helvetica",
+                                          value: "Helvetica, Arial, sans-serif"
+                                        },
+                                        {
+                                          label: "Times New Roman",
+                                          value:
+                                            "'Times New Roman', Times, serif"
+                                        },
+                                        {
+                                          label: "Courier New",
+                                          value:
+                                            "'Courier New', Courier, monospace"
+                                        },
+                                        {
+                                          label: "Verdana",
+                                          value: "Verdana, Geneva, sans-serif"
+                                        },
+                                        {
+                                          label: "Georgia",
+                                          value: "Georgia, serif"
+                                        },
+                                        {
+                                          label: "Tahoma",
+                                          value: "Tahoma, Geneva, sans-serif"
+                                        },
+                                        {
+                                          label: "Trebuchet MS",
+                                          value:
+                                            "'Trebuchet MS', Helvetica, sans-serif"
+                                        },
+                                        {
+                                          label: "System UI",
+                                          value: "system-ui, sans-serif"
+                                        }
+                                      ]}
+                                    />
+                                  </Form.Item>
+                                </Col>
+                                <Col span={8}>
+                                  <Form.Item label="Font Size" name="fontSize">
+                                    <InputNumber
+                                      min={12}
+                                      max={32}
+                                      formatter={(value) => `${value}px`}
+                                      parser={(value) =>
+                                        value.replace("px", "")
                                       }
-                                    ]}
-                                  />
-                                </Form.Item>
-                              </Col>
-                              <Col span={8}>
-                                <Form.Item label="Font Size" name="fontSize">
-                                  <InputNumber
-                                    min={12}
-                                    max={32}
-                                    formatter={(value) => `${value}px`}
-                                    parser={(value) => value.replace("px", "")}
-                                    // style={{ width: "100%" }}
-                                  />
-                                </Form.Item>
-                              </Col>
-                            </Row>
-                            {/* Color Settings Row */}
-                            <Row gutter={8}>
-                              <Col span={12}>
-                                <Form.Item
-                                  label="Accent Color"
-                                  name="accentColor"
-                                >
-                                  <ColorPicker
-                                    showText
-                                    format="hex"
-                                    presets={[
-                                      {
-                                        label: "Recommended",
-                                        colors: [
-                                          "#F5222D",
-                                          "#FA8C16",
-                                          "#FADB14",
-                                          "#8BBB11",
-                                          "#52C41A",
-                                          "#13A8A8",
-                                          "#1677FF",
-                                          "#2F54EB",
-                                          "#722ED1",
-                                          "#EB2F96"
-                                        ]
-                                      }
-                                    ]}
-                                  />
-                                </Form.Item>
-                              </Col>
-                              <Col span={12}>
-                                <Form.Item label="Text Color" name="textColor">
-                                  <ColorPicker
-                                    showText
-                                    format="hex"
-                                    presets={[
-                                      {
-                                        label: "Text Colors",
-                                        colors: [
-                                          "#000000",
-                                          "#262626",
-                                          "#434343",
-                                          "#595959",
-                                          "#8C8C8C",
-                                          "#FFFFFF",
-                                          "#F5F5F5",
-                                          "#FAFAFA"
-                                        ]
-                                      }
-                                    ]}
-                                  />
-                                </Form.Item>
-                              </Col>
-                            </Row>
-                            <Form.Item label="Background" name="background">
-                              <ColorPicker
-                                showText
-                                format="hex" // Use CSS format for gradients
-                                allowClear
-                                mode={["single", "gradient"]}
-                                presets={[
-                                  {
-                                    label: "Solid Colors",
-                                    colors: [
-                                      "#FFFFFF",
-                                      "#F5F5F5",
-                                      "#E8F4FD",
-                                      "#FFF7E6",
-                                      "#F6FFED",
-                                      "#F9F0FF"
-                                    ]
-                                  }
-                                ]}
-                              />
-                            </Form.Item>
-                          </Col>
+                                      // style={{ width: "100%" }}
+                                    />
+                                  </Form.Item>
+                                </Col>
+                              </Row>
+                              {/* Color Settings Row */}
+                              <Row gutter={8}>
+                                <Col span={12}>
+                                  <Form.Item
+                                    label="Accent Color"
+                                    name="accentColor"
+                                  >
+                                    <ColorPicker
+                                      showText
+                                      format="hex"
+                                      presets={[
+                                        {
+                                          label: "Recommended",
+                                          colors: [
+                                            "#F5222D",
+                                            "#FA8C16",
+                                            "#FADB14",
+                                            "#8BBB11",
+                                            "#52C41A",
+                                            "#13A8A8",
+                                            "#1677FF",
+                                            "#2F54EB",
+                                            "#722ED1",
+                                            "#EB2F96"
+                                          ]
+                                        }
+                                      ]}
+                                    />
+                                  </Form.Item>
+                                </Col>
+                                <Col span={12}>
+                                  <Form.Item
+                                    label="Text Color"
+                                    name="textColor"
+                                  >
+                                    <ColorPicker
+                                      showText
+                                      format="hex"
+                                      presets={[
+                                        {
+                                          label: "Text Colors",
+                                          colors: [
+                                            "#000000",
+                                            "#262626",
+                                            "#434343",
+                                            "#595959",
+                                            "#8C8C8C",
+                                            "#FFFFFF",
+                                            "#F5F5F5",
+                                            "#FAFAFA"
+                                          ]
+                                        }
+                                      ]}
+                                    />
+                                  </Form.Item>
+                                </Col>
+                              </Row>
+                              <Form.Item label="Background" name="background">
+                                <ColorPicker
+                                  showText
+                                  format="hex" // Use CSS format for gradients
+                                  allowClear
+                                  mode={["single", "gradient"]}
+                                  presets={[
+                                    {
+                                      label: "Solid Colors",
+                                      colors: [
+                                        "#FFFFFF",
+                                        "#F5F5F5",
+                                        "#E8F4FD",
+                                        "#FFF7E6",
+                                        "#F6FFED",
+                                        "#F9F0FF"
+                                      ]
+                                    }
+                                  ]}
+                                />
+                              </Form.Item>
+                            </Col>
 
-                          <Col xs={24} lg={12}>
-                            <Form.Item label="Banner Image URL" name="banner">
-                              <Input placeholder="Paste image URL or leave blank" />
-                            </Form.Item>
+                            <Col xs={24} lg={12}>
+                              <Form.Item label="Banner Image URL" name="banner">
+                                <Input placeholder="Paste image URL or leave blank" />
+                              </Form.Item>
 
-                            {/* Card & Style Settings Row */}
-                            <Row gutter={8}>
-                              <Col span={12}>
-                                <Form.Item label="Card Style" name="cardStyle">
-                                  <Select
-                                    options={[
-                                      { label: "Glassmorphic", value: "glass" },
-                                      { label: "Solid", value: "solid" },
-                                      { label: "Bordered", value: "bordered" }
-                                    ]}
-                                  />
-                                </Form.Item>
-                              </Col>
-                              <Col span={12}>
-                                <Form.Item
-                                  label="Avatar Shape"
-                                  name="avatarShape"
-                                >
-                                  <Select
-                                    options={[
-                                      { label: "Circle", value: "circle" },
-                                      { label: "Rounded", value: "rounded" },
-                                      { label: "Square", value: "square" }
-                                    ]}
-                                  />
-                                </Form.Item>
-                              </Col>
-                            </Row>
+                              {/* Card & Style Settings Row */}
+                              <Row gutter={8}>
+                                <Col span={12}>
+                                  <Form.Item
+                                    label="Card Style"
+                                    name="cardStyle"
+                                  >
+                                    <Select
+                                      options={[
+                                        {
+                                          label: "Glassmorphic",
+                                          value: "glass"
+                                        },
+                                        { label: "Solid", value: "solid" },
+                                        { label: "Bordered", value: "bordered" }
+                                      ]}
+                                    />
+                                  </Form.Item>
+                                </Col>
+                                <Col span={12}>
+                                  <Form.Item
+                                    label="Avatar Shape"
+                                    name="avatarShape"
+                                  >
+                                    <Select
+                                      options={[
+                                        { label: "Circle", value: "circle" },
+                                        { label: "Rounded", value: "rounded" },
+                                        { label: "Square", value: "square" }
+                                      ]}
+                                    />
+                                  </Form.Item>
+                                </Col>
+                              </Row>
 
-                            {/* Button & Link Settings Row */}
-                            <Row gutter={8}>
-                              <Col span={12}>
-                                <Form.Item
-                                  label="Button Shape"
-                                  name="buttonShape"
-                                >
-                                  <Select
-                                    options={[
-                                      { label: "Round", value: "round" },
-                                      { label: "Pill", value: "pill" },
-                                      { label: "Square", value: "square" }
-                                    ]}
-                                  />
-                                </Form.Item>
-                              </Col>
-                              <Col span={12}>
-                                <Form.Item label="Link Style" name="linkStyle">
-                                  <Select
-                                    options={[
-                                      { label: "Bold", value: "bold" },
-                                      {
-                                        label: "Underline",
-                                        value: "underline"
-                                      },
-                                      {
-                                        label: "Button",
-                                        value: "button"
-                                      },
-                                      { label: "Normal", value: "normal" }
-                                    ]}
-                                  />
-                                </Form.Item>
-                              </Col>
-                            </Row>
-                          </Col>
-                        </Row>
-                      </Form>
+                              {/* Button & Link Settings Row */}
+                              <Row gutter={8}>
+                                <Col span={12}>
+                                  <Form.Item
+                                    label="Button Shape"
+                                    name="buttonShape"
+                                  >
+                                    <Select
+                                      options={[
+                                        { label: "Round", value: "round" },
+                                        { label: "Pill", value: "pill" },
+                                        { label: "Square", value: "square" }
+                                      ]}
+                                    />
+                                  </Form.Item>
+                                </Col>
+                                <Col span={12}>
+                                  <Form.Item
+                                    label="Link Style"
+                                    name="linkStyle"
+                                  >
+                                    <Select
+                                      options={[
+                                        { label: "Bold", value: "bold" },
+                                        {
+                                          label: "Underline",
+                                          value: "underline"
+                                        },
+                                        {
+                                          label: "Button",
+                                          value: "button"
+                                        },
+                                        { label: "Normal", value: "normal" }
+                                      ]}
+                                    />
+                                  </Form.Item>
+                                </Col>
+                              </Row>
+                            </Col>
+                          </Row>
+                        </Form>
+                      </>
                     )
                   }
                 ]}
@@ -1200,7 +1225,7 @@ export default function Profile({ params }) {
             )}
           </Card>
           <Link
-            href="/"
+            href="/#get-started"
             style={{
               textAlign: "center",
               display: "flex",

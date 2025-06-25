@@ -37,7 +37,8 @@ export default function Footer() {
 
   const quickLinks = [
     { href: "/", label: "Home" },
-    { href: "/explore", label: "Explore Profiles" },
+    { href: "/#get-started", label: "Create" },
+    { href: "/explore", label: "Explore" },
     { href: "#", label: "About" },
     { href: "#", label: "Contact" }
   ];
@@ -258,7 +259,7 @@ export default function Footer() {
                   fontWeight: "var(--font-weight-medium)"
                 }}
               >
-                v0.4.3 • All systems operational
+                v0.4.4 • All systems operational
               </Text>
             </div>
           </Col>

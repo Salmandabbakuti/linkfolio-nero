@@ -296,18 +296,19 @@ export default function ProfileCard({
       color: linkStyle === "normal" ? textColor : accentColor
     };
 
-    const bannerStyle = banner
-      ? {
-          backgroundImage: `url(${banner})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          height: "120px",
-          width: "calc(100% + 48px)",
-          margin: "-24px -24px 24px -24px",
-          borderTopLeftRadius: containerStyle.borderRadius,
-          borderTopRightRadius: containerStyle.borderRadius
-        }
-      : {};
+    const bannerImage =
+      banner || `https://picsum.photos/seed/${profile?.handle}/1200/200`;
+    const bannerStyle = {
+      backgroundImage: `url(${bannerImage})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      height: "120px",
+      width: "calc(100% + 48px)",
+      margin: "-24px -24px 24px -24px",
+      borderTopLeftRadius: containerStyle.borderRadius,
+      borderTopRightRadius: containerStyle.borderRadius
+    };
+
     return {
       container: containerStyle,
       avatar: avatarStyle,
@@ -320,6 +321,8 @@ export default function ProfileCard({
     };
   }, [appearanceSettings]);
 
+  console.log("Dynamic Styles:", dynamicStyles);
+
   return (
     <>
       {/* Custom CSS */}
@@ -329,9 +332,8 @@ export default function ProfileCard({
       <Badge.Ribbon text={profile?.category} color={dynamicStyles.accent}>
         <div style={dynamicStyles.container}>
           {/* Banner */}
-          {dynamicStyles.banner.backgroundImage && (
-            <div style={dynamicStyles.banner} />
-          )}
+          <div style={dynamicStyles.banner} />
+
           <div style={{ textAlign: "center" }}>
             <Avatar
               src={

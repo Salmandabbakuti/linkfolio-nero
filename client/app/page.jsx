@@ -25,7 +25,6 @@ import {
   DollarOutlined,
   NotificationOutlined
 } from "@ant-design/icons";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { linkFolioContract } from "@/app/utils";
 import Hero from "./components/Hero";
@@ -369,9 +368,9 @@ export default function Home() {
             ))}
           </Row>
         </div>
-      </section>{" "}
+      </section>
       {/* Get Started Section */}
-      <section className={styles.getStartedSection}>
+      <section className={styles.getStartedSection} id="get-started">
         <div className="container">
           <div className={styles.getStartedContainer}>
             <Title level={2} className={styles.getStartedTitle}>

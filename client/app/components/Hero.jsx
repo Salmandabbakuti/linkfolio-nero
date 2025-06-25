@@ -1,23 +1,21 @@
 "use client";
-import { Typography, Button, Space, Row, Col, Card, Carousel } from "antd";
+import { Typography, Button, Space, Row, Col, Carousel } from "antd";
 import {
   RocketOutlined,
   CrownOutlined,
   StarFilled,
   ArrowRightOutlined,
-  PlayCircleOutlined,
   CompassOutlined,
   LeftOutlined,
   RightOutlined
 } from "@ant-design/icons";
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import Link from "next/link";
 import styles from "./Hero.module.css";
 
 const { Title, Paragraph } = Typography;
 
 export default function Hero({ onGetStarted }) {
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const carouselRef = useRef(null);
 
   const showcaseItems = [
