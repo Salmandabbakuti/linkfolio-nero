@@ -637,8 +637,9 @@ export default function Profile({ params }) {
                       >
                         {/* Template Selection Section with Collapse */}
                         <Collapse
-                          defaultActiveKey="templates"
+                          // defaultActiveKey={["templates"]}
                           style={{ marginBottom: "24px" }}
+                          expandIconPosition="right"
                           items={[
                             {
                               key: "templates",
@@ -1022,6 +1023,10 @@ export default function Profile({ params }) {
                                       {
                                         label: "Underline",
                                         value: "underline"
+                                      },
+                                      {
+                                        label: "Button",
+                                        value: "button"
                                       },
                                       { label: "Normal", value: "normal" }
                                     ]}

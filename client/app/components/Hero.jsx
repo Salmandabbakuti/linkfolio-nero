@@ -1,14 +1,16 @@
 "use client";
-import { Typography, Button, Space, Row, Col, Card } from "antd";
+import { Typography, Button, Space, Row, Col, Card, Carousel } from "antd";
 import {
   RocketOutlined,
   CrownOutlined,
   StarFilled,
   ArrowRightOutlined,
   PlayCircleOutlined,
-  CompassOutlined
+  CompassOutlined,
+  LeftOutlined,
+  RightOutlined
 } from "@ant-design/icons";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import styles from "./Hero.module.css";
 
@@ -16,6 +18,40 @@ const { Title, Paragraph } = Typography;
 
 export default function Hero({ onGetStarted }) {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const carouselRef = useRef(null);
+
+  const showcaseItems = [
+    {
+      title: "Professional Profiles",
+      description: "Create stunning profiles with custom themes and layouts",
+      image: "/api/placeholder/600/400", // Replace with actual screenshot
+      category: "Profiles"
+    },
+    {
+      title: "Ready-Made Templates",
+      description: "Choose from professionally designed templates",
+      image: "/api/placeholder/600/400", // Replace with actual screenshot
+      category: "Templates"
+    },
+    {
+      title: "Live Customization",
+      description: "Real-time preview as you customize your profile",
+      image: "/api/placeholder/600/400", // Replace with actual screenshot
+      category: "Customization"
+    },
+    {
+      title: "Dynamic Posts",
+      description: "Share updates and announcements with your audience",
+      image: "/api/placeholder/600/400", // Replace with actual screenshot
+      category: "Posts"
+    },
+    {
+      title: "Community Notes & Tips",
+      description: "Receive messages and tips from your community",
+      image: "/api/placeholder/600/400", // Replace with actual screenshot
+      category: "Notes"
+    }
+  ];
 
   const stats = [
     { number: "10K+", label: "Profiles Created" },
@@ -102,32 +138,6 @@ export default function Hero({ onGetStarted }) {
               Create Your LinkFolio
               <ArrowRightOutlined />
             </Button>
-
-            <Button
-              size="large"
-              icon={<PlayCircleOutlined />}
-              style={{
-                height: "52px",
-                padding: "0 24px",
-                fontSize: "16px",
-                fontWeight: "var(--font-weight-medium)",
-                borderRadius: "26px",
-                background: "rgba(255, 255, 255, 0.1)",
-                backdropFilter: "blur(10px)",
-                border: "1px solid rgba(255, 255, 255, 0.2)",
-                color: "var(--text-primary)"
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.background = "rgba(255, 255, 255, 0.2)";
-                e.target.style.transform = "translateY(-1px)";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.background = "rgba(255, 255, 255, 0.1)";
-                e.target.style.transform = "translateY(0)";
-              }}
-            >
-              Watch Demo
-            </Button>
             <Link href="/explore">
               <Button
                 size="large"
@@ -159,61 +169,63 @@ export default function Hero({ onGetStarted }) {
             </Link>
           </Space>
 
-          {/* Demo video placeholder */}
-          <div
-            style={{
-              position: "relative",
-              maxWidth: "700px",
-              margin: "0 auto 60px",
-              borderRadius: "20px",
-              overflow: "hidden",
-              boxShadow: "var(--shadow-2xl)",
-              background: "var(--surface)",
-              border: "1px solid var(--border-color)"
-            }}
-          >
-            <div
-              style={{
-                aspectRatio: "16/9",
-                background:
-                  "linear-gradient(135deg, var(--surface-secondary) 0%, var(--surface) 100%)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                transition: "all var(--transition-normal)"
-              }}
-              onClick={() => setIsVideoPlaying(!isVideoPlaying)}
-              onMouseEnter={(e) => {
-                e.target.style.transform = "scale(1.02)";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = "scale(1)";
-              }}
-            >
-              {!isVideoPlaying ? (
-                <div style={{ textAlign: "center" }}>
-                  <PlayCircleOutlined
-                    style={{
-                      fontSize: "64px",
-                      color: "var(--primary-color)",
-                      marginBottom: "16px",
-                      display: "block"
-                    }}
-                  />
-                  <Title level={4} style={{ margin: 0 }}>
-                    See LinkFolio in Action
-                  </Title>
-                  <Paragraph style={{ margin: "8px 0 0", opacity: 0.7 }}>
-                    3 minute demo
-                  </Paragraph>
-                </div>
-              ) : (
-                <Title level={4} style={{ margin: 0 }}>
-                  🎬 Demo Video Playing...
-                </Title>
-              )}
+          {/* Feature Showcase Carousel */}
+          <div className={styles.carouselContainer}>
+            {/* Carousel Navigation */}
+            <div className={styles.carouselNavigation}>
+              <Button
+                type="text"
+                icon={<LeftOutlined />}
+                onClick={() => carouselRef.current?.prev()}
+                className={styles.carouselNavButton}
+              />
+              <Button
+                type="text"
+                icon={<RightOutlined />}
+                onClick={() => carouselRef.current?.next()}
+                className={styles.carouselNavButton}
+              />
             </div>
+
+            <Carousel
+              ref={carouselRef}
+              autoplay
+              autoplaySpeed={4000}
+              dots={{ className: "custom-carousel-dots" }}
+              style={{ borderRadius: "20px" }}
+            >
+              {showcaseItems.map((item, index) => (
+                <div key={index}>
+                  <div className={styles.carouselSlide}>
+                    <div className={styles.carouselSlideContent}>
+                      {/* Category badge */}
+                      <div className={styles.carouselCategoryBadge}>
+                        {item.category}
+                      </div>
+
+                      {/* Content overlay */}
+                      <div className={styles.carouselContentOverlay}>
+                        <Title level={3} className={styles.carouselTitle}>
+                          {item.title}
+                        </Title>
+                        <Paragraph className={styles.carouselDescription}>
+                          {item.description}
+                        </Paragraph>
+                      </div>
+
+                      {/* Placeholder icon */}
+                      <div className={styles.carouselIcon}>
+                        {item.category === "Profiles" && "👤"}
+                        {item.category === "Templates" && "🎨"}
+                        {item.category === "Customization" && "⚙️"}
+                        {item.category === "Posts" && "📝"}
+                        {item.category === "Notes" && "💬"}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </Carousel>
           </div>
         </div>
 

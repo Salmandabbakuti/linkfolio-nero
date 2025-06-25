@@ -180,7 +180,10 @@ export default function ProfileCard({
         return {
           key,
           children: (
-            <a
+            <Button
+              type={
+                appearanceSettings?.linkStyle === "button" ? "default" : "link"
+              }
               href={link}
               target="_blank"
               rel="noopener noreferrer"
@@ -192,13 +195,19 @@ export default function ProfileCard({
                   appearanceSettings.linkStyle === "underline"
                     ? "underline"
                     : "none",
+                borderRadius:
+                  appearanceSettings.buttonShape === "round"
+                    ? "6px"
+                    : appearanceSettings.buttonShape === "pill"
+                    ? "50px"
+                    : "0px",
                 display: "flex",
                 alignItems: "center",
                 gap: "8px"
               }}
             >
               {social?.icon || <LinkOutlined />} {social?.name || "-"}
-            </a>
+            </Button>
           )
         };
       }
