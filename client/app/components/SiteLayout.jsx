@@ -1,68 +1,77 @@
 "use client";
-import { Divider, Layout } from "antd";
+import { Layout } from "antd";
 import Link from "next/link";
+import Footer from "./Footer";
 import "antd/dist/reset.css";
 
-const { Header, Footer, Content } = Layout;
+const { Header, Content } = Layout;
 
 export default function SiteLayout({ children }) {
   return (
     <Layout
       style={{
-        minHeight: "100vh"
+        minHeight: "100vh",
+        background: "transparent"
       }}
     >
       <Header
         style={{
           position: "sticky",
-          top: 5,
-          zIndex: 99,
-          padding: 0,
+          top: 8,
+          zIndex: 1000,
+          padding: "0 24px",
           color: "#fff",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          borderRadius: "15px",
-          marginTop: "10px"
+          borderRadius: "16px",
+          margin: "16px 16px 0",
+          background: "rgba(255, 255, 255, 0.1)",
+          backdropFilter: "blur(20px)",
+          border: "1px solid rgba(255, 255, 255, 0.2)",
+          boxShadow: "var(--shadow-lg)",
+          transition: "all var(--transition-normal)"
         }}
       >
         <Link href="/">
           <h3
             style={{
               margin: 0,
-              padding: "0 6px",
-              fontWeight: "bold"
+              fontWeight: "var(--font-weight-bold)",
+              background: "var(--text-gradient)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              fontSize: "1.5rem",
+              letterSpacing: "-0.02em"
             }}
           >
             🔗 LinkFolio
           </h3>
         </Link>
-        <appkit-button />
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "16px"
+          }}
+        >
+          <appkit-button />
+        </div>
       </Header>
 
       <Content
         style={{
-          margin: "12px 8px",
-          padding: 12,
-          minHeight: "100%",
-          color: "black",
-          maxHeight: "100%"
+          margin: "24px 16px 0",
+          padding: 0,
+          minHeight: "calc(100vh - 200px)",
+          position: "relative"
         }}
       >
-        {children}
+        <div className="container">{children}</div>
       </Content>
-      <Footer style={{ textAlign: "center" }}>
-        <Divider />
-        <a
-          href="https://github.com/Salmandabbakuti"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: "inherit", textDecoration: "none" }}
-        >
-          ©{new Date().getFullYear()} LinkFolio. Powered by NERO Chain & Reown
-        </a>
-        <p style={{ fontSize: "12px" }}>v0.3.0</p>
-      </Footer>
+
+      <Footer />
     </Layout>
   );
 }
