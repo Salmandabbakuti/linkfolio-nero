@@ -421,6 +421,7 @@ export default function ProfileCard({
           </div>
           <Tabs
             defaultActiveKey="links"
+            animated
             // activeKey={activeTab}
             onChange={(key) => {
               // const urlSearchParams = new URLSearchParams(window.location.search);
@@ -428,20 +429,31 @@ export default function ProfileCard({
               // router.push(`${pathname}?${urlSearchParams.toString()}`);
               // router.push(`${pathname}?tab=${key}`);
             }}
-            style={{
-              color: dynamicStyles.container.color
-            }}
             items={[
               {
                 key: "links",
-                label: "Links",
+                label: (
+                  <Typography.Text
+                    strong
+                    style={{ color: dynamicStyles.accent }}
+                  >
+                    Links
+                  </Typography.Text>
+                ),
                 children: (
                   <Descriptions column={2} colon={false} items={items} />
                 )
               },
               {
                 key: "posts",
-                label: "Posts",
+                label: (
+                  <Typography.Text
+                    strong
+                    style={{ color: dynamicStyles?.accent }}
+                  >
+                    Posts
+                  </Typography.Text>
+                ),
                 children: (
                   <>
                     <Paragraph
@@ -488,7 +500,7 @@ export default function ProfileCard({
                     <Divider />
                     <Typography.Text
                       strong
-                      style={{ color: dynamicStyles.accent }}
+                      style={{ color: dynamicStyles?.accent }}
                     >
                       Posts ({profile?.posts?.length || 0})
                     </Typography.Text>
@@ -545,13 +557,20 @@ export default function ProfileCard({
               },
               {
                 key: "notes",
-                label: "Notes",
+                label: (
+                  <Typography.Text
+                    strong
+                    style={{ color: dynamicStyles?.accent }}
+                  >
+                    Notes
+                  </Typography.Text>
+                ),
                 children: (
                   <>
                     <Paragraph
                       type="secondary"
                       style={{
-                        color: dynamicStyles.container.color,
+                        color: dynamicStyles?.container?.color,
                         opacity: 0.7
                       }}
                     >
@@ -571,8 +590,8 @@ export default function ProfileCard({
                           dynamicStyles.cardStyle === "glass"
                             ? "rgba(255,255,255,0.1)"
                             : undefined,
-                        borderColor: dynamicStyles.accent,
-                        color: dynamicStyles.container.color
+                        borderColor: dynamicStyles?.accent,
+                        color: dynamicStyles?.container?.color
                       }}
                     />
                     <Space wrap style={{ marginBottom: "0.5em" }}>
@@ -580,30 +599,41 @@ export default function ProfileCard({
                         <Button
                           key={tip.label}
                           size="small"
-                          type={tipAmount === tip.value ? "primary" : "default"}
+                          variant="solid"
                           onClick={() => setTipAmount(tip.value)}
                           style={{
                             minWidth: 60,
                             ...dynamicStyles.button,
+                            color: dynamicStyles?.container?.color,
                             backgroundColor:
                               tipAmount === tip.value
-                                ? dynamicStyles.accent
+                                ? dynamicStyles?.accent
                                 : undefined
                           }}
                         >
                           {tip.label}
                         </Button>
                       ))}
-                      <InputNumber
+                      <Input
+                        allowClear
+                        type="number"
                         size="small"
                         placeholder="Custom"
                         value={tipAmount}
-                        onChange={(value) => setTipAmount(value)}
+                        onChange={(e) => setTipAmount(e.target.value)}
                         min={0}
                         step={0.5}
                         precision={2}
-                        style={{ maxWidth: 170, verticalAlign: "middle" }}
-                        addonAfter="NERO"
+                        style={{
+                          maxWidth: 170,
+                          verticalAlign: "middle",
+                          backgroundColor:
+                            dynamicStyles?.cardStyle === "glass"
+                              ? "rgba(255,255,255,0.1)"
+                              : undefined,
+                          borderColor: dynamicStyles?.accent,
+                          color: dynamicStyles?.container?.color
+                        }}
                       />
                     </Space>
                     <Typography.Text
@@ -611,7 +641,8 @@ export default function ProfileCard({
                       style={{
                         fontSize: "12px",
                         display: "block",
-                        marginBottom: "16px"
+                        marginBottom: "16px",
+                        color: dynamicStyles?.container?.color
                       }}
                     >
                       💡 Tip will be sent directly to the profile owner
