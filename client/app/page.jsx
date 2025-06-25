@@ -29,6 +29,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { linkFolioContract } from "@/app/utils";
 import Hero from "./components/Hero";
+import styles from "./page.module.css";
 
 const { Title, Paragraph } = Typography;
 
@@ -198,82 +199,32 @@ export default function Home() {
       handleInput.focus();
     }
   };
-
   return (
-    <div
-      style={{
-        background: "transparent",
-        minHeight: "100vh"
-      }}
-    >
+    <div className={styles.mainContainer}>
       {/* Hero Section */}
       <Hero onGetStarted={handleGetStarted} />
+      
       {/* How It Works Section */}
-      <section
-        style={{
-          padding: "80px 0",
-          background: "rgba(255, 255, 255, 0.02)",
-          backdropFilter: "blur(10px)",
-          position: "relative"
-        }}
-      >
+      <section className={styles.howItWorksSection}>
         <div className="container">
-          <div style={{ textAlign: "center", marginBottom: "60px" }}>
-            <Title
-              level={2}
-              style={{
-                background: "var(--text-gradient)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                marginBottom: "16px",
-                fontSize: "clamp(1.8rem, 4vw, 2.5rem)"
-              }}
-            >
+          <div className={styles.sectionHeader}>
+            <Title level={2} className={styles.sectionTitle}>
               How LinkFolio Works
             </Title>
-            <Paragraph
-              style={{
-                fontSize: "1.1rem",
-                color: "var(--text-secondary)",
-                maxWidth: "600px",
-                margin: "0 auto"
-              }}
-            >
+            <Paragraph className={styles.sectionSubtitle}>
               Create your decentralized profile in minutes with our simple,
               intuitive process
             </Paragraph>
-          </div>{" "}
+          </div>
+          
           <Steps
             direction="vertical"
             size="default"
             current={-1}
-            style={{
-              maxWidth: "800px",
-              margin: "0 auto",
-              "--ant-color-text": "var(--text-primary)",
-              "--ant-color-text-secondary": "var(--text-secondary)",
-              "--ant-color-text-description": "var(--text-secondary)"
-            }}
+            className={styles.stepsContainer}
             items={howItWorksSteps.map((step, index) => ({
-              title: (
-                <span
-                  style={{
-                    color: "var(--text-primary)",
-                    fontSize: "18px",
-                    fontWeight: "var(--font-weight-semibold)"
-                  }}
-                >
-                  {step.title}
-                </span>
-              ),
-              description: (
-                <span
-                  style={{ color: "var(--text-secondary)", fontSize: "14px" }}
-                >
-                  {step.description}
-                </span>
-              ),
+              title: <span className={styles.stepTitle}>{step.title}</span>,
+              description: <span className={styles.stepDescription}>{step.description}</span>,
               icon: step.icon,
               style: {
                 paddingBottom: index === howItWorksSteps.length - 1 ? 0 : "40px"
@@ -281,89 +232,32 @@ export default function Home() {
             }))}
           />
         </div>
-      </section>
-      {/* Profile Customization Showcase Section */}
-      <section
-        style={{
-          padding: "80px 0",
-          background:
-            "linear-gradient(135deg, rgba(102, 126, 234, 0.03) 0%, rgba(236, 72, 153, 0.03) 100%)",
-          position: "relative"
-        }}
-      >
+      </section>      {/* Profile Customization Showcase Section */}
+      <section className={styles.customizationSection}>
         <div className="container">
-          {" "}
-          <div style={{ textAlign: "center", marginBottom: "60px" }}>
-            <Title
-              level={2}
-              style={{
-                background: "var(--text-gradient)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                marginBottom: "16px",
-                fontSize: "clamp(1.8rem, 4vw, 2.5rem)"
-              }}
-            >
+          <div className={styles.sectionHeader}>
+            <Title level={2} className={styles.sectionTitle}>
               🎨 Customize Your Style
             </Title>
-            <Paragraph
-              style={{
-                fontSize: "1.1rem",
-                color: "var(--text-secondary)",
-                maxWidth: "600px",
-                margin: "0 auto"
-              }}
-            >
-              Start with a template or build from scratch - make it uniquely
-              yours
+            <Paragraph className={styles.sectionSubtitle}>
+              Start with a template or build from scratch - make it uniquely yours
             </Paragraph>
-          </div>{" "}
+          </div>
+          
           <Row gutter={[32, 32]} justify="center">
-            {/* Combined Templates & Customization Card */}
             <Col xs={24} lg={16}>
-              <div
-                style={{
-                  textAlign: "center",
-                  padding: "40px 32px",
-                  background: "rgba(255, 255, 255, 0.05)",
-                  borderRadius: "16px",
-                  border: "1px solid rgba(255, 255, 255, 0.1)",
-                  height: "100%"
-                }}
-              >
-                <div style={{ fontSize: "48px", marginBottom: "20px" }}>🎨</div>
-                <Title
-                  level={3}
-                  style={{
-                    color: "var(--text-primary)",
-                    marginBottom: "16px"
-                  }}
-                >
+              <Card className={styles.customizationCard} bodyStyle={{ padding: 0 }}>
+                <div className={styles.customizationIcon}>🎨</div>
+                <Title level={3} className={styles.customizationTitle}>
                   Templates & Customization
                 </Title>
-                <Paragraph
-                  style={{
-                    color: "var(--text-secondary)",
-                    marginBottom: "32px",
-                    maxWidth: "500px",
-                    margin: "0 auto 32px"
-                  }}
-                >
+                <Paragraph className={styles.customizationDescription}>
                   Start with professional templates or build from scratch with
                   advanced customization tools
                 </Paragraph>
+                
                 {/* Template Preview Cards */}
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-                    gap: "16px",
-                    marginBottom: "32px",
-                    maxWidth: "600px",
-                    margin: "0 auto 32px"
-                  }}
-                >
+                <div className={styles.templateGrid}>
                   {[
                     { name: "Modern Glass", bg: "#E3F2FD", accent: "#1565C0" },
                     { name: "Retro Vibes", bg: "#FCE4EC", accent: "#AD1457" },
@@ -372,183 +266,63 @@ export default function Home() {
                   ].map((template, index) => (
                     <div
                       key={index}
-                      style={{
-                        height: "100px",
-                        background: template.bg,
-                        borderRadius: "12px",
-                        border: "2px solid rgba(255,255,255,0.1)",
-                        position: "relative",
-                        cursor: "pointer",
-                        transition: "all var(--transition-normal)",
-                        overflow: "hidden"
-                      }}
-                      onMouseEnter={(e) => {
-                        e.target.style.transform = "translateY(-4px)";
-                        e.target.style.boxShadow = "var(--shadow-lg)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.transform = "translateY(0)";
-                        e.target.style.boxShadow = "none";
-                      }}
+                      className={styles.templateCard}
+                      style={{ background: template.bg }}
                     >
-                      {/* Template preview elements */}
-                      <div
-                        style={{
-                          position: "absolute",
-                          top: "8px",
-                          left: "8px",
-                          width: "16px",
-                          height: "16px",
-                          borderRadius: "50%",
-                          background: template.accent,
-                          opacity: 0.8
-                        }}
+                      <div 
+                        className={styles.templateAvatar}
+                        style={{ background: template.accent }}
                       />
-                      <div
-                        style={{
-                          position: "absolute",
-                          top: "30px",
-                          left: "8px",
-                          right: "8px",
-                          height: "3px",
-                          background: template.accent,
-                          borderRadius: "2px",
-                          opacity: 0.6
-                        }}
+                      <div 
+                        className={styles.templateLine}
+                        style={{ background: template.accent }}
                       />
-                      <div
-                        style={{
-                          position: "absolute",
-                          top: "38px",
-                          left: "8px",
-                          width: "60%",
-                          height: "2px",
-                          background: template.accent,
-                          borderRadius: "1px",
-                          opacity: 0.4
-                        }}
+                      <div 
+                        className={styles.templateSubline}
+                        style={{ background: template.accent }}
                       />
-
-                      <div
-                        style={{
-                          position: "absolute",
-                          bottom: "6px",
-                          left: "8px",
-                          fontSize: "10px",
-                          fontWeight: "bold",
-                          color: template.accent
-                        }}
+                      <div 
+                        className={styles.templateName}
+                        style={{ color: template.accent }}
                       >
                         {template.name}
                       </div>
                     </div>
                   ))}
                 </div>
+
                 {/* Customization Features */}
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "12px",
-                    justifyContent: "center",
-                    flexWrap: "wrap",
-                    marginBottom: "24px"
-                  }}
-                >
+                <div className={styles.featuresContainer}>
                   {[
                     { name: "Colors", icon: "🎨" },
                     { name: "Fonts", icon: "📝" },
                     { name: "Layouts", icon: "🎯" },
                     { name: "Shapes", icon: "🔘" }
                   ].map((feature, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
-                        padding: "8px 16px",
-                        background: "rgba(255, 255, 255, 0.1)",
-                        borderRadius: "20px",
-                        border: "1px solid rgba(255, 255, 255, 0.2)",
-                        transition: "all var(--transition-normal)",
-                        cursor: "pointer"
-                      }}
-                      onMouseEnter={(e) => {
-                        e.target.style.background = "rgba(255, 255, 255, 0.15)";
-                        e.target.style.transform = "translateY(-1px)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.background = "rgba(255, 255, 255, 0.1)";
-                        e.target.style.transform = "translateY(0)";
-                      }}
-                    >
-                      <span style={{ fontSize: "14px" }}>{feature.icon}</span>
-                      <span
-                        style={{
-                          fontSize: "12px",
-                          fontWeight: "var(--font-weight-medium)",
-                          color: "var(--text-primary)"
-                        }}
-                      >
-                        {feature.name}
-                      </span>
+                    <div key={index} className={styles.featurePill}>
+                      <span className={styles.featureIcon}>{feature.icon}</span>
+                      <span className={styles.featureText}>{feature.name}</span>
                     </div>
                   ))}
                 </div>
+
                 {/* Real-time Preview Badge */}
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    padding: "8px 16px",
-                    background:
-                      "linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%)",
-                    borderRadius: "20px",
-                    border: "1px solid rgba(102, 126, 234, 0.3)"
-                  }}
-                >
-                  <span style={{ fontSize: "14px" }}>🔥</span>
-                  <span
-                    style={{
-                      fontSize: "12px",
-                      fontWeight: "var(--font-weight-medium)",
-                      color: "var(--text-primary)"
-                    }}
-                  >
-                    Real-time preview
-                  </span>
-                </div>{" "}
-              </div>
+                <div className={styles.previewBadge}>
+                  <span className={styles.previewIcon}>🔥</span>
+                  <span className={styles.previewText}>Real-time preview</span>
+                </div>
+              </Card>
             </Col>
           </Row>
         </div>
-      </section>
-      {/* Features Section */}
-      <section style={{ padding: "80px 0" }}>
+      </section>      {/* Features Section */}
+      <section className={styles.featuresSection}>
         <div className="container">
-          <div style={{ textAlign: "center", marginBottom: "60px" }}>
-            <Title
-              level={2}
-              style={{
-                background: "var(--text-gradient)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                marginBottom: "16px",
-                fontSize: "clamp(1.8rem, 4vw, 2.5rem)"
-              }}
-            >
+          <div className={styles.sectionHeader}>
+            <Title level={2} className={styles.sectionTitle}>
               Why Choose LinkFolio?
             </Title>
-            <Paragraph
-              style={{
-                fontSize: "1.1rem",
-                color: "var(--text-secondary)",
-                maxWidth: "700px",
-                margin: "0 auto"
-              }}
-            >
+            <Paragraph className={styles.sectionSubtitle}>
               Built for the future of digital identity with cutting-edge
               blockchain technology
             </Paragraph>
@@ -558,58 +332,25 @@ export default function Home() {
             {features.map((feature, index) => (
               <Col key={index} xs={24} md={12} lg={8}>
                 <Card
-                  style={{
-                    height: "100%",
-                    background: feature.highlight
-                      ? "linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%)"
-                      : "var(--surface)",
-                    border: feature.highlight
-                      ? "2px solid rgba(102, 126, 234, 0.2)"
-                      : "1px solid var(--border-color)",
-                    borderRadius: "16px",
-                    position: "relative",
-                    overflow: "hidden"
-                  }}
+                  className={`${styles.featureCard} ${
+                    feature.highlight ? styles.featureCardHighlight : styles.featureCardNormal
+                  }`}
                   styles={{ body: { padding: "32px 24px" } }}
                   hoverable
                 >
                   {feature.highlight && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "16px",
-                        right: "16px",
-                        background: "var(--secondary-color)",
-                        color: "white",
-                        padding: "4px 8px",
-                        borderRadius: "12px",
-                        fontSize: "10px",
-                        fontWeight: "bold"
-                      }}
-                    >
+                    <div className={styles.popularBadge}>
                       POPULAR
                     </div>
                   )}
 
-                  <div style={{ marginBottom: "20px" }}>{feature.icon}</div>
+                  <div className={styles.featureIconContainer}>{feature.icon}</div>
 
-                  <Title
-                    level={4}
-                    style={{
-                      marginBottom: "12px",
-                      color: "var(--text-primary)"
-                    }}
-                  >
+                  <Title level={4} className={styles.featureTitle}>
                     {feature.title}
                   </Title>
 
-                  <Paragraph
-                    style={{
-                      color: "var(--text-secondary)",
-                      lineHeight: "1.6",
-                      margin: 0
-                    }}
-                  >
+                  <Paragraph className={styles.featureDescription}>
                     {feature.description}
                   </Paragraph>
                 </Card>
@@ -617,58 +358,26 @@ export default function Home() {
             ))}
           </Row>
         </div>
-      </section>
-      {/* Get Started Section */}
-      <section
-        style={{
-          padding: "80px 0",
-          background:
-            "linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%)",
-          backdropFilter: "blur(10px)"
-        }}
-      >
+      </section>      {/* Get Started Section */}
+      <section className={styles.getStartedSection}>
         <div className="container">
-          <div
-            style={{ textAlign: "center", maxWidth: "600px", margin: "0 auto" }}
-          >
-            <Title
-              level={2}
-              style={{
-                background: "var(--text-gradient)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                marginBottom: "16px"
-              }}
-            >
+          <div className={styles.getStartedContainer}>
+            <Title level={2} className={styles.getStartedTitle}>
               Ready to Get Started?
             </Title>
-            <Paragraph
-              style={{
-                fontSize: "1.1rem",
-                color: "var(--text-secondary)",
-                marginBottom: "40px"
-              }}
-            >
+            <Paragraph className={styles.getStartedSubtitle}>
               Enter your desired handle to check availability and create your
               LinkFolio
             </Paragraph>
 
-            <Space.Compact
-              size="large"
-              style={{ width: "100%", maxWidth: "400px" }}
-            >
+            <Space.Compact size="large" className={styles.handleInputGroup}>
               <Input
                 id="handle-input"
                 placeholder="Enter your handle (e.g., john)"
                 value={handle}
                 onChange={(e) => setHandle(e.target.value.toLowerCase())}
                 onPressEnter={handleClaim}
-                style={{
-                  height: "52px",
-                  fontSize: "16px",
-                  borderRadius: "26px 0 0 26px"
-                }}
+                className={styles.handleInput}
                 maxLength={20}
               />
               <Button
@@ -677,31 +386,20 @@ export default function Home() {
                 loading={loading}
                 disabled={!handle.trim()}
                 icon={<RocketOutlined />}
-                style={{
-                  height: "52px",
-                  padding: "0 24px",
-                  fontSize: "16px",
-                  borderRadius: "0 26px 26px 0"
-                }}
+                className={styles.getStartedButton}
               >
                 Get Started
               </Button>
             </Space.Compact>
 
-            <div style={{ marginTop: "16px" }}>
-              <Paragraph
-                style={{
-                  fontSize: "14px",
-                  color: "var(--text-muted)",
-                  margin: 0
-                }}
-              >
+            <div className={styles.tipContainer}>
+              <Paragraph className={styles.tipText}>
                 💡 Tip: Choose a memorable handle that represents your brand
               </Paragraph>
             </div>
           </div>
         </div>
-      </section>{" "}
+      </section>
     </div>
   );
 }

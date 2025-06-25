@@ -637,181 +637,178 @@ export default function Profile({ params }) {
                       >
                         {/* Template Selection Section with Collapse */}
                         <Collapse
+                          defaultActiveKey="templates"
                           style={{ marginBottom: "24px" }}
                           items={[
                             {
                               key: "templates",
                               label: (
-                                <Typography.Text strong>
-                                  🎨 Quick Templates
-                                </Typography.Text>
-                              ),
-                              children: (
-                                <div>
-                                  <Typography.Paragraph
-                                    type="secondary"
-                                    style={{ marginBottom: "16px" }}
-                                  >
+                                <Space direction="vertical">
+                                  <Typography.Text strong>
+                                    🎨 Quick Templates
+                                  </Typography.Text>
+                                  <Typography.Text type="secondary">
                                     Choose from our curated templates or
                                     customize your own style below.
-                                  </Typography.Paragraph>
-                                  <div
-                                    style={{
-                                      display: "grid",
-                                      gridTemplateColumns:
-                                        "repeat(auto-fit, minmax(200px, 1fr))",
-                                      gap: "12px"
-                                    }}
-                                  >
-                                    {profileTemplates.map((template) => (
-                                      <Card
-                                        key={template.id}
-                                        size="small"
-                                        hoverable
-                                        onClick={() => {
-                                          setAppearanceSettings(
-                                            template.settings
-                                          );
-                                          message.success(
-                                            `Applied ${template.name} template!`
-                                          );
-                                        }}
+                                  </Typography.Text>
+                                </Space>
+                              ),
+                              children: (
+                                <div
+                                  style={{
+                                    display: "grid",
+                                    gridTemplateColumns:
+                                      "repeat(auto-fit, minmax(200px, 1fr))",
+                                    gap: "12px"
+                                  }}
+                                >
+                                  {profileTemplates.map((template) => (
+                                    <Card
+                                      key={template.id}
+                                      size="small"
+                                      hoverable
+                                      onClick={() => {
+                                        setAppearanceSettings(
+                                          template.settings
+                                        );
+                                        message.success(
+                                          `Applied ${template.name} template!`
+                                        );
+                                      }}
+                                      style={{
+                                        cursor: "pointer",
+                                        border:
+                                          appearanceSettings.fontFamily ===
+                                            template.settings.fontFamily &&
+                                          appearanceSettings.accentColor ===
+                                            template.settings.accentColor
+                                            ? "2px solid #1677ff"
+                                            : "1px solid #d9d9d9",
+                                        transition: "all 0.2s ease"
+                                      }}
+                                      styles={{
+                                        body: { padding: "8px" }
+                                      }}
+                                    >
+                                      <div
                                         style={{
-                                          cursor: "pointer",
-                                          border:
-                                            appearanceSettings.fontFamily ===
-                                              template.settings.fontFamily &&
-                                            appearanceSettings.accentColor ===
-                                              template.settings.accentColor
-                                              ? "2px solid #1677ff"
-                                              : "1px solid #d9d9d9",
-                                          transition: "all 0.2s ease"
-                                        }}
-                                        styles={{
-                                          body: { padding: "8px" }
+                                          height: "60px",
+                                          backgroundColor: "#f0f0f0", // Fallback color
+                                          background:
+                                            template.preview.background,
+                                          borderRadius: "6px",
+                                          marginBottom: "8px",
+                                          position: "relative",
+                                          overflow: "hidden",
+                                          display: "flex",
+                                          alignItems: "center",
+                                          justifyContent: "center",
+                                          paddingLeft: "8px"
                                         }}
                                       >
+                                        {/* Text Color and Style Indicator */}
                                         <div
                                           style={{
-                                            height: "60px",
-                                            backgroundColor: "#f0f0f0", // Fallback color
-                                            background:
-                                              template.preview.background,
-                                            borderRadius: "6px",
-                                            marginBottom: "8px",
-                                            position: "relative",
-                                            overflow: "hidden",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                            paddingLeft: "8px"
+                                            fontSize: `${Math.max(
+                                              14,
+                                              template.settings.fontSize - 4
+                                            )}px`,
+                                            color: template.settings.textColor,
+                                            fontFamily:
+                                              template.settings.fontFamily,
+                                            fontWeight:
+                                              template.settings.linkStyle ===
+                                              "bold"
+                                                ? "bold"
+                                                : "normal",
+                                            textDecoration:
+                                              template.settings.linkStyle ===
+                                              "underline"
+                                                ? "underline"
+                                                : "none",
+                                            textShadow:
+                                              template.settings.textColor ===
+                                                "#FFFFFF" ||
+                                              template.settings.textColor ===
+                                                "#F5F5F5"
+                                                ? "0 1px 2px rgba(0,0,0,0.5)"
+                                                : "none",
+                                            letterSpacing: "0.5px"
                                           }}
                                         >
-                                          {/* Text Color and Style Indicator */}
-                                          <div
-                                            style={{
-                                              fontSize: `${Math.max(
-                                                14,
-                                                template.settings.fontSize - 4
-                                              )}px`,
-                                              color:
-                                                template.settings.textColor,
-                                              fontFamily:
-                                                template.settings.fontFamily,
-                                              fontWeight:
-                                                template.settings.linkStyle ===
-                                                "bold"
-                                                  ? "bold"
-                                                  : "normal",
-                                              textDecoration:
-                                                template.settings.linkStyle ===
-                                                "underline"
-                                                  ? "underline"
-                                                  : "none",
-                                              textShadow:
-                                                template.settings.textColor ===
-                                                  "#FFFFFF" ||
-                                                template.settings.textColor ===
-                                                  "#F5F5F5"
-                                                  ? "0 1px 2px rgba(0,0,0,0.5)"
-                                                  : "none",
-                                              letterSpacing: "0.5px"
-                                            }}
-                                          >
-                                            T{template.settings.fontSize}
-                                          </div>
-
-                                          {/* Accent Color Button Indicator */}
-                                          <div
-                                            style={{
-                                              position: "absolute",
-                                              bottom: "4px",
-                                              right: "4px",
-                                              width: "20px",
-                                              height: "20px",
-                                              backgroundColor:
-                                                template.settings.accentColor,
-                                              borderRadius:
-                                                template.settings
-                                                  .buttonShape === "pill"
-                                                  ? "50%"
-                                                  : template.settings
-                                                      .buttonShape === "square"
-                                                  ? "2px"
-                                                  : "4px",
-                                              border:
-                                                template.settings.cardStyle ===
-                                                "bordered"
-                                                  ? "1px solid #fff"
-                                                  : "none",
-                                              backdropFilter:
-                                                template.settings.cardStyle ===
-                                                "glass"
-                                                  ? "blur(4px)"
-                                                  : "none"
-                                            }}
-                                          />
-
-                                          {/* Avatar Shape Indicator */}
-                                          <div
-                                            style={{
-                                              position: "absolute",
-                                              top: "4px",
-                                              right: "4px",
-                                              width: "12px",
-                                              height: "12px",
-                                              backgroundColor:
-                                                template.settings.textColor,
-                                              borderRadius:
-                                                template.settings
-                                                  .avatarShape === "circle"
-                                                  ? "50%"
-                                                  : template.settings
-                                                      .avatarShape === "rounded"
-                                                  ? "3px"
-                                                  : "0px",
-                                              opacity: 0.8
-                                            }}
-                                          />
+                                          T{template.settings.fontSize}
                                         </div>
-                                        <Typography.Text
-                                          strong
+
+                                        {/* Accent Color Button Indicator */}
+                                        <div
                                           style={{
-                                            fontSize: "12px",
-                                            display: "block"
+                                            position: "absolute",
+                                            bottom: "4px",
+                                            right: "4px",
+                                            width: "20px",
+                                            height: "20px",
+                                            backgroundColor:
+                                              template.settings.accentColor,
+                                            borderRadius:
+                                              template.settings.buttonShape ===
+                                              "pill"
+                                                ? "50%"
+                                                : template.settings
+                                                    .buttonShape === "square"
+                                                ? "2px"
+                                                : "4px",
+                                            border:
+                                              template.settings.cardStyle ===
+                                              "bordered"
+                                                ? "1px solid #fff"
+                                                : "none",
+                                            backdropFilter:
+                                              template.settings.cardStyle ===
+                                              "glass"
+                                                ? "blur(4px)"
+                                                : "none"
                                           }}
-                                        >
-                                          {template.name}
-                                        </Typography.Text>
-                                        <Typography.Text
-                                          type="secondary"
-                                          style={{ fontSize: "11px" }}
-                                        >
-                                          {template.description}
-                                        </Typography.Text>
-                                      </Card>
-                                    ))}
-                                  </div>
+                                        />
+
+                                        {/* Avatar Shape Indicator */}
+                                        <div
+                                          style={{
+                                            position: "absolute",
+                                            top: "4px",
+                                            right: "4px",
+                                            width: "12px",
+                                            height: "12px",
+                                            backgroundColor:
+                                              template.settings.textColor,
+                                            borderRadius:
+                                              template.settings.avatarShape ===
+                                              "circle"
+                                                ? "50%"
+                                                : template.settings
+                                                    .avatarShape === "rounded"
+                                                ? "3px"
+                                                : "0px",
+                                            opacity: 0.8
+                                          }}
+                                        />
+                                      </div>
+                                      <Typography.Text
+                                        strong
+                                        style={{
+                                          fontSize: "12px",
+                                          display: "block"
+                                        }}
+                                      >
+                                        {template.name}
+                                      </Typography.Text>
+                                      <Typography.Text
+                                        type="secondary"
+                                        style={{ fontSize: "11px" }}
+                                      >
+                                        {template.description}
+                                      </Typography.Text>
+                                    </Card>
+                                  ))}
                                 </div>
                               )
                             }

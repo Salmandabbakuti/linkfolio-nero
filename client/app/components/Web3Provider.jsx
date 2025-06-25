@@ -126,11 +126,45 @@ export default function Web3Provider({ children }) {
           // Button customization
           Button: {
             colorPrimary: "#6366f1",
+            defaultColor: "#ffffff",
             primaryShadow: "0 4px 12px rgba(99, 102, 241, 0.3)",
             borderRadius: 26,
             controlHeight: 40,
             fontSize: 14,
-            fontWeight: 500
+            fontWeight: 500,
+            defaultBg: "rgba(255, 255, 255, 0.1)",
+            defaultHoverBg: "rgba(255, 255, 255, 0.15)",
+            defaultActiveBg: "rgba(255, 255, 255, 0.3)"
+          },
+          InputNumber: {
+            colorPrimary: "#6366f1",
+            colorBgContainer: "rgba(255, 255, 255, 0.05)",
+            colorBorder: "rgba(255, 255, 255, 0.2)",
+            borderRadius: 12,
+            controlHeight: 48,
+            fontSize: 14
+          },
+
+          ColorPicker: {
+            colorPrimary: "#6366f1",
+            colorBgContainer: "rgba(255, 255, 255, 0.05)",
+            colorBorder: "rgba(255, 255, 255, 0.2)",
+            borderRadius: 12,
+            colorText: "#ffffff",
+            colorTextPlaceholder: "#737373"
+          },
+
+          // Select customization
+          Select: {
+            colorPrimary: "#6366f1",
+            colorBgContainer: "rgba(255, 255, 255, 0.05)",
+            colorBorder: "rgba(255, 255, 255, 0.2)",
+            borderRadius: 12,
+            controlHeight: 48,
+            fontSize: 14,
+            colorText: "#ffffff",
+            colorTextPlaceholder: "#737373",
+            optionSelectedBg: "rgba(99, 102, 241, 0.2)"
           },
 
           // Card customization

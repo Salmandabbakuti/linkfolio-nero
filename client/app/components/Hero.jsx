@@ -1,5 +1,5 @@
 "use client";
-import { Typography, Button, Space, Row, Col } from "antd";
+import { Typography, Button, Space, Row, Col, Card } from "antd";
 import {
   RocketOutlined,
   CrownOutlined,
@@ -10,6 +10,7 @@ import {
 } from "@ant-design/icons";
 import { useState } from "react";
 import Link from "next/link";
+import styles from "./Hero.module.css";
 
 const { Title, Paragraph } = Typography;
 
@@ -24,109 +25,30 @@ export default function Hero({ onGetStarted }) {
   ];
 
   return (
-    <section
-      style={{
-        padding: "80px 0 120px",
-        position: "relative",
-        overflow: "hidden",
-        textAlign: "center"
-      }}
-    >
+    <section className={styles.heroSection}>
       {/* Background decorations */}
-      <div
-        style={{
-          position: "absolute",
-          top: "10%",
-          left: "10%",
-          width: "300px",
-          height: "300px",
-          background: "var(--hero-gradient)",
-          borderRadius: "50%",
-          filter: "blur(120px)",
-          opacity: 0.3,
-          animation: "float 6s ease-in-out infinite"
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          bottom: "10%",
-          right: "10%",
-          width: "250px",
-          height: "250px",
-          background: "var(--primary-gradient)",
-          borderRadius: "50%",
-          filter: "blur(100px)",
-          opacity: 0.2,
-          animation: "float 8s ease-in-out infinite reverse"
-        }}
-      />
+      <div className={styles.backgroundBlur} />
+      <div className={styles.backgroundBlur} />
 
-      <div className="container" style={{ position: "relative", zIndex: 1 }}>
+      <div className={`container ${styles.heroContainer}`}>
         {/* Main hero content */}
-        <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+        <div className={styles.heroContent}>
           {/* Badge */}
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "8px 16px",
-              background: "rgba(102, 126, 234, 0.1)",
-              border: "1px solid rgba(102, 126, 234, 0.2)",
-              borderRadius: "50px",
-              marginBottom: "32px",
-              backdropFilter: "blur(10px)"
-            }}
-          >
+          <div className={styles.newFeatureBadge}>
             <StarFilled style={{ color: "var(--secondary-color)" }} />
-            <span
-              style={{
-                fontSize: "14px",
-                fontWeight: "var(--font-weight-medium)",
-                color: "var(--text-primary)"
-              }}
-            >
+            <span className={styles.badgeText}>
               New: Profile appearance customizations and ready-made templates
             </span>
             <CrownOutlined style={{ color: "var(--secondary-color)" }} />
           </div>
 
           {/* Main headline */}
-          <Title
-            level={1}
-            style={{
-              fontSize: "clamp(2.5rem, 5vw, 4rem)",
-              fontWeight: "var(--font-weight-extrabold)",
-              lineHeight: "1.1",
-              margin: "0 0 24px 0",
-              background: "var(--hero-gradient)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              letterSpacing: "-0.02em"
-            }}
-          >
+          <Title level={1} className={styles.heroTitle}>
             Create Your Digital Identity
             <br />
-            <span
-              style={{
-                position: "relative",
-                display: "inline-block"
-              }}
-            >
+            <span className={styles.titleHighlight}>
               Own It Forever
-              <svg
-                style={{
-                  position: "absolute",
-                  bottom: "-8px",
-                  left: "0",
-                  width: "100%",
-                  height: "12px"
-                }}
-                viewBox="0 0 300 12"
-                fill="none"
-              >
+              <svg className={styles.underlineSvg} viewBox="0 0 300 12" fill="none">
                 <path
                   d="M0 6C75 2, 150 2, 225 6C262.5 8, 337.5 8, 375 6"
                   stroke="var(--secondary-color)"
@@ -139,16 +61,7 @@ export default function Hero({ onGetStarted }) {
           </Title>
 
           {/* Subtitle */}
-          <Paragraph
-            style={{
-              fontSize: "1.25rem",
-              color: "var(--text-secondary)",
-              lineHeight: "1.6",
-              marginBottom: "40px",
-              maxWidth: "600px",
-              margin: "0 auto 40px"
-            }}
-          >
+          <Paragraph className={styles.heroSubtitle}>
             Build your professional profile as a{" "}
             <strong style={{ color: "var(--primary-color)" }}>
               soulbound NFT
