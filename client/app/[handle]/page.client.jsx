@@ -21,8 +21,7 @@ import {
   Select,
   ColorPicker,
   InputNumber,
-  Collapse,
-  theme
+  Collapse
 } from "antd";
 import {
   GlobalOutlined,
@@ -50,10 +49,7 @@ import {
   GET_PROFILE_QUERY,
   DEFAULT_APPEARANCE_SETTINGS
 } from "@/app/utils";
-import {
-  profileTemplates,
-  getTemplateById
-} from "@/app/utils/profileTemplates";
+import { profileTemplates } from "@/app/utils/profileTemplates";
 import {
   EXPLORER_URL,
   LINKFOLIO_CONTRACT_ADDRESS,
@@ -86,6 +82,9 @@ export default function Profile({ params }) {
     DEFAULT_APPEARANCE_SETTINGS
   );
   const [formValues, setFormValues] = useState({});
+  const [templateCollapseActiveKey, setTemplateCollapseActiveKey] = useState([
+    "templates"
+  ]);
 
   const { handle } = use(params);
   const router = useRouter();
@@ -637,8 +636,9 @@ export default function Profile({ params }) {
                       >
                         {/* Template Selection Section with Collapse */}
                         <Collapse
-                          // defaultActiveKey={["templates"]}
-                          style={{ marginBottom: "24px" }}
+                          activeKey={templateCollapseActiveKey}
+                          onChange={setTemplateCollapseActiveKey}
+                          style={{ marginBottom: "16px" }}
                           expandIconPosition="right"
                           items={[
                             {
