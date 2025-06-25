@@ -10,10 +10,12 @@ Craft your unique bio, avatar, and links to social media as properties and attri
 
 - **Gasless Experience:** Powered by NERO Chain Paymaster, users can interact without paying gas fees using ETH or stablecoins.
 - **Native Account Abstraction:** Streamlines wallet interactions and enhances user experience through smart contract-based wallets.
-- **Customizable Profiles:** Personalize your profile with a bio, avatar, and custom links.
-- **Soulbound NFTs:** Each profile is minted as a unique non transferrable NFT, offering ownership and authenticity.
-- **On-chain Metadata:** Store profile data directly on-chain, ensuring data integrity and immutability.
-- **User-Friendly DApp:** Claim, curate and update your social links securely and intuitively.
+- **Soulbound NFT Profiles:** Each profile is minted as a unique, non-transferrable NFT ensuring true ownership and authenticity.
+- **On-Chain Metadata:** All profile data is stored directly on-chain, ensuring permanence, integrity, and decentralization.
+- **Posts/Updates:** Share updates or announcements with your community through posts, enhancing engagement.
+- **Community Notes with Tips:** Allow community members to leave quick thoughts or messages on your profile and send tips to support creators, fostering interaction.
+- **Customizable Design:** Personalize your profile with custom themes, colors, fonts, and layouts to match your brand.
+- **Profile Templates:** Professional templates and appearance customization with live preview functionality.
 
 ### UX Flow
 
@@ -74,6 +76,17 @@ where the user is prompted to sign a message to create a profile, post or note. 
 ![Discover-Screen](https://github.com/user-attachments/assets/099a6deb-014b-43ab-a71f-96b371ff2614)
 
 ### ChangeLog
+
+#### 0.4.0
+
+- Added comprehensive appearance customization for profiles with live preview.
+- Introduced tipping functionality for notes, sending tips directly to profile owners.
+- Notes with tips display tip amounts and include links to view transactions on the blockchain explorer.
+- Added IPFS upload support for avatars and profile appearance settings.
+- Provided curated profile templates for quick style application to profiles.
+- Complete UI revamp with redesigned home page featuring hero section, features showcase, how it works guide, stats, and enhanced footer.
+- Improved component architecture with CSS modules for better maintainability and performance.
+- Enhanced responsive design and mobile optimization across all pages.
 
 #### 0.3.0
 

@@ -203,7 +203,6 @@ export default function Home() {
     <div className={styles.mainContainer}>
       {/* Hero Section */}
       <Hero onGetStarted={handleGetStarted} />
-      
       {/* How It Works Section */}
       <section className={styles.howItWorksSection}>
         <div className="container">
@@ -216,7 +215,7 @@ export default function Home() {
               intuitive process
             </Paragraph>
           </div>
-          
+
           <Steps
             direction="vertical"
             size="default"
@@ -224,7 +223,11 @@ export default function Home() {
             className={styles.stepsContainer}
             items={howItWorksSteps.map((step, index) => ({
               title: <span className={styles.stepTitle}>{step.title}</span>,
-              description: <span className={styles.stepDescription}>{step.description}</span>,
+              description: (
+                <span className={styles.stepDescription}>
+                  {step.description}
+                </span>
+              ),
               icon: step.icon,
               style: {
                 paddingBottom: index === howItWorksSteps.length - 1 ? 0 : "40px"
@@ -232,7 +235,8 @@ export default function Home() {
             }))}
           />
         </div>
-      </section>      {/* Profile Customization Showcase Section */}
+      </section>{" "}
+      {/* Profile Customization Showcase Section */}
       <section className={styles.customizationSection}>
         <div className="container">
           <div className={styles.sectionHeader}>
@@ -240,13 +244,17 @@ export default function Home() {
               🎨 Customize Your Style
             </Title>
             <Paragraph className={styles.sectionSubtitle}>
-              Start with a template or build from scratch - make it uniquely yours
+              Start with a template or build from scratch - make it uniquely
+              yours
             </Paragraph>
           </div>
-          
+
           <Row gutter={[32, 32]} justify="center">
             <Col xs={24} lg={16}>
-              <Card className={styles.customizationCard} bodyStyle={{ padding: 0 }}>
+              <Card
+                className={styles.customizationCard}
+                bodyStyle={{ padding: 0 }}
+              >
                 <div className={styles.customizationIcon}>🎨</div>
                 <Title level={3} className={styles.customizationTitle}>
                   Templates & Customization
@@ -255,7 +263,7 @@ export default function Home() {
                   Start with professional templates or build from scratch with
                   advanced customization tools
                 </Paragraph>
-                
+
                 {/* Template Preview Cards */}
                 <div className={styles.templateGrid}>
                   {[
@@ -269,19 +277,19 @@ export default function Home() {
                       className={styles.templateCard}
                       style={{ background: template.bg }}
                     >
-                      <div 
+                      <div
                         className={styles.templateAvatar}
                         style={{ background: template.accent }}
                       />
-                      <div 
+                      <div
                         className={styles.templateLine}
                         style={{ background: template.accent }}
                       />
-                      <div 
+                      <div
                         className={styles.templateSubline}
                         style={{ background: template.accent }}
                       />
-                      <div 
+                      <div
                         className={styles.templateName}
                         style={{ color: template.accent }}
                       >
@@ -315,7 +323,8 @@ export default function Home() {
             </Col>
           </Row>
         </div>
-      </section>      {/* Features Section */}
+      </section>{" "}
+      {/* Features Section */}
       <section className={styles.featuresSection}>
         <div className="container">
           <div className={styles.sectionHeader}>
@@ -333,18 +342,20 @@ export default function Home() {
               <Col key={index} xs={24} md={12} lg={8}>
                 <Card
                   className={`${styles.featureCard} ${
-                    feature.highlight ? styles.featureCardHighlight : styles.featureCardNormal
+                    feature.highlight
+                      ? styles.featureCardHighlight
+                      : styles.featureCardNormal
                   }`}
                   styles={{ body: { padding: "32px 24px" } }}
                   hoverable
                 >
                   {feature.highlight && (
-                    <div className={styles.popularBadge}>
-                      POPULAR
-                    </div>
+                    <div className={styles.popularBadge}>POPULAR</div>
                   )}
 
-                  <div className={styles.featureIconContainer}>{feature.icon}</div>
+                  <div className={styles.featureIconContainer}>
+                    {feature.icon}
+                  </div>
 
                   <Title level={4} className={styles.featureTitle}>
                     {feature.title}
@@ -358,7 +369,8 @@ export default function Home() {
             ))}
           </Row>
         </div>
-      </section>      {/* Get Started Section */}
+      </section>{" "}
+      {/* Get Started Section */}
       <section className={styles.getStartedSection}>
         <div className="container">
           <div className={styles.getStartedContainer}>

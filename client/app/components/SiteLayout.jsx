@@ -12,9 +12,7 @@ export default function SiteLayout({ children }) {
     <Layout className={styles.siteLayout}>
       <Header className={styles.siteHeader}>
         <Link href="/">
-          <h3 className={styles.siteLogo}>
-            🔗 LinkFolio
-          </h3>
+          <h3 className={styles.siteLogo}>🔗 LinkFolio</h3>
         </Link>
         <div className={styles.headerActions}>
           <appkit-button />

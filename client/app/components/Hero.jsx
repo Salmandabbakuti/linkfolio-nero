@@ -48,7 +48,11 @@ export default function Hero({ onGetStarted }) {
             <br />
             <span className={styles.titleHighlight}>
               Own It Forever
-              <svg className={styles.underlineSvg} viewBox="0 0 300 12" fill="none">
+              <svg
+                className={styles.underlineSvg}
+                viewBox="0 0 300 12"
+                fill="none"
+              >
                 <path
                   d="M0 6C75 2, 150 2, 225 6C262.5 8, 337.5 8, 375 6"
                   stroke="var(--secondary-color)"
@@ -228,11 +232,9 @@ export default function Hero({ onGetStarted }) {
                   transition: "all var(--transition-normal)"
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.background = "rgba(255, 255, 255, 0.1)";
                   e.target.style.transform = "translateY(-4px)";
                 }}
                 onMouseLeave={(e) => {
-                  e.target.style.background = "rgba(255, 255, 255, 0.05)";
                   e.target.style.transform = "translateY(0)";
                 }}
               >

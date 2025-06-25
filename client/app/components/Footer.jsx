@@ -1,6 +1,14 @@
 "use client";
-import { Typography, Row, Col, Divider } from "antd";
-import { TwitterOutlined, GithubOutlined, DiscordOutlined, MediumOutlined } from "@ant-design/icons";
+import { Row, Col, Typography, Space, Divider } from "antd";
+import {
+  GithubOutlined,
+  TwitterOutlined,
+  LinkedinOutlined,
+  HeartFilled,
+  RocketOutlined,
+  CrownOutlined,
+  GlobalOutlined
+} from "@ant-design/icons";
 import Link from "next/link";
 import styles from "./Footer.module.css";
 
@@ -9,118 +17,252 @@ const { Title, Text, Paragraph } = Typography;
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
-  const footerLinks = {
-    product: [
-      { label: "Features", href: "#features" },
-      { label: "Templates", href: "#templates" },
-      { label: "Pricing", href: "/pricing" },
-      { label: "Roadmap", href: "/roadmap" }
-    ],
-    resources: [
-      { label: "Documentation", href: "/docs" },
-      { label: "API Reference", href: "/api" },
-      { label: "Tutorials", href: "/tutorials" },
-      { label: "Blog", href: "/blog" }
-    ],
-    company: [
-      { label: "About", href: "/about" },
-      { label: "Careers", href: "/careers" },
-      { label: "Contact", href: "/contact" },
-      { label: "Press Kit", href: "/press" }
-    ],
-    legal: [
-      { label: "Privacy Policy", href: "/privacy" },
-      { label: "Terms of Service", href: "/terms" },
-      { label: "Cookie Policy", href: "/cookies" },
-      { label: "DMCA", href: "/dmca" }
-    ]
-  };
+  const socialLinks = [
+    {
+      icon: <GithubOutlined />,
+      href: "https://github.com/Salmandabbakuti",
+      label: "GitHub"
+    },
+    {
+      icon: <TwitterOutlined />,
+      href: "https://twitter.com/linkfolio",
+      label: "Twitter"
+    },
+    {
+      icon: <LinkedinOutlined />,
+      href: "https://linkedin.com/company/linkfolio",
+      label: "LinkedIn"
+    }
+  ];
+
+  const quickLinks = [
+    { href: "/", label: "Home" },
+    { href: "/explore", label: "Explore Profiles" },
+    { href: "#", label: "About" },
+    { href: "#", label: "Contact" }
+  ];
+
+  const resources = [
+    { href: "#", label: "Documentation" },
+    { href: "#", label: "API Reference" },
+    { href: "#", label: "Getting Started" },
+    { href: "#", label: "FAQ" }
+  ];
 
   return (
     <footer className={styles.footerSection}>
+      {/* Background decoration */}
       <div className={styles.footerGradient} />
-      
-      <div className={`container ${styles.footerContainer}`}>
-        {/* Brand Section */}
-        <div className={styles.footerBrand}>
-          <Title level={2} className={styles.footerLogo}>
-            🔗 LinkFolio
-          </Title>
-          <Paragraph className={styles.footerTagline}>
-            Create your digital identity as a soulbound NFT. Own your profile forever with on-chain metadata.
-          </Paragraph>
-        </div>
 
-        {/* Links Section */}
-        <Row gutter={[32, 32]} className={styles.footerLinks}>
-          <Col xs={12} sm={6}>
+      <div className={`container ${styles.footerContainer}`}>
+        {/* Main footer content */}
+        <Row gutter={[48, 32]}>
+          {/* Brand section */}
+          <Col xs={24} sm={12} lg={8}>
+            <div style={{ marginBottom: "24px" }}>
+              <Title level={3} className={styles.footerLogo}>
+                🔗 LinkFolio
+                <CrownOutlined
+                  style={{
+                    fontSize: "20px",
+                    color: "var(--secondary-color)",
+                    marginLeft: "8px"
+                  }}
+                />
+              </Title>
+              <Paragraph className={styles.footerTagline}>
+                Create and own your digital identity as a soulbound NFT with
+                on-chain metadata. Built on NERO Chain with gas-free
+                transactions via Account Abstraction.
+              </Paragraph>
+
+              {/* Social links */}
+              <Space size="middle" className={styles.socialLinks}>
+                {socialLinks.map((social, index) => (
+                  <a
+                    key={index}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.socialLink}
+                    title={social.label}
+                  >
+                    {social.icon}
+                  </a>
+                ))}
+              </Space>
+            </div>
+          </Col>
+
+          {/* Quick Links */}
+          <Col xs={12} sm={6} lg={4}>
             <div className={styles.footerLinkGroup}>
-              <h4>Product</h4>
-              {footerLinks.product.map((link, index) => (
-                <Link key={index} href={link.href} className={styles.footerLink}>
+              <h4>Quick Links</h4>
+              {quickLinks.map((link, index) => (
+                <Link
+                  key={index}
+                  href={link.href}
+                  className={styles.footerLink}
+                >
                   {link.label}
                 </Link>
               ))}
             </div>
           </Col>
-          
-          <Col xs={12} sm={6}>
+
+          {/* Resources */}
+          <Col xs={12} sm={6} lg={4}>
             <div className={styles.footerLinkGroup}>
               <h4>Resources</h4>
-              {footerLinks.resources.map((link, index) => (
-                <Link key={index} href={link.href} className={styles.footerLink}>
+              {resources.map((link, index) => (
+                <Link
+                  key={index}
+                  href={link.href}
+                  className={styles.footerLink}
+                >
                   {link.label}
                 </Link>
               ))}
             </div>
           </Col>
-          
-          <Col xs={12} sm={6}>
+
+          {/* Technology Stack */}
+          <Col xs={24} sm={12} lg={8}>
             <div className={styles.footerLinkGroup}>
-              <h4>Company</h4>
-              {footerLinks.company.map((link, index) => (
-                <Link key={index} href={link.href} className={styles.footerLink}>
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-          </Col>
-          
-          <Col xs={12} sm={6}>
-            <div className={styles.footerLinkGroup}>
-              <h4>Legal</h4>
-              {footerLinks.legal.map((link, index) => (
-                <Link key={index} href={link.href} className={styles.footerLink}>
-                  {link.label}
-                </Link>
-              ))}
+              <h4>
+                <RocketOutlined style={{ marginRight: "8px" }} />
+                Powered By
+              </h4>
+              <Space
+                direction="vertical"
+                size="middle"
+                style={{ width: "100%" }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "12px"
+                  }}
+                >
+                  {[
+                    { name: "NERO Chain", color: "#6366f1" },
+                    { name: "Reown", color: "#ec4899" },
+                    { name: "Next.js", color: "#000000" },
+                    { name: "Ant Design", color: "#1677ff" },
+                    { name: "Account Abstraction", color: "#10b981" }
+                  ].map((tech, index) => (
+                    <span
+                      key={index}
+                      style={{
+                        padding: "4px 12px",
+                        background: `${tech.color}15`,
+                        color: tech.color,
+                        borderRadius: "12px",
+                        fontSize: "12px",
+                        fontWeight: "var(--font-weight-medium)",
+                        border: `1px solid ${tech.color}30`
+                      }}
+                    >
+                      {tech.name}
+                    </span>
+                  ))}
+                </div>
+
+                <div
+                  style={{
+                    padding: "16px",
+                    background: "var(--surface-secondary)",
+                    borderRadius: "12px",
+                    border: "1px solid var(--border-color)"
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: "12px",
+                      color: "var(--text-muted)",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px"
+                    }}
+                  >
+                    <GlobalOutlined />
+                    Built with{" "}
+                    <HeartFilled style={{ color: "var(--error-color)" }} /> for
+                    the decentralized web
+                  </Text>
+                </div>
+              </Space>
             </div>
           </Col>
         </Row>
 
         <Divider className={styles.footerDivider} />
 
-        {/* Bottom Section */}
-        <div className={styles.footerBottom}>
-          <Text className={styles.footerCopyright}>
-            © {currentYear} LinkFolio. All rights reserved. Built on NERO Chain.
-          </Text>
-          
-          <div className={styles.socialLinks}>
-            <a href="https://twitter.com/linkfolio" className={styles.socialLink} aria-label="Twitter">
-              <TwitterOutlined />
-            </a>
-            <a href="https://github.com/linkfolio" className={styles.socialLink} aria-label="GitHub">
-              <GithubOutlined />
-            </a>
-            <a href="https://discord.gg/linkfolio" className={styles.socialLink} aria-label="Discord">
-              <DiscordOutlined />
-            </a>
-            <a href="https://medium.com/@linkfolio" className={styles.socialLink} aria-label="Medium">
-              <MediumOutlined />
-            </a>
-          </div>
-        </div>
+        {/* Bottom section */}
+        <Row
+          justify="space-between"
+          align="middle"
+          style={{ flexWrap: "wrap-reverse", gap: "16px" }}
+        >
+          <Col>
+            <Text className={styles.footerCopyright}>
+              © {currentYear} LinkFolio. All rights reserved.{" "}
+              <span style={{ margin: "0 8px" }}>•</span>
+              <Link
+                href="#"
+                style={{
+                  color: "var(--text-muted)",
+                  textDecoration: "underline"
+                }}
+              >
+                Privacy Policy
+              </Link>
+              <span style={{ margin: "0 8px" }}>•</span>
+              <Link
+                href="#"
+                style={{
+                  color: "var(--text-muted)",
+                  textDecoration: "underline"
+                }}
+              >
+                Terms of Service
+              </Link>
+            </Text>
+          </Col>
+          <Col>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "6px 12px",
+                background: "var(--surface-secondary)",
+                borderRadius: "20px",
+                border: "1px solid var(--border-color)"
+              }}
+            >
+              <div
+                style={{
+                  width: "8px",
+                  height: "8px",
+                  borderRadius: "50%",
+                  background: "var(--success-color)",
+                  animation: "pulse 2s infinite"
+                }}
+              />
+              <Text
+                style={{
+                  color: "var(--text-secondary)",
+                  fontSize: "12px",
+                  fontWeight: "var(--font-weight-medium)"
+                }}
+              >
+                v0.4.0 • All systems operational
+              </Text>
+            </div>
+          </Col>
+        </Row>
       </div>
     </footer>
   );
