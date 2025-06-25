@@ -357,7 +357,7 @@ export default function Profile({ params }) {
       {mode === "edit" ? (
         <Row gutter={16}>
           {/* Left: Editing Section (made smaller) */}
-          <Col xs={24} lg={14} xl={16}>
+          <Col xs={24} lg={12} xl={14}>
             <Card
               title={profile?.id ? "Edit Profile" : "Create Profile"}
               variant="outlined"
@@ -639,7 +639,7 @@ export default function Profile({ params }) {
                           activeKey={templateCollapseActiveKey}
                           onChange={setTemplateCollapseActiveKey}
                           style={{ marginBottom: "16px" }}
-                          expandIconPosition="right"
+                          expandIconPosition="end"
                           items={[
                             {
                               key: "templates",
@@ -1046,8 +1046,8 @@ export default function Profile({ params }) {
           {/* Right: Live Preview Section (made larger) */}
           <Col
             xs={24}
-            lg={10}
-            xl={8}
+            lg={8}
+            xl={10}
             style={{
               display: "flex",
               flexDirection: "column",

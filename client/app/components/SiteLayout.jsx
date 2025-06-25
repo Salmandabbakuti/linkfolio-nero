@@ -19,9 +19,7 @@ export default function SiteLayout({ children }) {
         </div>
       </Header>
 
-      <Content className={styles.siteContent}>
-        <div className="container">{children}</div>
-      </Content>
+      <Content className={styles.siteContent}>{children}</Content>
 
       <Footer />
     </Layout>
