@@ -89,6 +89,28 @@ export const profileTemplates = [
     }
   },
   {
+    id: "dark-void",
+    name: "Dark Void",
+    description: "Deep black with electric blue highlights",
+    preview: {
+      background: "#0A0A0A",
+      cardStyle: "glass",
+      accentColor: "#1890FF"
+    },
+    settings: {
+      fontFamily: "Inter, sans-serif",
+      fontSize: 16,
+      background: "#0A0A0A",
+      accentColor: "#1890FF",
+      cardStyle: "glass",
+      buttonShape: "round",
+      linkStyle: "bold",
+      textColor: "#E8E8E8",
+      avatarShape: "circle",
+      banner: ""
+    }
+  },
+  {
     id: "forest-zen",
     name: "Forest Zen",
     description: "Natural green tones with minimal design",
@@ -111,23 +133,23 @@ export const profileTemplates = [
     }
   },
   {
-    id: "royal-purple",
-    name: "Royal Purple",
-    description: "Elegant purple gradient with sophisticated styling",
+    id: "midnight-purple",
+    name: "Midnight Purple",
+    description: "Dark purple theme with mystical vibes",
     preview: {
-      background: "#F3E5F5",
-      cardStyle: "glass",
-      accentColor: "#722ED1"
+      background: "#1F1A2D",
+      cardStyle: "bordered",
+      accentColor: "#B37FEB"
     },
     settings: {
       fontFamily: "Georgia, serif",
-      fontSize: 18,
-      background: "#F3E5F5",
-      accentColor: "#722ED1",
-      cardStyle: "glass",
-      buttonShape: "round",
+      fontSize: 17,
+      background: "#1F1A2D",
+      accentColor: "#B37FEB",
+      cardStyle: "bordered",
+      buttonShape: "pill",
       linkStyle: "underline",
-      textColor: "#4A148C",
+      textColor: "#E0D4F7",
       avatarShape: "circle",
       banner: ""
     }
@@ -155,6 +177,28 @@ export const profileTemplates = [
     }
   },
   {
+    id: "carbon-steel",
+    name: "Carbon Steel",
+    description: "Industrial dark theme with steel accents",
+    preview: {
+      background: "#1C1C1C",
+      cardStyle: "solid",
+      accentColor: "#8C8C8C"
+    },
+    settings: {
+      fontFamily: "'Courier New', Courier, monospace",
+      fontSize: 16,
+      background: "#1C1C1C",
+      accentColor: "#8C8C8C",
+      cardStyle: "solid",
+      buttonShape: "square",
+      linkStyle: "bold",
+      textColor: "#F0F0F0",
+      avatarShape: "square",
+      banner: ""
+    }
+  },
+  {
     id: "retro-vibes",
     name: "Retro Vibes",
     description: "Nostalgic 80s inspired with bold colors",
@@ -172,6 +216,28 @@ export const profileTemplates = [
       buttonShape: "pill",
       linkStyle: "bold",
       textColor: "#AD1457",
+      avatarShape: "rounded",
+      banner: ""
+    }
+  },
+  {
+    id: "emerald-night",
+    name: "Emerald Night",
+    description: "Dark green forest theme with gold accents",
+    preview: {
+      background: "#0D1B0D",
+      cardStyle: "glass",
+      accentColor: "#52C41A"
+    },
+    settings: {
+      fontFamily: "Roboto, sans-serif",
+      fontSize: 16,
+      background: "#0D1B0D",
+      accentColor: "#52C41A",
+      cardStyle: "glass",
+      buttonShape: "round",
+      linkStyle: "normal",
+      textColor: "#A8E6A8",
       avatarShape: "rounded",
       banner: ""
     }
@@ -199,67 +265,23 @@ export const profileTemplates = [
     }
   },
   {
-    id: "golden-luxury",
-    name: "Golden Luxury",
-    description: "Premium gold accents with elegant design",
+    id: "crimson-shadow",
+    name: "Crimson Shadow",
+    description: "Dark red theme with dramatic shadows",
     preview: {
-      background: "#FFF7E6",
-      cardStyle: "solid",
-      accentColor: "#FADB14"
+      background: "#1A0A0A",
+      cardStyle: "bordered",
+      accentColor: "#FF4D4F"
     },
     settings: {
       fontFamily: "Georgia, serif",
       fontSize: 17,
-      background: "#FFF7E6",
-      accentColor: "#FADB14",
-      cardStyle: "solid",
+      background: "#1A0A0A",
+      accentColor: "#FF4D4F",
+      cardStyle: "bordered",
       buttonShape: "pill",
       linkStyle: "bold",
-      textColor: "#595959",
-      avatarShape: "circle",
-      banner: ""
-    }
-  },
-  {
-    id: "pastel-dream",
-    name: "Pastel Dream",
-    description: "Soft pastel colors with dreamy aesthetics",
-    preview: {
-      background: "#F9F0FF",
-      cardStyle: "glass",
-      accentColor: "#722ED1"
-    },
-    settings: {
-      fontFamily: "Poppins, sans-serif",
-      fontSize: 16,
-      background: "#F9F0FF",
-      accentColor: "#722ED1",
-      cardStyle: "glass",
-      buttonShape: "pill",
-      linkStyle: "normal",
-      textColor: "#434343",
-      avatarShape: "rounded",
-      banner: ""
-    }
-  },
-  {
-    id: "tech-startup",
-    name: "Tech Startup",
-    description: "Modern tech aesthetic with vibrant accents",
-    preview: {
-      background: "#E8F4FD",
-      cardStyle: "glass",
-      accentColor: "#1677FF"
-    },
-    settings: {
-      fontFamily: "Inter, sans-serif",
-      fontSize: 15,
-      background: "#E8F4FD",
-      accentColor: "#1677FF",
-      cardStyle: "glass",
-      buttonShape: "round",
-      linkStyle: "bold",
-      textColor: "#262626",
+      textColor: "#FFB3B3",
       avatarShape: "circle",
       banner: ""
     }
