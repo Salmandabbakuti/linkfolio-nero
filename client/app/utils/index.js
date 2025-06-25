@@ -31,18 +31,15 @@ export const supportedSocials = [
 
 export const DEFAULT_APPEARANCE_SETTINGS = {
   fontFamily: "Inter, sans-serif",
-  fontSize: 16, // Changed to number for InputNumber
-  background: "#fff", // Default background color
-  accentColor: "#ff9900",
-  cardStyle: "glass",
-  buttonShape: "round",
+  fontSize: 16,
+  background: "#1F1A2D",
+  accentColor: "#1890FF",
+  cardStyle: "solid",
+  buttonShape: "pill",
   linkStyle: "bold",
-  textColor: "#222",
+  textColor: "#E8E8E8",
   avatarShape: "circle",
-  profileCardShadow: "0 4px 24px #ff990055",
-  profileCardBorder: "2px solid #ff9900",
-  banner: "",
-  customCSS: ""
+  banner: ""
 };
 
 const linkFolioContractABI = [

@@ -25,7 +25,6 @@ import {
 } from "antd";
 import {
   GlobalOutlined,
-  EyeOutlined,
   DeleteOutlined,
   EditOutlined,
   ShareAltOutlined,
@@ -33,7 +32,8 @@ import {
   ExportOutlined,
   ExclamationCircleOutlined,
   SyncOutlined,
-  LoadingOutlined
+  LoadingOutlined,
+  ExpandAltOutlined
 } from "@ant-design/icons";
 import {
   useAppKitProvider,
@@ -62,11 +62,22 @@ import {
   getProfileSettingsFromIpfs
 } from "@/app/actions/pinata";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const categoryArr = ["Personal", "Creator", "Business"];
 
 export default function Profile({ params }) {
+  const { handle } = use(params);
+
+  const initialValues = {
+    name: "",
+    handle,
+    category: "Personal", // Default to Personal
+    bio: "",
+    avatar: "",
+    links: {}
+  };
+
   // State
   const [profile, setProfile] = useState(null);
   const [formData] = Form.useForm();
@@ -81,12 +92,11 @@ export default function Profile({ params }) {
   const [appearanceSettings, setAppearanceSettings] = useState(
     DEFAULT_APPEARANCE_SETTINGS
   );
-  const [formValues, setFormValues] = useState({});
+  const [formValues, setFormValues] = useState(initialValues);
   const [templateCollapseActiveKey, setTemplateCollapseActiveKey] = useState([
     "templates"
   ]);
 
-  const { handle } = use(params);
   const router = useRouter();
   const { address: account } = useAppKitAccount();
   const { selectedNetworkId } = useAppKitState();
@@ -94,15 +104,6 @@ export default function Profile({ params }) {
 
   const searchParams = useSearchParams();
   const modeParam = searchParams.get("mode");
-
-  const initialValues = {
-    name: "",
-    handle,
-    category: "Personal", // Default to Personal
-    bio: "",
-    avatar: "",
-    links: {}
-  };
 
   const isProfileOwner = useMemo(
     () =>
@@ -364,12 +365,6 @@ export default function Profile({ params }) {
               loading={loading?.read}
               extra={
                 <Space>
-                  <Button
-                    title="Preview"
-                    shape="circle"
-                    icon={<EyeOutlined />}
-                    onClick={() => setMode("preview")}
-                  />
                   {isProfileOwner && (
                     <Popconfirm
                       title="Are you sure you want to delete this profile?"
@@ -611,7 +606,6 @@ export default function Profile({ params }) {
                       <Form
                         layout="vertical"
                         initialValues={appearanceSettings}
-                        key={JSON.stringify(appearanceSettings)} // Force re-render when settings change
                         onValuesChange={(changedValues, allValues) => {
                           console.log(
                             "Appearance settings changed:",
@@ -1061,11 +1055,19 @@ export default function Profile({ params }) {
                 position: "sticky",
                 top: "20px"
               }}
+              extra={
+                <Button
+                  title="Expand to Fullscreen"
+                  shape="circle"
+                  icon={<ExpandAltOutlined />}
+                  onClick={() => setMode("preview")}
+                />
+              }
             >
               <ProfileCard
                 profile={{
-                  ...profile,
                   ...formValues,
+                  ...profile,
                   avatar: avatarFile
                     ? URL.createObjectURL(avatarFile?.originFileObj)
                     : formValues.avatar ||

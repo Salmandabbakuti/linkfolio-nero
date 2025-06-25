@@ -11,8 +11,7 @@ import {
   Typography,
   Divider,
   Tag,
-  Badge,
-  InputNumber
+  Badge
 } from "antd";
 import {
   LinkOutlined,
@@ -390,9 +389,7 @@ export default function ProfileCard({
                 marginLeft: "8px"
               }}
             >
-              {profile?.tipAmount && (
-                <span>💰 {formatEther(profile.tipAmount || 0n)} NERO</span>
-              )}
+              <span>💰 {formatEther(profile?.tipAmount || 0n)} NERO</span>
             </Tag>
             <Tag
               bordered={false}
@@ -403,19 +400,19 @@ export default function ProfileCard({
                 marginLeft: "8px"
               }}
             >
-              {profile?.eoa?.id && (
-                <span
-                  title="Copy EOA address"
-                  onClick={() => {
-                    navigator.clipboard.writeText(profile?.eoa?.id);
-                    message.success("EOA address copied to clipboard!");
-                  }}
-                  style={{ cursor: "pointer" }}
-                >
-                  {ellipsisString(profile?.eoa?.id, 8, 5)}{" "}
-                  <CopyOutlined style={{ marginLeft: "4px" }} />
-                </span>
-              )}
+              <span
+                title="Copy EOA address"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    profile?.eoa?.id || account || ""
+                  );
+                  message.success("EOA address copied to clipboard!");
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                {ellipsisString(profile?.eoa?.id || account || "", 8, 5)}{" "}
+                <CopyOutlined style={{ marginLeft: "4px" }} />
+              </span>
             </Tag>
             {/* tabs with links, posts, notes */}
           </div>
