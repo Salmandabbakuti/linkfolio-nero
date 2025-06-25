@@ -5,9 +5,11 @@ import {
   CrownOutlined,
   StarFilled,
   ArrowRightOutlined,
-  PlayCircleOutlined
+  PlayCircleOutlined,
+  CompassOutlined
 } from "@ant-design/icons";
 import { useState } from "react";
+import Link from "next/link";
 
 const { Title, Paragraph } = Typography;
 
@@ -209,6 +211,35 @@ export default function Hero({ onGetStarted }) {
             >
               Watch Demo
             </Button>
+            <Link href="/explore">
+              <Button
+                size="large"
+                icon={<CompassOutlined />}
+                style={{
+                  height: "52px",
+                  padding: "0 24px",
+                  fontSize: "16px",
+                  fontWeight: "var(--font-weight-medium)",
+                  borderRadius: "26px",
+                  background: "rgba(102, 126, 234, 0.1)",
+                  backdropFilter: "blur(10px)",
+                  border: "1px solid rgba(102, 126, 234, 0.3)",
+                  color: "var(--primary-color)"
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = "rgba(102, 126, 234, 0.2)";
+                  e.target.style.transform = "translateY(-1px)";
+                  e.target.style.borderColor = "rgba(102, 126, 234, 0.5)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = "rgba(102, 126, 234, 0.1)";
+                  e.target.style.transform = "translateY(0)";
+                  e.target.style.borderColor = "rgba(102, 126, 234, 0.3)";
+                }}
+              >
+                Explore Profiles
+              </Button>
+            </Link>
           </Space>
 
           {/* Demo video placeholder */}

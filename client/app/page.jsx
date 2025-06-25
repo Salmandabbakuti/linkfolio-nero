@@ -163,10 +163,6 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleInputChange = (e) => {
-    setHandle(e.target.value);
-  };
-
   const handleClaim = async () => {
     // handle length should be between 3 and 15 characters
     if (handle.length < 3 || handle.length > 15) {
