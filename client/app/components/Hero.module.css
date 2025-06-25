@@ -269,18 +269,18 @@
 }
 
 /* Custom Carousel Styles */
-:global(.custom-carousel-dots) {
+.carouselWrapper :global(.ant-carousel .ant-carousel-dots) {
   bottom: 20px !important;
 }
 
-:global(.custom-carousel-dots li button) {
+.carouselWrapper :global(.ant-carousel .ant-carousel-dots li button) {
   background: rgba(255, 255, 255, 0.4) !important;
   border-radius: 50% !important;
   width: 12px !important;
   height: 12px !important;
 }
 
-:global(.custom-carousel-dots li.slick-active button) {
+.carouselWrapper :global(.ant-carousel .ant-carousel-dots li.ant-carousel-dots-active button) {
   background: var(--primary-color) !important;
   width: 16px !important;
   height: 16px !important;

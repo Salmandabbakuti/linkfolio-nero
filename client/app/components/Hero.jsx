@@ -170,7 +170,9 @@ export default function Hero({ onGetStarted }) {
           </Space>
 
           {/* Feature Showcase Carousel */}
-          <div className={styles.carouselContainer}>
+          <div
+            className={`${styles.carouselContainer} ${styles.carouselWrapper}`}
+          >
             {/* Carousel Navigation */}
             <div className={styles.carouselNavigation}>
               <Button
@@ -191,7 +193,7 @@ export default function Hero({ onGetStarted }) {
               ref={carouselRef}
               autoplay
               autoplaySpeed={4000}
-              dots={{ className: "custom-carousel-dots" }}
+              dots={true}
               style={{ borderRadius: "20px" }}
             >
               {showcaseItems.map((item, index) => (

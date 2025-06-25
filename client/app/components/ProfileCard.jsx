@@ -476,12 +476,7 @@ export default function ProfileCard({
                           }}
                         />
                         <Button
-                          type="primary"
-                          shape={
-                            appearanceSettings.buttonShape === "pill"
-                              ? "round"
-                              : "default"
-                          }
+                          variant="solid"
                           onClick={handleCreatePost}
                           loading={loading?.createPost}
                           style={dynamicStyles.button}
@@ -622,12 +617,7 @@ export default function ProfileCard({
                       💡 Tip will be sent directly to the profile owner
                     </Typography.Text>
                     <Button
-                      type="primary"
-                      shape={
-                        appearanceSettings.buttonShape === "pill"
-                          ? "round"
-                          : "default"
-                      }
+                      variant="solid"
                       onClick={handleLeaveNote}
                       loading={loading?.leaveNote}
                       icon={<DollarOutlined />}
