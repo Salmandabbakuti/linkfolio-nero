@@ -80,7 +80,6 @@
 
 .customizationDescription {
   color: var(--text-secondary);
-  margin-bottom: 32px;
   max-width: 500px;
   margin: 0 auto 32px;
 }
@@ -89,7 +88,6 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 16px;
-  margin-bottom: 32px;
   max-width: 600px;
   margin: 0 auto 32px;
 }

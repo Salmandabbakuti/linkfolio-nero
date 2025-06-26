@@ -94,9 +94,8 @@
   font-size: 1.25rem;
   color: var(--text-secondary);
   line-height: 1.6;
-  margin-bottom: 40px;
   max-width: 600px;
-  margin: 0 auto 40px;
+  margin: 0 auto 40px auto;
 }
 
 .ctaButtons {
