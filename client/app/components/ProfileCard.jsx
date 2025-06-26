@@ -296,10 +296,8 @@ export default function ProfileCard({
       color: linkStyle === "normal" ? textColor : accentColor
     };
 
-    const bannerImage =
-      banner || `https://picsum.photos/seed/${profile?.handle}/1200/200`;
     const bannerStyle = {
-      backgroundImage: `url(${bannerImage})`,
+      backgroundImage: `url(${banner})`,
       backgroundSize: "cover",
       backgroundPosition: "center",
       height: "120px",

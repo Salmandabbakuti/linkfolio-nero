@@ -19,7 +19,7 @@ export const profileTemplates = [
       linkStyle: "bold",
       textColor: "#1565C0",
       avatarShape: "circle",
-      banner: ""
+      banner: "https://picsum.photos/seed/modern-glass/1200/200"
     }
   },
   {
@@ -41,7 +41,7 @@ export const profileTemplates = [
       linkStyle: "underline",
       textColor: "#FFFFFF",
       avatarShape: "square",
-      banner: ""
+      banner: "https://picsum.photos/seed/neon-cyberpunk/1200/200"
     }
   },
   {
@@ -63,7 +63,7 @@ export const profileTemplates = [
       linkStyle: "bold",
       textColor: "#8B4513",
       avatarShape: "rounded",
-      banner: ""
+      banner: "https://picsum.photos/seed/warm-sunset/1200/200"
     }
   },
   {
@@ -85,7 +85,7 @@ export const profileTemplates = [
       linkStyle: "normal",
       textColor: "#006064",
       avatarShape: "circle",
-      banner: ""
+      banner: "https://picsum.photos/seed/ocean-breeze/1200/200"
     }
   },
   {
@@ -107,7 +107,7 @@ export const profileTemplates = [
       linkStyle: "bold",
       textColor: "#E8E8E8",
       avatarShape: "circle",
-      banner: ""
+      banner: "https://picsum.photos/seed/dark-void/1200/200"
     }
   },
   {
@@ -129,7 +129,7 @@ export const profileTemplates = [
       linkStyle: "bold",
       textColor: "#2E7D32",
       avatarShape: "rounded",
-      banner: ""
+      banner: "https://picsum.photos/seed/forest-zen/1200/200"
     }
   },
   {
@@ -151,7 +151,7 @@ export const profileTemplates = [
       linkStyle: "underline",
       textColor: "#E0D4F7",
       avatarShape: "circle",
-      banner: ""
+      banner: "https://picsum.photos/seed/midnight-purple/1200/200"
     }
   },
   {
@@ -173,7 +173,7 @@ export const profileTemplates = [
       linkStyle: "underline",
       textColor: "#000000",
       avatarShape: "square",
-      banner: ""
+      banner: "https://picsum.photos/seed/minimalist-mono/1200/200"
     }
   },
   {
@@ -195,7 +195,7 @@ export const profileTemplates = [
       linkStyle: "bold",
       textColor: "#F0F0F0",
       avatarShape: "square",
-      banner: ""
+      banner: "https://picsum.photos/seed/carbon-steel/1200/200"
     }
   },
   {
@@ -217,7 +217,7 @@ export const profileTemplates = [
       linkStyle: "bold",
       textColor: "#AD1457",
       avatarShape: "rounded",
-      banner: ""
+      banner: "https://picsum.photos/seed/retro-vibes/1200/200"
     }
   },
   {
@@ -239,7 +239,7 @@ export const profileTemplates = [
       linkStyle: "normal",
       textColor: "#A8E6A8",
       avatarShape: "rounded",
-      banner: ""
+      banner: "https://picsum.photos/seed/emerald-night/1200/200"
     }
   },
   {
@@ -261,7 +261,7 @@ export const profileTemplates = [
       linkStyle: "bold",
       textColor: "#1C1C1C",
       avatarShape: "circle",
-      banner: ""
+      banner: "https://picsum.photos/seed/corporate-blue/1200/200"
     }
   },
   {
@@ -283,7 +283,7 @@ export const profileTemplates = [
       linkStyle: "bold",
       textColor: "#FFB3B3",
       avatarShape: "circle",
-      banner: ""
+      banner: "https://picsum.photos/seed/crimson-shadow/1200/200"
     }
   }
 ];

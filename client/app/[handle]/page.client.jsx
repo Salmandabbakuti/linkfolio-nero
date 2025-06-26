@@ -33,7 +33,8 @@ import {
   ExclamationCircleOutlined,
   SyncOutlined,
   LoadingOutlined,
-  ExpandAltOutlined
+  ExpandAltOutlined,
+  SaveOutlined
 } from "@ant-design/icons";
 import {
   useAppKitProvider,
@@ -70,17 +71,17 @@ export default function Profile({ params }) {
   const { handle } = use(params);
 
   const initialValues = {
-    name: "",
     handle,
-    category: "Personal", // Default to Personal
-    bio: "",
-    avatar: "",
-    links: {}
+    category: "Personal" // Default to Personal
+  };
+
+  const initialAppearanceSettings = {
+    ...DEFAULT_APPEARANCE_SETTINGS,
+    banner: `https://picsum.photos/seed/${handle}/1200/200`
   };
 
   // State
   const [profile, setProfile] = useState(null);
-  const [formData] = Form.useForm();
   const [mode, setMode] = useState("view");
   const [avatarFile, setAvatarFile] = useState(null);
   const [loading, setLoading] = useState({
@@ -90,13 +91,14 @@ export default function Profile({ params }) {
   const [aaWalletAddress, setAAWalletAddress] = useState(null);
   const [selectedSocials, setSelectedSocials] = useState([]);
   const [appearanceSettings, setAppearanceSettings] = useState(
-    DEFAULT_APPEARANCE_SETTINGS
+    initialAppearanceSettings
   );
-  const [formValues, setFormValues] = useState(initialValues);
   // const [templateCollapseActiveKey, setTemplateCollapseActiveKey] = useState([
   //   "templates"
   // ]);
-
+  const [previewData, setPreviewData] = useState(null);
+  const [profileFormData] = Form.useForm();
+  const profileFormValues = Form.useWatch([], profileFormData);
   const [settingsFormData] = Form.useForm();
 
   const router = useRouter();
@@ -118,7 +120,8 @@ export default function Profile({ params }) {
   useEffect(() => {
     fetchProfile();
     resolveAAWalletAddress();
-  }, [walletProvider]);
+  }, [account]);
+
   // On edit mode, preselect socials with existing links
   useEffect(() => {
     if (mode === "edit" && profile?.links) {
@@ -178,7 +181,7 @@ export default function Profile({ params }) {
       };
       console.log("parsed profile:", parsedProfile);
       setProfile(parsedProfile);
-      formData.setFieldsValue(parsedProfile);
+      profileFormData.setFieldsValue(parsedProfile);
       // get profile settings from IPFS if settingsHash is present
       if (parsedProfile?.settingsHash) {
         message.info("Fetching profile settings from IPFS...");
@@ -268,11 +271,11 @@ export default function Profile({ params }) {
           linkFolioContract.target,
           "createProfile",
           [
-            dataObj.name,
+            dataObj.name || "",
             handle,
             categoryVal,
-            dataObj.bio,
-            dataObj.avatar,
+            dataObj.bio || "",
+            dataObj.avatar || "",
             linkKeys,
             links,
             account,
@@ -367,6 +370,14 @@ export default function Profile({ params }) {
               loading={loading?.read}
               extra={
                 <Space>
+                  <Button
+                    type="primary"
+                    shape="circle"
+                    title="Save"
+                    icon={<SaveOutlined />}
+                    loading={loading?.write}
+                    onClick={() => profileFormData.submit()}
+                  />
                   {isProfileOwner && (
                     <Popconfirm
                       title="Are you sure you want to delete this profile?"
@@ -393,14 +404,11 @@ export default function Profile({ params }) {
                     label: "Profile",
                     children: (
                       <Form
-                        form={formData}
+                        form={profileFormData}
                         onFinish={onFinish}
                         initialValues={initialValues}
                         layout="vertical"
                         requiredMark
-                        onValuesChange={(changedValues, allValues) => {
-                          setFormValues(allValues);
-                        }}
                       >
                         <Spin
                           spinning={loading?.write}
@@ -468,7 +476,7 @@ export default function Profile({ params }) {
                                   }
                                 ]}
                               >
-                                <Input />
+                                <Input maxLength={50} showCount />
                               </Form.Item>
                               <Form.Item
                                 label="Handle"
@@ -509,7 +517,7 @@ export default function Profile({ params }) {
                           <Row gutter={16}>
                             <Col xs={24} lg={24}>
                               <Form.Item label="Bio" name="bio">
-                                <Input.TextArea />
+                                <Input.TextArea maxLength={300} showCount />
                               </Form.Item>
                             </Col>
                           </Row>
@@ -574,6 +582,7 @@ export default function Profile({ params }) {
                                         social.icon || <GlobalOutlined />
                                       }
                                       placeholder={`Enter your ${social.name} profile link`}
+                                      maxLength={100}
                                     />
                                   </Form.Item>
                                 </Col>
@@ -794,7 +803,7 @@ export default function Profile({ params }) {
                           layout="vertical"
                           // id={JSON.stringify(appearanceSettings)} // force re-render on settings change
                           form={settingsFormData}
-                          initialValues={appearanceSettings}
+                          initialValues={initialAppearanceSettings}
                           onValuesChange={(changedValues, allValues) => {
                             console.log(
                               "Appearance settings changed:",
@@ -1085,18 +1094,24 @@ export default function Profile({ params }) {
                   title="Expand to Fullscreen"
                   shape="circle"
                   icon={<ExpandAltOutlined />}
-                  onClick={() => setMode("preview")}
+                  onClick={() => {
+                    // Capture current form values for preview before form unmounting
+                    // getFieldsValue() will be empty if the form is unmounted
+                    const currentFormValues = profileFormData.getFieldsValue();
+                    setPreviewData(currentFormValues);
+                    setMode("preview");
+                  }}
                 />
               }
             >
               <ProfileCard
                 profile={{
-                  ...formValues,
                   ...profile,
+                  ...profileFormValues,
+                  links: profileFormValues?.links || [], //priority to form values
                   avatar: avatarFile
                     ? URL.createObjectURL(avatarFile?.originFileObj)
-                    : formValues.avatar ||
-                      profile?.avatar ||
+                    : profile?.avatar ||
                       `https://api.dicebear.com/5.x/open-peeps/svg?seed=${handle}`
                 }}
                 aaWalletAddress={aaWalletAddress}
@@ -1211,15 +1226,20 @@ export default function Profile({ params }) {
               </>
             ) : (
               <ProfileCard
-                aaWalletAddress={aaWalletAddress}
                 profile={
                   mode === "preview"
                     ? {
                         ...profile,
-                        ...formData.getFieldsValue()
+                        ...previewData,
+                        links: previewData?.links || [], //priority to form values
+                        avatar: avatarFile
+                          ? URL.createObjectURL(avatarFile?.originFileObj)
+                          : profile?.avatar ||
+                            `https://api.dicebear.com/5.x/open-peeps/svg?seed=${handle}`
                       }
                     : profile
                 }
+                aaWalletAddress={aaWalletAddress}
                 appearanceSettings={appearanceSettings}
               />
             )}
