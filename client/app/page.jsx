@@ -252,7 +252,7 @@ export default function Home() {
             <Col xs={24} lg={16}>
               <Card
                 className={styles.customizationCard}
-                bodyStyle={{ padding: 0 }}
+                styles={{ body: { padding: 0 } }}
               >
                 <div className={styles.customizationIcon}>🎨</div>
                 <Title level={3} className={styles.customizationTitle}>
