@@ -184,7 +184,6 @@ export default function Profile({ params }) {
       profileFormData.setFieldsValue(parsedProfile);
       // get profile settings from IPFS if settingsHash is present
       if (parsedProfile?.settingsHash) {
-        message.info("Fetching profile settings from IPFS...");
         const profileSettingsRes = await getProfileSettingsFromIpfs(
           parsedProfile?.settingsHash
         );
@@ -214,7 +213,6 @@ export default function Profile({ params }) {
     const categoryVal = categoryArr.indexOf(dataObj?.category);
     try {
       // upload settings to IPFS
-      console.log("Uploading profile settings to IPFS...");
       message.info("Uploading profile settings to IPFS...");
       const uploadRes = await uploadProfileSettingsToIpfs(appearanceSettings);
       if (uploadRes?.error) {
@@ -225,10 +223,9 @@ export default function Profile({ params }) {
       dataObj.settingsHash = uploadRes?.cid; // remove this line
       // if avatar file is present, upload it to IPFS
       if (avatarFile) {
-        message.info("Uploading avatar file to IPFS...");
+        message.info("Uploading avatar to IPFS...");
         const formData = new FormData();
         formData.append("file", avatarFile?.originFileObj);
-        console.log("Uploading avatar file to IPFS:", avatarFile);
         const uploadRes = await uploadFileToIpfs(formData);
         if (uploadRes?.error) {
           console.error("Avatar upload failed:", uploadRes.error);
@@ -271,7 +268,7 @@ export default function Profile({ params }) {
           linkFolioContract.target,
           "createProfile",
           [
-            dataObj.name || "",
+            dataObj.name,
             handle,
             categoryVal,
             dataObj.bio || "",
@@ -301,8 +298,8 @@ export default function Profile({ params }) {
           tokenId,
           dataObj.name,
           categoryVal,
-          dataObj.bio,
-          dataObj.avatar,
+          dataObj.bio || "",
+          dataObj.avatar || "",
           linkKeys,
           links,
           dataObj.settingsHash || "" // settingsHash is optional

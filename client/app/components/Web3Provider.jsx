@@ -4,33 +4,12 @@ import "@ant-design/v5-patch-for-react-19";
 import { ConfigProvider, theme } from "antd";
 import { createAppKit } from "@reown/appkit/react";
 import { EthersAdapter } from "@reown/appkit-adapter-ethers";
-import { mainnet, arbitrum, defineChain } from "@reown/appkit/networks";
-
-// Define the Nero Testnet chain
-const neroTestnet = defineChain({
-  id: 689,
-  caipNetworkId: "eip155:689",
-  chainNamespace: "eip155",
-  name: "Nero Testnet",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Nero",
-    symbol: "NERO"
-  },
-  rpcUrls: {
-    default: {
-      http: ["https://rpc-testnet.nerochain.io"],
-      webSocket: ["wss://rpc-testnet.nerochain.io"]
-    }
-  },
-  blockExplorers: {
-    default: { name: "Explorer", url: "https://testnet.neroscan.io/" }
-  }
-});
+import { mainnet, arbitrum } from "@reown/appkit/networks";
+import { neroTestnetChain, neroMainnetChain } from "@/app/utils";
 
 // 1. Get projectId at https://cloud.reown.com
 const projectId = process.env.NEXT_PUBLIC_REOWN_PROJECT_ID;
-const networks = [mainnet, arbitrum, neroTestnet];
+const networks = [neroTestnetChain, neroMainnetChain, mainnet, arbitrum];
 
 // 2. Create a metadata object
 const metadata = {
@@ -47,8 +26,12 @@ createAppKit({
   metadata,
   networks,
   projectId,
-  defaultNetwork: neroTestnet,
+  defaultNetwork: neroTestnetChain, // Default network to use
   allowUnsupportedChain: false,
+  chainImages: {
+    689: "https://testnet.neroscan.io/favicon.svg",
+    1689: "https://framerusercontent.com/images/45NncLY0V1ELrMis3GvSCJsN79s.png"
+  },
   themeMode: "dark",
   themeVariables: {
     "--w3m-accent": "#6366f1" // Primary indigo color

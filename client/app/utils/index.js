@@ -1,4 +1,5 @@
 import { Contract, JsonRpcProvider } from "ethers";
+import { defineChain } from "@reown/appkit/networks";
 import { GraphQLClient, gql } from "graphql-request";
 import {
   XOutlined,
@@ -42,6 +43,58 @@ export const DEFAULT_APPEARANCE_SETTINGS = {
   banner: ""
 };
 
+// Define the Nero Testnet chain
+export const neroTestnetChain = defineChain({
+  id: 689,
+  caipNetworkId: "eip155:689",
+  chainNamespace: "eip155",
+  name: "Nero Testnet",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Nero",
+    symbol: "NERO"
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://rpc-testnet.nerochain.io"],
+      webSocket: ["wss://rpc-testnet.nerochain.io"]
+    }
+  },
+  blockExplorers: {
+    default: { name: "Explorer", url: "https://testnet.neroscan.io" }
+  }
+});
+
+export const neroMainnetChain = defineChain({
+  id: 1689,
+  caipNetworkId: "eip155:1689",
+  chainNamespace: "eip155",
+  name: "Nero Mainnet",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Nero",
+    symbol: "NERO"
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://rpc.nerochain.io"],
+      webSocket: ["wss://rpc.nerochain.io"]
+    }
+  },
+  blockExplorers: {
+    default: { name: "Explorer", url: "https://neroscan.io" }
+  }
+});
+
+// nero testnet provider
+const defaultProvider = new JsonRpcProvider(
+  "https://rpc-testnet.nerochain.io",
+  689,
+  {
+    staticNetwork: true
+  }
+);
+
 const linkFolioContractABI = [
   "function createProfile(string _name, string _handle, uint8 _category, string _bio, string _avatar, string[] _linkKeys, string[] _links, address _eoa, string _settingsHash)",
   "function updateProfile(uint256 _tokenId, string _name, uint8 _category, string _bio, string _avatar, string[] _linkKeys, string[] _links, string _settingsHash)",
@@ -52,15 +105,6 @@ const linkFolioContractABI = [
   "function handleToTokenId(string handle) view returns (uint256 tokenId)",
   "function tokenURI(uint256 tokenId) view returns (string uri)"
 ];
-
-// nero testnet provider
-const defaultProvider = new JsonRpcProvider(
-  "https://rpc-testnet.nerochain.io",
-  689,
-  {
-    staticNetwork: true
-  }
-);
 
 export const linkFolioContract = new Contract(
   LINKFOLIO_CONTRACT_ADDRESS,
