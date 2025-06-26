@@ -94,10 +94,9 @@ export default function Profile({ params }) {
   const [appearanceSettings, setAppearanceSettings] = useState(
     initialAppearanceSettings
   );
-  // const [templateCollapseActiveKey, setTemplateCollapseActiveKey] = useState([
-  //   "templates"
-  // ]);
   const [isPreviewExpanded, setIsPreviewExpanded] = useState(false);
+  const [previewData, setPreviewData] = useState(null);
+
   const [profileFormData] = Form.useForm();
   const profileFormValues = Form.useWatch([], profileFormData);
   const [settingsFormData] = Form.useForm();
@@ -1138,15 +1137,26 @@ export default function Profile({ params }) {
                       <ExpandAltOutlined />
                     )
                   }
-                  onClick={() => setIsPreviewExpanded(!isPreviewExpanded)}
+                  onClick={() => {
+                    if (!isPreviewExpanded) {
+                      // Capture form values before expanding
+                      const currentFormValues =
+                        profileFormData.getFieldsValue();
+                      setPreviewData(currentFormValues);
+                    }
+                    setIsPreviewExpanded(!isPreviewExpanded);
+                  }}
                 />
               }
             >
               <ProfileCard
                 profile={{
                   ...profile,
-                  ...profileFormValues,
-                  links: profileFormValues?.links || [], //priority to form values
+                  ...(isPreviewExpanded ? previewData : profileFormValues),
+                  links:
+                    (isPreviewExpanded
+                      ? previewData?.links
+                      : profileFormValues?.links) || [], //priority to form values
                   avatar: avatarFile
                     ? URL.createObjectURL(avatarFile?.originFileObj)
                     : profile?.avatar ||
