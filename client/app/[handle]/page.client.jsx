@@ -34,7 +34,8 @@ import {
   SyncOutlined,
   LoadingOutlined,
   ExpandAltOutlined,
-  SaveOutlined
+  SaveOutlined,
+  CompressOutlined
 } from "@ant-design/icons";
 import {
   useAppKitProvider,
@@ -96,7 +97,7 @@ export default function Profile({ params }) {
   // const [templateCollapseActiveKey, setTemplateCollapseActiveKey] = useState([
   //   "templates"
   // ]);
-  const [previewData, setPreviewData] = useState(null);
+  const [isPreviewExpanded, setIsPreviewExpanded] = useState(false);
   const [profileFormData] = Form.useForm();
   const profileFormValues = Form.useWatch([], profileFormData);
   const [settingsFormData] = Form.useForm();
@@ -362,720 +363,741 @@ export default function Profile({ params }) {
     <div>
       {mode === "edit" ? (
         <Row gutter={16}>
-          {/* Left: Editing Section (made smaller) */}
-          <Col xs={24} lg={12} xl={14}>
-            <Card
-              title={profile?.id ? "Edit Profile" : "Create Profile"}
-              variant="outlined"
-              loading={loading?.read}
-              extra={
-                <Space>
-                  <Button
-                    type="primary"
-                    shape="circle"
-                    title="Save"
-                    icon={<SaveOutlined />}
-                    loading={loading?.write}
-                    onClick={() => profileFormData.submit()}
-                  />
-                  {isProfileOwner && (
-                    <Popconfirm
-                      title="Are you sure you want to delete this profile?"
-                      onConfirm={handleDeleteProfile}
-                    >
-                      <Button
-                        title="Delete Profile"
-                        type="primary"
-                        shape="circle"
-                        danger
-                        icon={<DeleteOutlined />}
-                      />
-                    </Popconfirm>
-                  )}
-                </Space>
-              }
-            >
-              <Tabs
-                defaultActiveKey="profile"
-                tabPosition="top"
-                items={[
-                  {
-                    key: "profile",
-                    label: "Profile",
-                    children: (
-                      <Form
-                        form={profileFormData}
-                        onFinish={onFinish}
-                        initialValues={initialValues}
-                        layout="vertical"
-                        requiredMark
+          {/* Left: Editing Section - Hide when preview is expanded */}
+          {!isPreviewExpanded && (
+            <Col xs={24} lg={12} xl={14}>
+              <Card
+                title={profile?.id ? "Edit Profile" : "Create Profile"}
+                variant="outlined"
+                loading={loading?.read}
+                extra={
+                  <Space>
+                    <Button
+                      type="primary"
+                      shape="circle"
+                      title="Save"
+                      icon={<SaveOutlined />}
+                      loading={loading?.write}
+                      onClick={() => profileFormData.submit()}
+                    />
+                    {isProfileOwner && (
+                      <Popconfirm
+                        title="Are you sure you want to delete this profile?"
+                        onConfirm={handleDeleteProfile}
                       >
-                        <Spin
-                          spinning={loading?.write}
-                          size="large"
-                          tip="Transaction in progress..."
-                          indicator={<LoadingOutlined spin />}
+                        <Button
+                          title="Delete Profile"
+                          type="primary"
+                          shape="circle"
+                          danger
+                          icon={<DeleteOutlined />}
+                        />
+                      </Popconfirm>
+                    )}
+                  </Space>
+                }
+              >
+                <Tabs
+                  defaultActiveKey="profile"
+                  tabPosition="top"
+                  items={[
+                    {
+                      key: "profile",
+                      label: "Profile",
+                      children: (
+                        <Form
+                          form={profileFormData}
+                          onFinish={onFinish}
+                          initialValues={initialValues}
+                          layout="vertical"
+                          requiredMark
                         >
-                          <Row gutter={16}>
-                            <Col xs={24} lg={12}>
-                              <Form.Item
-                                label="Avatar"
-                                name="avatar"
-                                hasFeedback
-                                help="Recommended 78x78, Max: 300KB"
-                              >
-                                <Upload
-                                  name="avatar"
-                                  multiple={false}
-                                  showUploadList
-                                  listType="picture-circle"
-                                  fileList={avatarFile ? [avatarFile] : []}
-                                  accept="image/*"
-                                  maxCount={1}
-                                  beforeUpload={() => false}
-                                  onChange={({ fileList }) => {
-                                    console.log("Avatar changed", fileList[0]);
-                                    const file = fileList[0];
-                                    if (!file) {
-                                      setAvatarFile(null);
-                                      return;
-                                    }
-                                    if (
-                                      !file?.type?.startsWith("image/") ||
-                                      file?.size > 300000
-                                    ) {
-                                      return message.error(
-                                        "Invalid file type or size (Max 300KB)"
-                                      );
-                                    }
-                                    setAvatarFile(file);
-                                  }}
-                                >
-                                  {avatarFile ? null : (
-                                    <Avatar
-                                      src={
-                                        profile?.avatar ||
-                                        `https://api.dicebear.com/5.x/open-peeps/svg?seed=${handle}`
-                                      }
-                                      alt="Profile"
-                                      size={100}
-                                      shape="circle"
-                                    />
-                                  )}
-                                </Upload>
-                              </Form.Item>
-                            </Col>
-                            <Col xs={24} lg={12}>
-                              <Form.Item
-                                label="Name"
-                                name="name"
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Please enter your name"
-                                  }
-                                ]}
-                              >
-                                <Input maxLength={50} showCount />
-                              </Form.Item>
-                              <Form.Item
-                                label="Handle"
-                                name="handle"
-                                hasFeedback
-                                help="Your unique handle, cannot be changed."
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Please enter your handle"
-                                  }
-                                ]}
-                              >
-                                <Input readOnly />
-                              </Form.Item>
-                              <Form.Item
-                                label="Category"
-                                name="category"
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Please select a category"
-                                  }
-                                ]}
-                              >
-                                <Select
-                                  placeholder="Select profile category"
-                                  options={[
-                                    { label: "Personal", value: "Personal" },
-                                    { label: "Creator", value: "Creator" },
-                                    { label: "Business", value: "Business" }
-                                  ]}
-                                />
-                              </Form.Item>
-                            </Col>
-                          </Row>
-
-                          <Row gutter={16}>
-                            <Col xs={24} lg={24}>
-                              <Form.Item label="Bio" name="bio">
-                                <Input.TextArea maxLength={300} showCount />
-                              </Form.Item>
-                            </Col>
-                          </Row>
-
-                          <Divider>
-                            <Title level={5}>Social Links</Title>
-                          </Divider>
-                          <Typography.Paragraph
-                            type="secondary"
-                            style={{ marginBottom: "10px" }}
+                          <Spin
+                            spinning={loading?.write}
+                            size="large"
+                            tip="Transaction in progress..."
+                            indicator={<LoadingOutlined spin />}
                           >
-                            Select the social platforms to include links in your
-                            profile. Click to add or remove them.
-                          </Typography.Paragraph>
-                          <Space wrap style={{ marginBottom: 16 }}>
-                            {supportedSocials.map((social) => (
-                              <Button
-                                key={social.id}
-                                size="small"
-                                type={
-                                  selectedSocials.includes(
-                                    social.name.toLowerCase()
-                                  )
-                                    ? "primary"
-                                    : "default"
-                                }
-                                icon={social.icon || <GlobalOutlined />}
-                                onClick={() => {
-                                  setSelectedSocials((prev) =>
-                                    prev.includes(social.name.toLowerCase())
-                                      ? prev.filter(
-                                          (s) => s !== social.name.toLowerCase()
-                                        )
-                                      : [...prev, social.name.toLowerCase()]
-                                  );
-                                }}
-                              >
-                                {social.name}
-                              </Button>
-                            ))}
-                          </Space>
-
-                          <Row gutter={16}>
-                            {selectedSocials.map((socialKey) => {
-                              const social = supportedSocials.find(
-                                (s) => s.name.toLowerCase() === socialKey
-                              );
-                              return (
-                                <Col xs={24} lg={12} key={socialKey}>
-                                  <Form.Item
-                                    label={social.name}
-                                    name={["links", socialKey]}
-                                    rules={[
-                                      {
-                                        required: true,
-                                        message: `Please enter your ${social.name} profile link`
+                            <Row gutter={16}>
+                              <Col xs={24} lg={12}>
+                                <Form.Item
+                                  label="Avatar"
+                                  name="avatar"
+                                  hasFeedback
+                                  help="Recommended 78x78, Max: 300KB"
+                                >
+                                  <Upload
+                                    name="avatar"
+                                    multiple={false}
+                                    showUploadList
+                                    listType="picture-circle"
+                                    fileList={avatarFile ? [avatarFile] : []}
+                                    accept="image/*"
+                                    maxCount={1}
+                                    beforeUpload={() => false}
+                                    onChange={({ fileList }) => {
+                                      console.log(
+                                        "Avatar changed",
+                                        fileList[0]
+                                      );
+                                      const file = fileList[0];
+                                      if (!file) {
+                                        setAvatarFile(null);
+                                        return;
                                       }
-                                    ]}
+                                      if (
+                                        !file?.type?.startsWith("image/") ||
+                                        file?.size > 300000
+                                      ) {
+                                        return message.error(
+                                          "Invalid file type or size (Max 300KB)"
+                                        );
+                                      }
+                                      setAvatarFile(file);
+                                    }}
                                   >
-                                    <Input
-                                      addonBefore={
-                                        social.icon || <GlobalOutlined />
-                                      }
-                                      placeholder={`Enter your ${social.name} profile link`}
-                                      maxLength={100}
-                                    />
-                                  </Form.Item>
-                                </Col>
-                              );
-                            })}
-                          </Row>
+                                    {avatarFile ? null : (
+                                      <Avatar
+                                        src={
+                                          profile?.avatar ||
+                                          `https://api.dicebear.com/5.x/open-peeps/svg?seed=${handle}`
+                                        }
+                                        alt="Profile"
+                                        size={100}
+                                        shape="circle"
+                                      />
+                                    )}
+                                  </Upload>
+                                </Form.Item>
+                              </Col>
+                              <Col xs={24} lg={12}>
+                                <Form.Item
+                                  label="Name"
+                                  name="name"
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: "Please enter your name"
+                                    }
+                                  ]}
+                                >
+                                  <Input maxLength={50} showCount />
+                                </Form.Item>
+                                <Form.Item
+                                  label="Handle"
+                                  name="handle"
+                                  hasFeedback
+                                  help="Your unique handle, cannot be changed."
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: "Please enter your handle"
+                                    }
+                                  ]}
+                                >
+                                  <Input readOnly />
+                                </Form.Item>
+                                <Form.Item
+                                  label="Category"
+                                  name="category"
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: "Please select a category"
+                                    }
+                                  ]}
+                                >
+                                  <Select
+                                    placeholder="Select profile category"
+                                    options={[
+                                      { label: "Personal", value: "Personal" },
+                                      { label: "Creator", value: "Creator" },
+                                      { label: "Business", value: "Business" }
+                                    ]}
+                                  />
+                                </Form.Item>
+                              </Col>
+                            </Row>
 
-                          <Space>
-                            <Button
-                              shape="round"
-                              onClick={() => setMode("view")}
+                            <Row gutter={16}>
+                              <Col xs={24} lg={24}>
+                                <Form.Item label="Bio" name="bio">
+                                  <Input.TextArea maxLength={300} showCount />
+                                </Form.Item>
+                              </Col>
+                            </Row>
+
+                            <Divider>
+                              <Title level={5}>Social Links</Title>
+                            </Divider>
+                            <Typography.Paragraph
+                              type="secondary"
+                              style={{ marginBottom: "10px" }}
                             >
-                              Back
-                            </Button>
-                            <Button
-                              type="primary"
-                              shape="round"
-                              htmlType="submit"
-                              loading={loading?.write}
-                            >
-                              Save
-                            </Button>
-                          </Space>
-                        </Spin>
-                      </Form>
-                    )
-                  },
-                  {
-                    key: "appearance",
-                    label: "Appearance",
-                    children: (
-                      <>
-                        <Collapse
-                          defaultActiveKey={["templates"]}
-                          // activeKey={["templates"]}
-                          // onChange={setTemplateCollapseActiveKey}
-                          style={{ marginBottom: "16px" }}
-                          expandIconPosition="end"
-                          items={[
-                            {
-                              key: "templates",
-                              label: (
-                                <Space direction="vertical">
-                                  <Typography.Text strong>
-                                    🎨 Quick Templates
-                                  </Typography.Text>
-                                  <Typography.Text type="secondary">
-                                    Choose from our curated templates or
-                                    customize your own style below.
-                                  </Typography.Text>
-                                </Space>
-                              ),
-                              children: (
-                                <div
-                                  style={{
-                                    display: "grid",
-                                    gridTemplateColumns:
-                                      "repeat(auto-fit, minmax(200px, 1fr))",
-                                    gap: "12px"
+                              Select the social platforms to include links in
+                              your profile. Click to add or remove them.
+                            </Typography.Paragraph>
+                            <Space wrap style={{ marginBottom: 16 }}>
+                              {supportedSocials.map((social) => (
+                                <Button
+                                  key={social.id}
+                                  size="small"
+                                  type={
+                                    selectedSocials.includes(
+                                      social.name.toLowerCase()
+                                    )
+                                      ? "primary"
+                                      : "default"
+                                  }
+                                  icon={social.icon || <GlobalOutlined />}
+                                  onClick={() => {
+                                    setSelectedSocials((prev) =>
+                                      prev.includes(social.name.toLowerCase())
+                                        ? prev.filter(
+                                            (s) =>
+                                              s !== social.name.toLowerCase()
+                                          )
+                                        : [...prev, social.name.toLowerCase()]
+                                    );
                                   }}
                                 >
-                                  {profileTemplates.map((template) => (
-                                    <Card
-                                      key={template.id}
-                                      size="small"
-                                      hoverable
-                                      onClick={() => {
-                                        settingsFormData.setFieldsValue(
-                                          template.settings
-                                        );
-                                        setAppearanceSettings(
-                                          template.settings
-                                        );
-                                        message.success(
-                                          `Applied ${template.name} template!`
-                                        );
-                                      }}
-                                      style={{
-                                        cursor: "pointer",
-                                        border:
-                                          appearanceSettings.fontFamily ===
-                                            template.settings.fontFamily &&
-                                          appearanceSettings.accentColor ===
-                                            template.settings.accentColor
-                                            ? "2px solid #1677ff"
-                                            : "1px solid #d9d9d9",
-                                        transition: "all 0.2s ease"
-                                      }}
-                                      styles={{
-                                        body: { padding: "8px" }
-                                      }}
+                                  {social.name}
+                                </Button>
+                              ))}
+                            </Space>
+
+                            <Row gutter={16}>
+                              {selectedSocials.map((socialKey) => {
+                                const social = supportedSocials.find(
+                                  (s) => s.name.toLowerCase() === socialKey
+                                );
+                                return (
+                                  <Col xs={24} lg={12} key={socialKey}>
+                                    <Form.Item
+                                      label={social.name}
+                                      name={["links", socialKey]}
+                                      rules={[
+                                        {
+                                          required: true,
+                                          message: `Please enter your ${social.name} profile link`
+                                        }
+                                      ]}
                                     >
-                                      <div
+                                      <Input
+                                        addonBefore={
+                                          social.icon || <GlobalOutlined />
+                                        }
+                                        placeholder={`Enter your ${social.name} profile link`}
+                                        maxLength={100}
+                                      />
+                                    </Form.Item>
+                                  </Col>
+                                );
+                              })}
+                            </Row>
+
+                            <Space>
+                              <Button
+                                shape="round"
+                                onClick={() => setMode("view")}
+                              >
+                                Back
+                              </Button>
+                              <Button
+                                type="primary"
+                                shape="round"
+                                htmlType="submit"
+                                loading={loading?.write}
+                              >
+                                Save
+                              </Button>
+                            </Space>
+                          </Spin>
+                        </Form>
+                      )
+                    },
+                    {
+                      key: "appearance",
+                      label: "Appearance",
+                      children: (
+                        <>
+                          <Collapse
+                            defaultActiveKey={["templates"]}
+                            // activeKey={["templates"]}
+                            // onChange={setTemplateCollapseActiveKey}
+                            style={{ marginBottom: "16px" }}
+                            expandIconPosition="end"
+                            items={[
+                              {
+                                key: "templates",
+                                label: (
+                                  <Space direction="vertical">
+                                    <Typography.Text strong>
+                                      🎨 Quick Templates
+                                    </Typography.Text>
+                                    <Typography.Text type="secondary">
+                                      Choose from our curated templates or
+                                      customize your own style below.
+                                    </Typography.Text>
+                                  </Space>
+                                ),
+                                children: (
+                                  <div
+                                    style={{
+                                      display: "grid",
+                                      gridTemplateColumns:
+                                        "repeat(auto-fit, minmax(200px, 1fr))",
+                                      gap: "12px"
+                                    }}
+                                  >
+                                    {profileTemplates.map((template) => (
+                                      <Card
+                                        key={template.id}
+                                        size="small"
+                                        hoverable
+                                        onClick={() => {
+                                          settingsFormData.setFieldsValue(
+                                            template.settings
+                                          );
+                                          setAppearanceSettings(
+                                            template.settings
+                                          );
+                                          message.success(
+                                            `Applied ${template.name} template!`
+                                          );
+                                        }}
                                         style={{
-                                          height: "60px",
-                                          backgroundColor: "#f0f0f0", // Fallback color
-                                          background:
-                                            template.preview.background,
-                                          borderRadius: "6px",
-                                          marginBottom: "8px",
-                                          position: "relative",
-                                          overflow: "hidden",
-                                          display: "flex",
-                                          alignItems: "center",
-                                          justifyContent: "center",
-                                          paddingLeft: "8px"
+                                          cursor: "pointer",
+                                          border:
+                                            appearanceSettings.fontFamily ===
+                                              template.settings.fontFamily &&
+                                            appearanceSettings.accentColor ===
+                                              template.settings.accentColor
+                                              ? "2px solid #1677ff"
+                                              : "1px solid #d9d9d9",
+                                          transition: "all 0.2s ease"
+                                        }}
+                                        styles={{
+                                          body: { padding: "8px" }
                                         }}
                                       >
-                                        {/* Text Color and Style Indicator */}
                                         <div
                                           style={{
-                                            fontSize: `${Math.max(
-                                              14,
-                                              template.settings.fontSize - 4
-                                            )}px`,
-                                            color: template.settings.textColor,
-                                            fontFamily:
-                                              template.settings.fontFamily,
-                                            fontWeight:
-                                              template.settings.linkStyle ===
-                                              "bold"
-                                                ? "bold"
-                                                : "normal",
-                                            textDecoration:
-                                              template.settings.linkStyle ===
-                                              "underline"
-                                                ? "underline"
-                                                : "none",
-                                            textShadow:
-                                              template.settings.textColor ===
-                                                "#FFFFFF" ||
-                                              template.settings.textColor ===
-                                                "#F5F5F5"
-                                                ? "0 1px 2px rgba(0,0,0,0.5)"
-                                                : "none",
-                                            letterSpacing: "0.5px"
+                                            height: "60px",
+                                            backgroundColor: "#f0f0f0", // Fallback color
+                                            background:
+                                              template.preview.background,
+                                            borderRadius: "6px",
+                                            marginBottom: "8px",
+                                            position: "relative",
+                                            overflow: "hidden",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            paddingLeft: "8px"
                                           }}
                                         >
-                                          T{template.settings.fontSize}
+                                          {/* Text Color and Style Indicator */}
+                                          <div
+                                            style={{
+                                              fontSize: `${Math.max(
+                                                14,
+                                                template.settings.fontSize - 4
+                                              )}px`,
+                                              color:
+                                                template.settings.textColor,
+                                              fontFamily:
+                                                template.settings.fontFamily,
+                                              fontWeight:
+                                                template.settings.linkStyle ===
+                                                "bold"
+                                                  ? "bold"
+                                                  : "normal",
+                                              textDecoration:
+                                                template.settings.linkStyle ===
+                                                "underline"
+                                                  ? "underline"
+                                                  : "none",
+                                              textShadow:
+                                                template.settings.textColor ===
+                                                  "#FFFFFF" ||
+                                                template.settings.textColor ===
+                                                  "#F5F5F5"
+                                                  ? "0 1px 2px rgba(0,0,0,0.5)"
+                                                  : "none",
+                                              letterSpacing: "0.5px"
+                                            }}
+                                          >
+                                            T{template.settings.fontSize}
+                                          </div>
+
+                                          {/* Accent Color Button Indicator */}
+                                          <div
+                                            style={{
+                                              position: "absolute",
+                                              bottom: "4px",
+                                              right: "4px",
+                                              width: "20px",
+                                              height: "20px",
+                                              backgroundColor:
+                                                template.settings.accentColor,
+                                              borderRadius:
+                                                template.settings
+                                                  .buttonShape === "pill"
+                                                  ? "50%"
+                                                  : template.settings
+                                                      .buttonShape === "square"
+                                                  ? "2px"
+                                                  : "4px",
+                                              border:
+                                                template.settings.cardStyle ===
+                                                "bordered"
+                                                  ? "1px solid #fff"
+                                                  : "none",
+                                              backdropFilter:
+                                                template.settings.cardStyle ===
+                                                "glass"
+                                                  ? "blur(4px)"
+                                                  : "none"
+                                            }}
+                                          />
+
+                                          {/* Avatar Shape Indicator */}
+                                          <div
+                                            style={{
+                                              position: "absolute",
+                                              top: "4px",
+                                              right: "4px",
+                                              width: "12px",
+                                              height: "12px",
+                                              backgroundColor:
+                                                template.settings.textColor,
+                                              borderRadius:
+                                                template.settings
+                                                  .avatarShape === "circle"
+                                                  ? "50%"
+                                                  : template.settings
+                                                      .avatarShape === "rounded"
+                                                  ? "3px"
+                                                  : "0px",
+                                              opacity: 0.8
+                                            }}
+                                          />
                                         </div>
-
-                                        {/* Accent Color Button Indicator */}
-                                        <div
+                                        <Typography.Text
+                                          strong
                                           style={{
-                                            position: "absolute",
-                                            bottom: "4px",
-                                            right: "4px",
-                                            width: "20px",
-                                            height: "20px",
-                                            backgroundColor:
-                                              template.settings.accentColor,
-                                            borderRadius:
-                                              template.settings.buttonShape ===
-                                              "pill"
-                                                ? "50%"
-                                                : template.settings
-                                                    .buttonShape === "square"
-                                                ? "2px"
-                                                : "4px",
-                                            border:
-                                              template.settings.cardStyle ===
-                                              "bordered"
-                                                ? "1px solid #fff"
-                                                : "none",
-                                            backdropFilter:
-                                              template.settings.cardStyle ===
-                                              "glass"
-                                                ? "blur(4px)"
-                                                : "none"
+                                            fontSize: "12px",
+                                            display: "block"
                                           }}
-                                        />
-
-                                        {/* Avatar Shape Indicator */}
-                                        <div
-                                          style={{
-                                            position: "absolute",
-                                            top: "4px",
-                                            right: "4px",
-                                            width: "12px",
-                                            height: "12px",
-                                            backgroundColor:
-                                              template.settings.textColor,
-                                            borderRadius:
-                                              template.settings.avatarShape ===
-                                              "circle"
-                                                ? "50%"
-                                                : template.settings
-                                                    .avatarShape === "rounded"
-                                                ? "3px"
-                                                : "0px",
-                                            opacity: 0.8
-                                          }}
-                                        />
-                                      </div>
-                                      <Typography.Text
-                                        strong
-                                        style={{
-                                          fontSize: "12px",
-                                          display: "block"
-                                        }}
-                                      >
-                                        {template.name}
-                                      </Typography.Text>
-                                      <Typography.Text
-                                        type="secondary"
-                                        style={{ fontSize: "11px" }}
-                                      >
-                                        {template.description}
-                                      </Typography.Text>
-                                    </Card>
-                                  ))}
-                                </div>
-                              )
-                            }
-                          ]}
-                        />
-                        <Form
-                          layout="vertical"
-                          // id={JSON.stringify(appearanceSettings)} // force re-render on settings change
-                          form={settingsFormData}
-                          initialValues={initialAppearanceSettings}
-                          onValuesChange={(changedValues, allValues) => {
-                            console.log(
-                              "Appearance settings changed:",
-                              allValues
-                            );
-                            const colorFields = [
-                              "accentColor",
-                              "textColor",
-                              "background"
-                            ];
-                            // Handle ColorPicker values which return objects
-                            colorFields.forEach((field) => {
-                              if (
-                                allValues[field] &&
-                                typeof allValues[field] === "object"
-                              ) {
-                                allValues[field] =
-                                  allValues[field].toHexString();
+                                        >
+                                          {template.name}
+                                        </Typography.Text>
+                                        <Typography.Text
+                                          type="secondary"
+                                          style={{ fontSize: "11px" }}
+                                        >
+                                          {template.description}
+                                        </Typography.Text>
+                                      </Card>
+                                    ))}
+                                  </div>
+                                )
                               }
-                            });
-                            setAppearanceSettings(allValues);
-                          }}
-                        >
-                          <Row gutter={16}>
-                            <Col xs={24} lg={12}>
-                              {/* Font Settings Row */}
-                              <Row gutter={8}>
-                                <Col span={16}>
-                                  <Form.Item
-                                    label="Font Family"
-                                    name="fontFamily"
-                                  >
-                                    <Select
-                                      options={[
-                                        {
-                                          label: "Inter",
-                                          value: "Inter, sans-serif"
-                                        },
-                                        {
-                                          label: "Roboto",
-                                          value: "Roboto, sans-serif"
-                                        },
-                                        {
-                                          label: "Arial",
-                                          value: "Arial, Helvetica, sans-serif"
-                                        },
-                                        {
-                                          label: "Helvetica",
-                                          value: "Helvetica, Arial, sans-serif"
-                                        },
-                                        {
-                                          label: "Times New Roman",
-                                          value:
-                                            "'Times New Roman', Times, serif"
-                                        },
-                                        {
-                                          label: "Courier New",
-                                          value:
-                                            "'Courier New', Courier, monospace"
-                                        },
-                                        {
-                                          label: "Verdana",
-                                          value: "Verdana, Geneva, sans-serif"
-                                        },
-                                        {
-                                          label: "Georgia",
-                                          value: "Georgia, serif"
-                                        },
-                                        {
-                                          label: "Tahoma",
-                                          value: "Tahoma, Geneva, sans-serif"
-                                        },
-                                        {
-                                          label: "Trebuchet MS",
-                                          value:
-                                            "'Trebuchet MS', Helvetica, sans-serif"
-                                        },
-                                        {
-                                          label: "System UI",
-                                          value: "system-ui, sans-serif"
+                            ]}
+                          />
+                          <Form
+                            layout="vertical"
+                            // id={JSON.stringify(appearanceSettings)} // force re-render on settings change
+                            form={settingsFormData}
+                            initialValues={initialAppearanceSettings}
+                            onValuesChange={(changedValues, allValues) => {
+                              console.log(
+                                "Appearance settings changed:",
+                                allValues
+                              );
+                              const colorFields = [
+                                "accentColor",
+                                "textColor",
+                                "background"
+                              ];
+                              // Handle ColorPicker values which return objects
+                              colorFields.forEach((field) => {
+                                if (
+                                  allValues[field] &&
+                                  typeof allValues[field] === "object"
+                                ) {
+                                  allValues[field] =
+                                    allValues[field].toHexString();
+                                }
+                              });
+                              setAppearanceSettings(allValues);
+                            }}
+                          >
+                            <Row gutter={16}>
+                              <Col xs={24} lg={12}>
+                                {/* Font Settings Row */}
+                                <Row gutter={8}>
+                                  <Col span={16}>
+                                    <Form.Item
+                                      label="Font Family"
+                                      name="fontFamily"
+                                    >
+                                      <Select
+                                        options={[
+                                          {
+                                            label: "Inter",
+                                            value: "Inter, sans-serif"
+                                          },
+                                          {
+                                            label: "Roboto",
+                                            value: "Roboto, sans-serif"
+                                          },
+                                          {
+                                            label: "Arial",
+                                            value:
+                                              "Arial, Helvetica, sans-serif"
+                                          },
+                                          {
+                                            label: "Helvetica",
+                                            value:
+                                              "Helvetica, Arial, sans-serif"
+                                          },
+                                          {
+                                            label: "Times New Roman",
+                                            value:
+                                              "'Times New Roman', Times, serif"
+                                          },
+                                          {
+                                            label: "Courier New",
+                                            value:
+                                              "'Courier New', Courier, monospace"
+                                          },
+                                          {
+                                            label: "Verdana",
+                                            value: "Verdana, Geneva, sans-serif"
+                                          },
+                                          {
+                                            label: "Georgia",
+                                            value: "Georgia, serif"
+                                          },
+                                          {
+                                            label: "Tahoma",
+                                            value: "Tahoma, Geneva, sans-serif"
+                                          },
+                                          {
+                                            label: "Trebuchet MS",
+                                            value:
+                                              "'Trebuchet MS', Helvetica, sans-serif"
+                                          },
+                                          {
+                                            label: "System UI",
+                                            value: "system-ui, sans-serif"
+                                          }
+                                        ]}
+                                      />
+                                    </Form.Item>
+                                  </Col>
+                                  <Col span={8}>
+                                    <Form.Item
+                                      label="Font Size"
+                                      name="fontSize"
+                                    >
+                                      <InputNumber
+                                        min={12}
+                                        max={32}
+                                        formatter={(value) => `${value}px`}
+                                        parser={(value) =>
+                                          value.replace("px", "")
                                         }
-                                      ]}
-                                    />
-                                  </Form.Item>
-                                </Col>
-                                <Col span={8}>
-                                  <Form.Item label="Font Size" name="fontSize">
-                                    <InputNumber
-                                      min={12}
-                                      max={32}
-                                      formatter={(value) => `${value}px`}
-                                      parser={(value) =>
-                                        value.replace("px", "")
+                                        // style={{ width: "100%" }}
+                                      />
+                                    </Form.Item>
+                                  </Col>
+                                </Row>
+                                {/* Color Settings Row */}
+                                <Row gutter={8}>
+                                  <Col span={12}>
+                                    <Form.Item
+                                      label="Accent Color"
+                                      name="accentColor"
+                                    >
+                                      <ColorPicker
+                                        showText
+                                        format="hex"
+                                        presets={[
+                                          {
+                                            label: "Recommended",
+                                            colors: [
+                                              "#F5222D",
+                                              "#FA8C16",
+                                              "#FADB14",
+                                              "#8BBB11",
+                                              "#52C41A",
+                                              "#13A8A8",
+                                              "#1677FF",
+                                              "#2F54EB",
+                                              "#722ED1",
+                                              "#EB2F96"
+                                            ]
+                                          }
+                                        ]}
+                                      />
+                                    </Form.Item>
+                                  </Col>
+                                  <Col span={12}>
+                                    <Form.Item
+                                      label="Text Color"
+                                      name="textColor"
+                                    >
+                                      <ColorPicker
+                                        showText
+                                        format="hex"
+                                        presets={[
+                                          {
+                                            label: "Text Colors",
+                                            colors: [
+                                              "#000000",
+                                              "#262626",
+                                              "#434343",
+                                              "#595959",
+                                              "#8C8C8C",
+                                              "#FFFFFF",
+                                              "#F5F5F5",
+                                              "#FAFAFA"
+                                            ]
+                                          }
+                                        ]}
+                                      />
+                                    </Form.Item>
+                                  </Col>
+                                </Row>
+                                <Form.Item label="Background" name="background">
+                                  <ColorPicker
+                                    showText
+                                    format="hex" // Use CSS format for gradients
+                                    allowClear
+                                    mode={["single", "gradient"]}
+                                    presets={[
+                                      {
+                                        label: "Solid Colors",
+                                        colors: [
+                                          "#FFFFFF",
+                                          "#F5F5F5",
+                                          "#E8F4FD",
+                                          "#FFF7E6",
+                                          "#F6FFED",
+                                          "#F9F0FF"
+                                        ]
                                       }
-                                      // style={{ width: "100%" }}
-                                    />
-                                  </Form.Item>
-                                </Col>
-                              </Row>
-                              {/* Color Settings Row */}
-                              <Row gutter={8}>
-                                <Col span={12}>
-                                  <Form.Item
-                                    label="Accent Color"
-                                    name="accentColor"
-                                  >
-                                    <ColorPicker
-                                      showText
-                                      format="hex"
-                                      presets={[
-                                        {
-                                          label: "Recommended",
-                                          colors: [
-                                            "#F5222D",
-                                            "#FA8C16",
-                                            "#FADB14",
-                                            "#8BBB11",
-                                            "#52C41A",
-                                            "#13A8A8",
-                                            "#1677FF",
-                                            "#2F54EB",
-                                            "#722ED1",
-                                            "#EB2F96"
-                                          ]
-                                        }
-                                      ]}
-                                    />
-                                  </Form.Item>
-                                </Col>
-                                <Col span={12}>
-                                  <Form.Item
-                                    label="Text Color"
-                                    name="textColor"
-                                  >
-                                    <ColorPicker
-                                      showText
-                                      format="hex"
-                                      presets={[
-                                        {
-                                          label: "Text Colors",
-                                          colors: [
-                                            "#000000",
-                                            "#262626",
-                                            "#434343",
-                                            "#595959",
-                                            "#8C8C8C",
-                                            "#FFFFFF",
-                                            "#F5F5F5",
-                                            "#FAFAFA"
-                                          ]
-                                        }
-                                      ]}
-                                    />
-                                  </Form.Item>
-                                </Col>
-                              </Row>
-                              <Form.Item label="Background" name="background">
-                                <ColorPicker
-                                  showText
-                                  format="hex" // Use CSS format for gradients
-                                  allowClear
-                                  mode={["single", "gradient"]}
-                                  presets={[
-                                    {
-                                      label: "Solid Colors",
-                                      colors: [
-                                        "#FFFFFF",
-                                        "#F5F5F5",
-                                        "#E8F4FD",
-                                        "#FFF7E6",
-                                        "#F6FFED",
-                                        "#F9F0FF"
-                                      ]
-                                    }
-                                  ]}
-                                />
-                              </Form.Item>
-                            </Col>
+                                    ]}
+                                  />
+                                </Form.Item>
+                              </Col>
 
-                            <Col xs={24} lg={12}>
-                              <Form.Item label="Banner Image URL" name="banner">
-                                <Input placeholder="Paste image URL or leave blank" />
-                              </Form.Item>
+                              <Col xs={24} lg={12}>
+                                <Form.Item
+                                  label="Banner Image URL"
+                                  name="banner"
+                                >
+                                  <Input placeholder="Paste image URL or leave blank" />
+                                </Form.Item>
 
-                              {/* Card & Style Settings Row */}
-                              <Row gutter={8}>
-                                <Col span={12}>
-                                  <Form.Item
-                                    label="Card Style"
-                                    name="cardStyle"
-                                  >
-                                    <Select
-                                      options={[
-                                        {
-                                          label: "Glassmorphic",
-                                          value: "glass"
-                                        },
-                                        { label: "Solid", value: "solid" },
-                                        { label: "Bordered", value: "bordered" }
-                                      ]}
-                                    />
-                                  </Form.Item>
-                                </Col>
-                                <Col span={12}>
-                                  <Form.Item
-                                    label="Avatar Shape"
-                                    name="avatarShape"
-                                  >
-                                    <Select
-                                      options={[
-                                        { label: "Circle", value: "circle" },
-                                        { label: "Rounded", value: "rounded" },
-                                        { label: "Square", value: "square" }
-                                      ]}
-                                    />
-                                  </Form.Item>
-                                </Col>
-                              </Row>
+                                {/* Card & Style Settings Row */}
+                                <Row gutter={8}>
+                                  <Col span={12}>
+                                    <Form.Item
+                                      label="Card Style"
+                                      name="cardStyle"
+                                    >
+                                      <Select
+                                        options={[
+                                          {
+                                            label: "Glassmorphic",
+                                            value: "glass"
+                                          },
+                                          { label: "Solid", value: "solid" },
+                                          {
+                                            label: "Bordered",
+                                            value: "bordered"
+                                          }
+                                        ]}
+                                      />
+                                    </Form.Item>
+                                  </Col>
+                                  <Col span={12}>
+                                    <Form.Item
+                                      label="Avatar Shape"
+                                      name="avatarShape"
+                                    >
+                                      <Select
+                                        options={[
+                                          { label: "Circle", value: "circle" },
+                                          {
+                                            label: "Rounded",
+                                            value: "rounded"
+                                          },
+                                          { label: "Square", value: "square" }
+                                        ]}
+                                      />
+                                    </Form.Item>
+                                  </Col>
+                                </Row>
 
-                              {/* Button & Link Settings Row */}
-                              <Row gutter={8}>
-                                <Col span={12}>
-                                  <Form.Item
-                                    label="Button Shape"
-                                    name="buttonShape"
-                                  >
-                                    <Select
-                                      options={[
-                                        { label: "Round", value: "round" },
-                                        { label: "Pill", value: "pill" },
-                                        { label: "Square", value: "square" }
-                                      ]}
-                                    />
-                                  </Form.Item>
-                                </Col>
-                                <Col span={12}>
-                                  <Form.Item
-                                    label="Link Style"
-                                    name="linkStyle"
-                                  >
-                                    <Select
-                                      options={[
-                                        { label: "Bold", value: "bold" },
-                                        {
-                                          label: "Underline",
-                                          value: "underline"
-                                        },
-                                        {
-                                          label: "Button",
-                                          value: "button"
-                                        },
-                                        { label: "Normal", value: "normal" }
-                                      ]}
-                                    />
-                                  </Form.Item>
-                                </Col>
-                              </Row>
-                            </Col>
-                          </Row>
-                        </Form>
-                      </>
-                    )
-                  }
-                ]}
-              />
-            </Card>
-          </Col>
-          {/* Right: Live Preview Section (made larger) */}
+                                {/* Button & Link Settings Row */}
+                                <Row gutter={8}>
+                                  <Col span={12}>
+                                    <Form.Item
+                                      label="Button Shape"
+                                      name="buttonShape"
+                                    >
+                                      <Select
+                                        options={[
+                                          { label: "Round", value: "round" },
+                                          { label: "Pill", value: "pill" },
+                                          { label: "Square", value: "square" }
+                                        ]}
+                                      />
+                                    </Form.Item>
+                                  </Col>
+                                  <Col span={12}>
+                                    <Form.Item
+                                      label="Link Style"
+                                      name="linkStyle"
+                                    >
+                                      <Select
+                                        options={[
+                                          { label: "Bold", value: "bold" },
+                                          {
+                                            label: "Underline",
+                                            value: "underline"
+                                          },
+                                          {
+                                            label: "Button",
+                                            value: "button"
+                                          },
+                                          { label: "Normal", value: "normal" }
+                                        ]}
+                                      />
+                                    </Form.Item>
+                                  </Col>
+                                </Row>
+                              </Col>
+                            </Row>
+                          </Form>
+                        </>
+                      )
+                    }
+                  ]}
+                />{" "}
+              </Card>
+            </Col>
+          )}
+          {/* Right: Live Preview Section - Expand to full width when editing section is hidden */}
           <Col
             xs={24}
-            lg={8}
-            xl={10}
+            lg={isPreviewExpanded ? 24 : 8}
+            xl={isPreviewExpanded ? 24 : 10}
             style={{
               display: "flex",
               flexDirection: "column",
@@ -1083,7 +1105,19 @@ export default function Profile({ params }) {
             }}
           >
             <Card
-              title="Live Preview"
+              title={
+                <>
+                  Preview{" "}
+                  <ExclamationCircleOutlined
+                    title="May contain unsaved changes"
+                    style={{
+                      color: "#ff4d4f",
+                      fontSize: "12px"
+                      // fontWeight: "bold"
+                    }}
+                  />
+                </>
+              }
               hoverable
               style={{
                 position: "sticky",
@@ -1091,16 +1125,20 @@ export default function Profile({ params }) {
               }}
               extra={
                 <Button
-                  title="Expand to Fullscreen"
+                  title={
+                    isPreviewExpanded
+                      ? "Collapse Preview"
+                      : "Expand to Fullscreen"
+                  }
                   shape="circle"
-                  icon={<ExpandAltOutlined />}
-                  onClick={() => {
-                    // Capture current form values for preview before form unmounting
-                    // getFieldsValue() will be empty if the form is unmounted
-                    const currentFormValues = profileFormData.getFieldsValue();
-                    setPreviewData(currentFormValues);
-                    setMode("preview");
-                  }}
+                  icon={
+                    isPreviewExpanded ? (
+                      <CompressOutlined />
+                    ) : (
+                      <ExpandAltOutlined />
+                    )
+                  }
+                  onClick={() => setIsPreviewExpanded(!isPreviewExpanded)}
                 />
               }
             >
@@ -1123,21 +1161,6 @@ export default function Profile({ params }) {
       ) : (
         <>
           <Card
-            title={
-              mode === "preview" ? (
-                <>
-                  Preview{" "}
-                  <ExclamationCircleOutlined
-                    title="May contain unsaved changes"
-                    style={{
-                      color: "#ff4d4f",
-                      fontSize: "12px"
-                      // fontWeight: "bold"
-                    }}
-                  />
-                </>
-              ) : null
-            }
             variant="outlined"
             hoverable
             loading={loading?.read}
@@ -1162,7 +1185,7 @@ export default function Profile({ params }) {
             ]}
             extra={
               <Space>
-                {(isProfileOwner || mode === "preview") && (
+                {isProfileOwner && (
                   <Button
                     title="Edit Profile"
                     shape="circle"
@@ -1226,19 +1249,7 @@ export default function Profile({ params }) {
               </>
             ) : (
               <ProfileCard
-                profile={
-                  mode === "preview"
-                    ? {
-                        ...profile,
-                        ...previewData,
-                        links: previewData?.links || [], //priority to form values
-                        avatar: avatarFile
-                          ? URL.createObjectURL(avatarFile?.originFileObj)
-                          : profile?.avatar ||
-                            `https://api.dicebear.com/5.x/open-peeps/svg?seed=${handle}`
-                      }
-                    : profile
-                }
+                profile={profile}
                 aaWalletAddress={aaWalletAddress}
                 appearanceSettings={appearanceSettings}
               />
