@@ -202,6 +202,7 @@ export const GET_PROFILE_QUERY = gql`
           id
           name
           handle
+          avatar
         }
         createdAt
       }

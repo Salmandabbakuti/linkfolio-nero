@@ -219,14 +219,14 @@ export default function ProfileCard({
         cardStyle === "glass"
           ? "20px"
           : cardStyle === "bordered"
-          ? "12px"
-          : "8px",
+            ? "12px"
+            : "8px",
       boxShadow:
         cardStyle === "glass"
           ? `0 4px 24px ${hexToRgba(accentColor, 0.3)}`
           : cardStyle === "bordered"
-          ? "0 2px 8px rgba(0,0,0,0.1)"
-          : "none",
+            ? "0 2px 8px rgba(0,0,0,0.1)"
+            : "none",
       border: cardStyle === "bordered" ? `1.5px solid ${accentColor}` : "none",
       backdropFilter: cardStyle === "glass" ? "blur(20px)" : "none",
       backgroundColor: background,
@@ -245,8 +245,8 @@ export default function ProfileCard({
         avatarShape === "circle"
           ? "50%"
           : avatarShape === "rounded"
-          ? "20%"
-          : "0%"
+            ? "20%"
+            : "0%"
     };
 
     const buttonStyle = {
@@ -254,8 +254,8 @@ export default function ProfileCard({
         buttonShape === "round"
           ? "6px"
           : buttonShape === "pill"
-          ? "50px"
-          : "0px",
+            ? "50px"
+            : "0px",
       backgroundColor: accentColor,
       color: textColor,
       borderColor: accentColor,
@@ -280,8 +280,8 @@ export default function ProfileCard({
         buttonShape === "round"
           ? "6px"
           : buttonShape === "pill"
-          ? "50px"
-          : "0px",
+            ? "50px"
+            : "0px",
       fontFamily,
       fontSize: `${fontSize}px`
     };
@@ -512,7 +512,10 @@ export default function ProfileCard({
                                 cursor: "pointer",
                                 border: "1px solid grey"
                               }}
-                              src={`https://api.dicebear.com/5.x/open-peeps/svg?seed=${item?.author?.id}`}
+                              src={
+                                item?.author?.avatar ||
+                                `https://api.dicebear.com/5.x/open-peeps/svg?seed=${item?.author?.id}`
+                              }
                             />
                           }
                           title={
