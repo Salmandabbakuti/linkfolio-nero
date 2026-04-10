@@ -354,7 +354,7 @@ export default function ProfileCard({
             src={appearanceSettings.banner}
             alt="Profile Banner"
             preview={{
-              mask: ""
+              mask: { blur: true }
             }}
             width={"calc(100% + 48px)"}
             height={120}
@@ -371,7 +371,7 @@ export default function ProfileCard({
             }
             alt="Profile Avatar"
             preview={{
-              mask: ""
+              mask: { blur: true }
             }}
             width={100}
             height={100}
