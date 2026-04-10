@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 import {
   Button,
   Typography,
@@ -8,8 +9,8 @@ import {
   Col,
   Space,
   Input,
-  message,
-  Steps
+  Steps,
+  App as AntdApp
 } from "antd";
 import {
   RocketOutlined,
@@ -18,6 +19,9 @@ import {
   UserOutlined,
   LinkOutlined,
   ShareAltOutlined,
+  GithubOutlined,
+  XOutlined,
+  LinkedinOutlined,
   CrownOutlined,
   ThunderboltOutlined,
   SafetyOutlined,
@@ -30,7 +34,7 @@ import { linkFolioContract } from "@/app/utils";
 import Hero from "./components/Hero";
 import styles from "./page.module.css";
 
-const { Title, Paragraph } = Typography;
+const { Title, Paragraph, Text } = Typography;
 
 const howItWorksSteps = [
   {
@@ -160,10 +164,53 @@ const features = [
   }
 ];
 
+const socialLinks = [
+  {
+    icon: <GithubOutlined />,
+    href: "https://github.com/Salmandabbakuti/linkfolio-nero",
+    label: "GitHub"
+  },
+  {
+    icon: <XOutlined />,
+    href: "https://x.com/linkfolio",
+    label: "X"
+  },
+  {
+    icon: <LinkedinOutlined />,
+    href: "https://linkedin.com/company/linkfolio",
+    label: "LinkedIn"
+  }
+];
+
+const quickLinks = [
+  { href: "/", label: "Home" },
+  { href: "/#get-started", label: "Create" },
+  { href: "/explore", label: "Explore" },
+  { href: "#", label: "About" },
+  { href: "#", label: "Contact" }
+];
+
+const resources = [
+  { href: "#", label: "Documentation" },
+  { href: "#", label: "API Reference" },
+  { href: "#", label: "Getting Started" },
+  { href: "#", label: "FAQ" }
+];
+
+const technologies = [
+  { name: "NERO Chain", color: "#6366f1" },
+  { name: "TheGraph", color: "#10b981" },
+  { name: "Next.js", color: "#fdfdfd" },
+  { name: "AppKit", color: "#ec4899" },
+  { name: "ethers.js", color: "#f97316" },
+  { name: "Ant Design", color: "#1677ff" }
+];
+
 export default function Home() {
   const [handle, setHandle] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { message } = AntdApp.useApp();
 
   const handleClaim = async () => {
     // handle length should be between 3 and 15 characters
@@ -217,13 +264,13 @@ export default function Home() {
           </div>
 
           <Steps
-            direction="vertical"
-            size="default"
+            orientation="vertical"
+            size="medium"
             current={-1}
             className={styles.stepsContainer}
             items={howItWorksSteps.map((step, index) => ({
               title: <span className={styles.stepTitle}>{step.title}</span>,
-              description: (
+              content: (
                 <span className={styles.stepDescription}>
                   {step.description}
                 </span>
@@ -382,7 +429,7 @@ export default function Home() {
               LinkFolio
             </Paragraph>
 
-            <Space.Compact size="large" className={styles.handleInputGroup}>
+            <Space.Compact size="small" className={styles.handleInputGroup}>
               <Input
                 id="handle-input"
                 placeholder="Enter your handle (e.g., john)"
@@ -404,14 +451,110 @@ export default function Home() {
               </Button>
             </Space.Compact>
 
-            <div className={styles.tipContainer}>
-              <Paragraph className={styles.tipText}>
-                💡 Tip: Choose a memorable handle that represents your brand
-              </Paragraph>
-            </div>
+            <Paragraph className={styles.tipText}>
+              💡 Tip: Choose a memorable handle that represents your brand
+            </Paragraph>
           </div>
         </div>
       </section>
+
+      <footer className={styles.homeFooterSection}>
+        <div className={styles.footerGradient} />
+
+        <div className={`container ${styles.homeFooterContainer}`}>
+          <Row gutter={[48, 32]}>
+            <Col xs={24} sm={12} lg={8}>
+              <div className={styles.footerBrandBlock}>
+                <Title level={3} className={styles.footerLogo}>
+                  <span>🔗 LinkFolio</span>
+                  <CrownOutlined className={styles.footerLogoIcon} />
+                </Title>
+                <Paragraph className={styles.footerTagline}>
+                  Create and own your digital identity as a soulbound NFT with
+                  on-chain metadata. Built on NERO Chain with gas-free
+                  transactions via Account Abstraction.
+                </Paragraph>
+
+                <Space size="middle" className={styles.socialLinks}>
+                  {socialLinks.map((social) => (
+                    <a
+                      key={social.label}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.socialLink}
+                      title={social.label}
+                    >
+                      {social.icon}
+                    </a>
+                  ))}
+                </Space>
+              </div>
+            </Col>
+
+            <Col xs={12} sm={6} lg={4}>
+              <div className={styles.footerLinkGroup}>
+                <h4>Quick Links</h4>
+                {quickLinks.map((link) => (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    className={styles.footerLink}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </Col>
+
+            <Col xs={12} sm={6} lg={4}>
+              <div className={styles.footerLinkGroup}>
+                <h4>Resources</h4>
+                {resources.map((link) => (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    className={styles.footerLink}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </Col>
+
+            <Col xs={24} sm={12} lg={8}>
+              <div className={styles.footerLinkGroup}>
+                <h4 className={styles.footerPoweredBy}>
+                  <RocketOutlined />
+                  <span>Powered By</span>
+                </h4>
+
+                <div className={styles.techGrid}>
+                  {technologies.map((tech) => (
+                    <span
+                      key={tech.name}
+                      className={styles.techTag}
+                      style={{
+                        "--tech-color": tech.color,
+                        "--tech-bg": `${tech.color}15`,
+                        "--tech-border": `${tech.color}30`
+                      }}
+                    >
+                      {tech.name}
+                    </span>
+                  ))}
+                </div>
+
+                <div className={styles.footerNote}>
+                  <Text className={styles.footerNoteText}>
+                    Built with ❤️ for the decentralized web
+                  </Text>
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </div>
+      </footer>
     </div>
   );
 }
