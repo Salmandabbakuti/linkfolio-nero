@@ -461,10 +461,10 @@ export default function Profile({ params }) {
           />
         }
         styles={{
-          cover: { padding: "24px" }
+          root: { padding: 0 }
         }}
       >
-        <Space direction="vertical" align="center" style={{ width: "100%" }}>
+        <Space orientation="vertical" align="center" style={{ width: "100%" }}>
           <Skeleton.Avatar active size={88} shape="circle" />
 
           <Skeleton.Button
@@ -547,6 +547,9 @@ export default function Profile({ params }) {
               <Card
                 title={hasProfile ? "Edit Profile" : "Create Profile"}
                 variant="outlined"
+                style={{
+                  marginBottom: "10px"
+                }}
                 extra={
                   <Space>
                     {hasProfile && (
@@ -1294,7 +1297,7 @@ export default function Profile({ params }) {
                       )
                     }
                   ]}
-                />{" "}
+                />
               </Card>
             </Col>
           )}
@@ -1326,7 +1329,12 @@ export default function Profile({ params }) {
               hoverable
               style={{
                 position: "sticky",
-                top: "20px"
+                overflow: "hidden"
+              }}
+              styles={{
+                body: {
+                  padding: 0
+                }
               }}
               extra={
                 <Button
@@ -1367,6 +1375,14 @@ export default function Profile({ params }) {
           <Card
             variant="outlined"
             hoverable
+            style={{
+              overflow: "hidden"
+            }}
+            styles={{
+              body: {
+                padding: 0
+              }
+            }}
             extra={
               <Space wrap>
                 {isProfileOwner && (

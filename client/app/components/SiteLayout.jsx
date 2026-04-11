@@ -92,7 +92,7 @@ export default function SiteLayout({ children }) {
           </div>
 
           <Tag title="All systems operational">
-            <Text>v0.5.1</Text>{" "}
+            <Text>v0.5.2</Text>{" "}
             <Badge status="processing" color="#52c41a" text="All OK" />
           </Tag>
         </div>
