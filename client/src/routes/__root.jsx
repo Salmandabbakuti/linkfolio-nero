@@ -45,7 +45,7 @@ function RootLayout() {
             <Outlet />
           </SiteLayout>
         </Web3Provider>
-        <TanStackRouterDevtools position="bottom-right" />
+        <TanStackRouterDevtools />
         <Scripts />
       </body>
     </html>

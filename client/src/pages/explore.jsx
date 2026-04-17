@@ -147,7 +147,7 @@ export default function Explore() {
                 <Card
                   cover={<div style={{ height: 100 }} />}
                   hoverable
-                  style={{ height: 300 }}
+                  style={{ height: 270 }}
                   variant="outlined"
                   loading
                 />
