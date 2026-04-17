@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import ProfilePage from "@/pages/handle";
-import { linkFolioContract } from "@/lib";
+import { linkFolioContract } from "@/utils";
 
 const DEFAULT_DESCRIPTION =
   "Create and own your digital identity as a soulbound NFT with on-chain metadata, gas-free via NERO Chain’s Paymaster and account abstraction.";
@@ -28,7 +28,10 @@ export const Route = createFileRoute("/$handle")({
         metadata.image = profile.avatar || null;
       }
     } catch (error) {
-      console.error("Error generating metadata. returning default metadata", error);
+      console.error(
+        "Error generating metadata. returning default metadata",
+        error
+      );
     }
 
     return metadata;

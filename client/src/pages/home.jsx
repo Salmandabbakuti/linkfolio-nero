@@ -29,9 +29,9 @@ import {
   NotificationOutlined
 } from "@ant-design/icons";
 import { useNavigate } from "@tanstack/react-router";
-import { linkFolioContract } from "@/lib";
+import { linkFolioContract } from "@/utils";
 import Hero from "@/components/Hero";
-import styles from "@/styles/page.module.css";
+import styles from "@/styles/Home.module.css";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -199,7 +199,7 @@ const resources = [
 const technologies = [
   { name: "NERO Chain", color: "#6366f1" },
   { name: "TheGraph", color: "#10b981" },
-  { name: "Next.js", color: "#fdfdfd" },
+  { name: "Tanstack Start", color: "#0092b8" },
   { name: "AppKit", color: "#ec4899" },
   { name: "ethers.js", color: "#f97316" },
   { name: "Ant Design", color: "#1677ff" }
@@ -228,7 +228,11 @@ export default function Home() {
           `${handle} is already taken. Please try another one.`
         );
       }
-      navigate({ to: "/$handle", params: { handle }, search: { mode: "claim" } });
+      navigate({
+        to: "/$handle",
+        params: { handle },
+        search: { mode: "claim" }
+      });
     } catch (err) {
       console.error("Error while checking handle availability", err);
       message.error(

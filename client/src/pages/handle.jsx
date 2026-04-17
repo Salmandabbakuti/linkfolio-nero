@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import {
   Form,
   Input,
@@ -26,7 +27,6 @@ import {
   App as AntdApp
 } from "antd";
 import {
-  GlobalOutlined,
   DeleteOutlined,
   EditOutlined,
   ShareAltOutlined,
@@ -39,7 +39,17 @@ import {
   SaveOutlined,
   CompressOutlined,
   ArrowLeftOutlined,
-  RollbackOutlined
+  RollbackOutlined,
+  XOutlined,
+  FacebookOutlined,
+  YoutubeOutlined,
+  GithubOutlined,
+  GlobalOutlined,
+  DiscordOutlined,
+  FrownOutlined,
+  CodeOutlined,
+  LinkedinOutlined,
+  InstagramOutlined
 } from "@ant-design/icons";
 import {
   useAppKitProvider,
@@ -50,18 +60,17 @@ import { BrowserProvider } from "ethers";
 import ProfileCard from "@/components/ProfileCard";
 import {
   linkFolioContract,
-  supportedSocials,
   subgraphClient as client,
   GET_PROFILE_QUERY,
   DEFAULT_APPEARANCE_SETTINGS
-} from "@/lib";
-import { profileTemplates } from "@/lib/profileTemplates";
+} from "@/utils";
+import { profileTemplates } from "@/utils/profileTemplates";
 import {
   EXPLORER_URL,
   LINKFOLIO_CONTRACT_ADDRESS,
   PINATA_GATEWAY_URL
-} from "@/lib/constants";
-import { executeOperation, getAAWalletAddress } from "@/lib/aaUtils";
+} from "@/utils/constants";
+import { executeOperation, getAAWalletAddress } from "@/utils/aaUtils";
 import {
   uploadProfileSettingsToIpfs,
   uploadFileToIpfs,
@@ -89,9 +98,29 @@ const fontFamilies = [
   { label: "System UI", value: "system-ui, sans-serif" }
 ];
 
+const supportedSocials = [
+  { id: "facebook", name: "Facebook", icon: <FacebookOutlined /> },
+  { id: "youtube", name: "YouTube", icon: <YoutubeOutlined /> },
+  { id: "github", name: "GitHub", icon: <GithubOutlined /> },
+  { id: "snapchat", name: "Snapchat", icon: <GlobalOutlined /> },
+  { id: "telegram", name: "Telegram", icon: <GlobalOutlined /> },
+  { id: "discord", name: "Discord", icon: <DiscordOutlined /> },
+  { id: "farcaster", name: "Farcaster", icon: <FrownOutlined /> },
+  { id: "blockchain", name: "Blockchain", icon: <CodeOutlined /> },
+  { id: "linkedin", name: "LinkedIn", icon: <LinkedinOutlined /> },
+  { id: "x", name: "X", icon: <XOutlined /> },
+  { id: "instagram", name: "Instagram", icon: <InstagramOutlined /> },
+  { id: "other", name: "Other", icon: <GlobalOutlined /> }
+];
+
 export default function Profile() {
   const { handle } = useParams({ strict: false });
   const { message } = AntdApp.useApp();
+  const getProfileSettingsFromIpfsFn = useServerFn(getProfileSettingsFromIpfs);
+  const uploadProfileSettingsToIpfsFn = useServerFn(
+    uploadProfileSettingsToIpfs
+  );
+  const uploadFileToIpfsFn = useServerFn(uploadFileToIpfs);
 
   const initialValues = {
     handle,
@@ -257,7 +286,9 @@ export default function Profile() {
       profileFormData.setFieldsValue(parsedProfile);
       // get profile settings from IPFS if settingsHash is present
       if (parsedProfile?.settingsHash) {
-        const profileSettingsRes = await getProfileSettingsFromIpfs({ data: parsedProfile?.settingsHash });
+        const profileSettingsRes = await getProfileSettingsFromIpfsFn({
+          data: parsedProfile?.settingsHash
+        });
         if (profileSettingsRes?.error) {
           return message.error(
             `Failed to fetch profile settings: ${profileSettingsRes?.error}`
@@ -285,7 +316,9 @@ export default function Profile() {
     try {
       // upload settings to IPFS
       message.info("Uploading profile settings to IPFS...");
-      const uploadRes = await uploadProfileSettingsToIpfs({ data: appearanceSettings });
+      const uploadRes = await uploadProfileSettingsToIpfsFn({
+        data: appearanceSettings
+      });
       if (uploadRes?.error) {
         return message.error(
           `Failed to upload profile settings: ${uploadRes?.error}`
@@ -297,7 +330,7 @@ export default function Profile() {
         message.info("Uploading avatar to IPFS...");
         const formData = new FormData();
         formData.append("file", avatarFile?.originFileObj);
-        const uploadRes = await uploadFileToIpfs({ data: formData });
+        const uploadRes = await uploadFileToIpfsFn({ data: formData });
         if (uploadRes?.error) {
           console.error("Avatar upload failed:", uploadRes.error);
           return message.error(

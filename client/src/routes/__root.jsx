@@ -4,9 +4,10 @@ import {
   HeadContent,
   Scripts
 } from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import Web3Provider from "@/components/Web3Provider";
 import SiteLayout from "@/components/SiteLayout";
-import appCss from "@/styles/globals.css?url";
+import globalCss from "@/styles/globals.css?url";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -25,8 +26,8 @@ export const Route = createRootRoute({
       }
     ],
     links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico" }
+      { rel: "stylesheet", href: globalCss },
+      { rel: "icon", href: "/favicon.svg" }
     ]
   }),
   component: RootLayout
@@ -44,6 +45,7 @@ function RootLayout() {
             <Outlet />
           </SiteLayout>
         </Web3Provider>
+        <TanStackRouterDevtools position="bottom-right" />
         <Scripts />
       </body>
     </html>

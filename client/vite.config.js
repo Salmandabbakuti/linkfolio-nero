@@ -1,30 +1,25 @@
 import { defineConfig } from "vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
-import react from "@vitejs/plugin-react";
+import react, { reactCompilerPreset } from "@vitejs/plugin-react";
+import babel from "@rolldown/plugin-babel";
 import { nitro } from "nitro/vite";
-import { fileURLToPath, URL } from "node:url";
+import path from "path";
 
 export default defineConfig({
-  server: {
-    port: 3000
-  },
   resolve: {
     alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url))
+      "@": path.resolve(import.meta.dirname, "./src")
     }
   },
   plugins: [
     tanstackStart({
-      srcDirectory: "src",
+      srcDirectory: "./src",
       router: {
         routesDirectory: "routes"
       }
     }),
-    react({
-      babel: {
-        plugins: ["babel-plugin-react-compiler"]
-      }
-    }),
+    react(),
+    babel({ presets: [reactCompilerPreset()] }),
     nitro({
       preset: "node-server"
     })

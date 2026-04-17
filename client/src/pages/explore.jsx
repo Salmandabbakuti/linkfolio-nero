@@ -16,7 +16,7 @@ import {
 } from "antd";
 import { Link } from "@tanstack/react-router";
 import { useAppKitAccount } from "@reown/appkit/react";
-import { subgraphClient as client, GET_PROFILES_QUERY } from "@/lib";
+import { subgraphClient as client, GET_PROFILES_QUERY } from "@/utils";
 import { SyncOutlined } from "@ant-design/icons";
 
 const { Title, Paragraph } = Typography;
@@ -144,7 +144,11 @@ export default function Explore() {
           ) : (
             profiles.map((item) => (
               <Col xs={24} sm={12} md={8} lg={6} key={item.handle}>
-                <Link to="/$handle" params={{ handle: item?.handle }} key="view-profile">
+                <Link
+                  to="/$handle"
+                  params={{ handle: item?.handle }}
+                  key="view-profile"
+                >
                   <Card
                     hoverable
                     variant="outlined"

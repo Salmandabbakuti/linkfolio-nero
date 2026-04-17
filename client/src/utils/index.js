@@ -1,34 +1,7 @@
 import { Contract, JsonRpcProvider } from "ethers";
 import { defineChain } from "@reown/appkit/networks";
 import { GraphQLClient, gql } from "graphql-request";
-import {
-  XOutlined,
-  FacebookOutlined,
-  YoutubeOutlined,
-  GithubOutlined,
-  GlobalOutlined,
-  DiscordOutlined,
-  FrownOutlined,
-  CodeOutlined,
-  LinkedinOutlined,
-  InstagramOutlined
-} from "@ant-design/icons";
 import { LINKFOLIO_CONTRACT_ADDRESS } from "./constants";
-
-export const supportedSocials = [
-  { id: "facebook", name: "Facebook", icon: <FacebookOutlined /> },
-  { id: "youtube", name: "YouTube", icon: <YoutubeOutlined /> },
-  { id: "github", name: "GitHub", icon: <GithubOutlined /> },
-  { id: "snapchat", name: "Snapchat", icon: <GlobalOutlined /> },
-  { id: "telegram", name: "Telegram", icon: <GlobalOutlined /> },
-  { id: "discord", name: "Discord", icon: <DiscordOutlined /> },
-  { id: "farcaster", name: "Farcaster", icon: <FrownOutlined /> },
-  { id: "blockchain", name: "Blockchain", icon: <CodeOutlined /> },
-  { id: "linkedin", name: "LinkedIn", icon: <LinkedinOutlined /> },
-  { id: "x", name: "X", icon: <XOutlined /> },
-  { id: "instagram", name: "Instagram", icon: <InstagramOutlined /> },
-  { id: "other", name: "Other", icon: <GlobalOutlined /> }
-];
 
 export const DEFAULT_APPEARANCE_SETTINGS = {
   fontFamily: "Inter, sans-serif",
@@ -109,7 +82,7 @@ export const linkFolioContract = new Contract(
 );
 
 const subgraphUrl =
-  process.env.NEXT_PUBLIC_SUBGRAPH_API_URL ||
+  import.meta.env.VITE_SUBGRAPH_API_URL ||
   "https://subgraph.mainnet.nero.metaborong.com/subgraphs/name/linkfolio-nero";
 
 export const subgraphClient = new GraphQLClient(subgraphUrl);

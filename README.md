@@ -155,7 +155,7 @@ where the user is prompted to sign a message to create a profile, post or note. 
 - [Hardhat](https://hardhat.org/) - Ethereum development environment for professionals
 - [Reown Appkit](https://reown.com/appkit) - The full stack toolkit to build onchain app UX.
 - [Ethers.js](https://docs.ethers.io/v5/) - A complete and compact library for interacting with the Ethereum Blockchain and its ecosystem.
-- [Next.js](https://nextjs.org/) - The React Framework for Production.
+- [Tanstack Start](https://tanstack.com/start) - Full-stack Framework powered by TanStack Router for React and Solid.
 - [Ant Design](https://ant.design/) - A design system for enterprise-level products. Create an efficient and enjoyable work experience.
 
 ## Safety

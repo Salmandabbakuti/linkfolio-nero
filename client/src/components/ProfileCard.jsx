@@ -17,7 +17,17 @@ import {
 import {
   LinkOutlined,
   DollarOutlined,
-  ExportOutlined
+  ExportOutlined,
+  XOutlined,
+  FacebookOutlined,
+  YoutubeOutlined,
+  GithubOutlined,
+  GlobalOutlined,
+  DiscordOutlined,
+  FrownOutlined,
+  CodeOutlined,
+  LinkedinOutlined,
+  InstagramOutlined
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -28,17 +38,28 @@ import {
 } from "@reown/appkit/react";
 import { BrowserProvider, parseEther, formatEther } from "ethers";
 import { useNavigate, useSearch } from "@tanstack/react-router";
-import {
-  supportedSocials,
-  ellipsisString,
-  linkFolioContract
-} from "@/lib";
-import { executeOperation } from "@/lib/aaUtils";
-import { EXPLORER_URL } from "@/lib/constants";
+import { ellipsisString, linkFolioContract } from "@/utils";
+import { executeOperation } from "@/utils/aaUtils";
+import { EXPLORER_URL } from "@/utils/constants";
 
 dayjs.extend(relativeTime);
 
 const { Paragraph, Text, Title } = Typography;
+
+const supportedSocials = [
+  { id: "facebook", name: "Facebook", icon: <FacebookOutlined /> },
+  { id: "youtube", name: "YouTube", icon: <YoutubeOutlined /> },
+  { id: "github", name: "GitHub", icon: <GithubOutlined /> },
+  { id: "snapchat", name: "Snapchat", icon: <GlobalOutlined /> },
+  { id: "telegram", name: "Telegram", icon: <GlobalOutlined /> },
+  { id: "discord", name: "Discord", icon: <DiscordOutlined /> },
+  { id: "farcaster", name: "Farcaster", icon: <FrownOutlined /> },
+  { id: "blockchain", name: "Blockchain", icon: <CodeOutlined /> },
+  { id: "linkedin", name: "LinkedIn", icon: <LinkedinOutlined /> },
+  { id: "x", name: "X", icon: <XOutlined /> },
+  { id: "instagram", name: "Instagram", icon: <InstagramOutlined /> },
+  { id: "other", name: "Other", icon: <GlobalOutlined /> }
+];
 
 export default function ProfileCard({
   profile,

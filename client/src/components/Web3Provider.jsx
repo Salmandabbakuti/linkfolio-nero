@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import { ConfigProvider, theme, App as AntdApp } from "antd";
 import { createAppKit } from "@reown/appkit/react";
 import { EthersAdapter } from "@reown/appkit-adapter-ethers";
-import { neroTestnetChain, neroMainnetChain } from "@/lib";
+import { neroTestnetChain, neroMainnetChain } from "@/utils";
 
 // 1. Get projectId at https://cloud.reown.com
-const projectId = process.env.NEXT_PUBLIC_REOWN_PROJECT_ID;
+const projectId = import.meta.env.VITE_REOWN_PROJECT_ID;
 const networks = [neroMainnetChain, neroTestnetChain];
 
 // 2. Create a metadata object
@@ -31,9 +31,6 @@ createAppKit({
     1689: "https://framerusercontent.com/images/45NncLY0V1ELrMis3GvSCJsN79s.png"
   },
   themeMode: "dark",
-  themeVariables: {
-    "--w3m-accent": "#6366f1" // Primary indigo color
-  },
   features: {
     analytics: true, // Optional - defaults to your Cloud configuration
     swaps: false,
