@@ -12,13 +12,10 @@ export default defineConfig({
     }
   },
   plugins: [
-    tanstackStart({
-      srcDirectory: "./src",
-      router: {
-        routesDirectory: "routes"
-      }
+    tanstackStart(),
+    nitro({
+      preset: "vercel"
     }),
-    nitro(),
     react(),
     babel({ presets: [reactCompilerPreset()] })
   ]
