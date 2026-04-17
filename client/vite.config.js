@@ -18,10 +18,8 @@ export default defineConfig({
         routesDirectory: "routes"
       }
     }),
+    nitro(),
     react(),
-    babel({ presets: [reactCompilerPreset()] }),
-    nitro({
-      preset: "node-server"
-    })
+    babel({ presets: [reactCompilerPreset()] })
   ]
 });

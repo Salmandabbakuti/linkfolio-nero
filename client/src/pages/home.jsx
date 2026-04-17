@@ -1,4 +1,3 @@
-"use client";
 import { useState } from "react";
 import {
   Button,
@@ -242,19 +241,13 @@ export default function Home() {
       setLoading(false);
     }
   };
-  const handleGetStarted = () => {
-    const handleInput = document.getElementById("handle-input");
-    if (handleInput) {
-      handleInput.scrollIntoView({ behavior: "smooth" });
-      handleInput.focus();
-    }
-  };
+
   return (
     <div className={styles.mainContainer}>
       {/* Hero Section */}
-      <Hero onGetStarted={handleGetStarted} />
+      <Hero />
       {/* How It Works Section */}
-      <section className={styles.howItWorksSection}>
+      <section className={styles.howItWorksSection} id="how-it-works">
         <div className="container">
           <div className={styles.sectionHeader}>
             <Title level={2} className={styles.sectionTitle}>

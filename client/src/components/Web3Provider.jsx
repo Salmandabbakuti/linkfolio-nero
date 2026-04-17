@@ -1,4 +1,3 @@
-"use client";
 import { useState, useEffect } from "react";
 import { ConfigProvider, theme, App as AntdApp } from "antd";
 import { createAppKit } from "@reown/appkit/react";

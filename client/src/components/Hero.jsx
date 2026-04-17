@@ -1,4 +1,3 @@
-"use client";
 import { Typography, Button, Space, Row, Col, Carousel, Image } from "antd";
 import {
   RocketOutlined,
@@ -15,7 +14,7 @@ import styles from "./Hero.module.css";
 
 const { Title, Paragraph } = Typography;
 
-export default function Hero({ onGetStarted }) {
+export default function Hero() {
   const carouselRef = useRef(null);
   const showcaseItems = [
     {
@@ -108,25 +107,26 @@ export default function Hero({ onGetStarted }) {
           </Paragraph>
 
           {/* CTA Buttons */}
-          <Space size="large" style={{ marginBottom: "60px" }}>
-            <Button
-              type="primary"
-              size="large"
-              icon={<RocketOutlined />}
-              onClick={onGetStarted}
-              style={{
-                height: "52px",
-                padding: "0 32px",
-                fontSize: "16px",
-                fontWeight: "var(--font-weight-semibold)",
-                borderRadius: "26px",
-                boxShadow: "var(--shadow-colored)",
-                border: "none"
-              }}
-            >
-              Create Your LinkFolio
-              <ArrowRightOutlined />
-            </Button>
+          <Space wrap style={{ marginBottom: "20px" }}>
+            <Link to="/" hash="get-started">
+              <Button
+                type="primary"
+                size="large"
+                icon={<RocketOutlined />}
+                style={{
+                  height: "52px",
+                  padding: "0 32px",
+                  fontSize: "16px",
+                  fontWeight: "var(--font-weight-semibold)",
+                  borderRadius: "26px",
+                  boxShadow: "var(--shadow-colored)",
+                  border: "none"
+                }}
+              >
+                Create
+                <ArrowRightOutlined />
+              </Button>
+            </Link>
             <Link to="/explore">
               <Button
                 type="default"

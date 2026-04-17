@@ -27,7 +27,9 @@ import {
   FrownOutlined,
   CodeOutlined,
   LinkedinOutlined,
-  InstagramOutlined
+  InstagramOutlined,
+  CalendarOutlined,
+  EditOutlined
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -726,13 +728,13 @@ export default function ProfileCard({
                 textAlign: "center"
               }}
             >
-              <small>
-                Created at:{" "}
+              <small title="Created At">
+                <CalendarOutlined />{" "}
                 {dayjs(profile.createdAt * 1000).format("MMM D, YYYY h:mm A")}
               </small>
               {" • "}
-              <small>
-                Last updated:{" "}
+              <small title="Updated At">
+                <EditOutlined />{" "}
                 {dayjs(profile.updatedAt * 1000).format("MMM D, YYYY h:mm A")}
               </small>
             </div>

@@ -1,6 +1,10 @@
-"use client";
 import { useState, useEffect } from "react";
-import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
+import {
+  useNavigate,
+  useParams,
+  useSearch,
+  Link
+} from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import {
   Form,
@@ -559,9 +563,9 @@ export default function Profile() {
           <Button key="create" type="primary" onClick={() => setMode("edit")}>
             Create Profile
           </Button>,
-          <a key="home" href="/#get-started">
+          <Link key="home" to="/" hash="how-it-works">
             <Button>See How It Works</Button>
-          </a>
+          </Link>
         ]}
       />
     );
@@ -1476,8 +1480,9 @@ export default function Profile() {
               appearanceSettings={appearanceSettings}
             />
           </Card>
-          <a
-            href="/#get-started"
+          <Link
+            to="/"
+            hash="get-started"
             style={{
               textAlign: "center",
               display: "flex",
@@ -1485,11 +1490,16 @@ export default function Profile() {
               alignItems: "center"
             }}
           >
-            <Button type="link" style={{ marginTop: "20px" }}>
+            <Button
+              type="link"
+              style={{
+                marginTop: "20px"
+              }}
+            >
               🔗 Create Your LinkFolio
               <ArrowRightOutlined />
             </Button>
-          </a>
+          </Link>
         </>
       )}
     </div>

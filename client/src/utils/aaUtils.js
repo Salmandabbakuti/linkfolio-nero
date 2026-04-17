@@ -5,8 +5,7 @@ import { linkFolioContract } from ".";
 const NERO_RPC_URL = "https://rpc.nerochain.io";
 const BUNDLER_URL = "https://bundler-mainnet.nerochain.io";
 const PAYMASTER_URL = "https://paymaster-mainnet.nerochain.io";
-const API_KEY =
-  import.meta.env.VITE_NERO_PLATFORM_API_KEY || "your_api_key_here";
+const API_KEY = import.meta.env.VITE_NERO_PLATFORM_API_KEY;
 
 // Contract addresses
 const ENTRYPOINT_ADDRESS = "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789";

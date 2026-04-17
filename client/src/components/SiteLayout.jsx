@@ -1,4 +1,3 @@
-"use client";
 import { Layout, Menu, Drawer, Button, Badge, Typography, Tag } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import { useState } from "react";
@@ -14,8 +13,13 @@ export default function SiteLayout({ children }) {
   const currentYear = new Date().getFullYear();
 
   const navigationItems = [
-    { key: "features", label: "Features", href: "/#features" },
-    { key: "create", label: "Create", href: "/#get-started" },
+    { key: "features", label: "Features", href: "/", hash: "features" },
+    {
+      key: "create",
+      label: "Create",
+      href: "/",
+      hash: "get-started"
+    },
     { key: "explore", label: "Explore", href: "/explore" }
   ];
 
@@ -32,17 +36,16 @@ export default function SiteLayout({ children }) {
           </Link>
 
           <nav className={styles.desktopNav}>
-            {navigationItems.map((item) =>
-              item.href.startsWith("/#") ? (
-                <a key={item.key} href={item.href} className={styles.navLink}>
-                  {item.label}
-                </a>
-              ) : (
-                <Link key={item.key} to={item.href} className={styles.navLink}>
-                  {item.label}
-                </Link>
-              )
-            )}
+            {navigationItems.map((item) => (
+              <Link
+                key={item.key}
+                to={item.href}
+                hash={item.hash}
+                className={styles.navLink}
+              >
+                {item.label}
+              </Link>
+            ))}
           </nav>
         </div>
 
@@ -69,10 +72,10 @@ export default function SiteLayout({ children }) {
             onClick={() => setMobileMenuOpen(false)}
             items={navigationItems.map((item) => ({
               key: item.key,
-              label: item.href.startsWith("/#") ? (
-                <a href={item.href}>{item.label}</a>
-              ) : (
-                <Link to={item.href}>{item.label}</Link>
+              label: (
+                <Link to={item.href} hash={item.hash}>
+                  {item.label}
+                </Link>
               )
             }))}
           />
@@ -99,7 +102,7 @@ export default function SiteLayout({ children }) {
           </div>
 
           <Tag title="All systems operational">
-            <Text>v0.5.2</Text>{" "}
+            <Text>v0.6.0</Text>{" "}
             <Badge status="processing" color="#52c41a" text="All OK" />
           </Tag>
         </div>

@@ -4,7 +4,7 @@ import { errorResponse } from "./utils";
 
 const pinata = new PinataSDK({
   pinataJwt: process.env.PINATA_JWT,
-  pinataGateway: import.meta.env.VITE_PINATA_GATEWAY_URL
+  pinataGateway: import.meta.env.VITE_PINATA_GATEWAY_URL || "https://ipfs.io"
 });
 
 export const uploadProfileSettingsToIpfs = createServerFn({
@@ -24,9 +24,15 @@ export const uploadProfileSettingsToIpfs = createServerFn({
   }
 });
 
-export const uploadFileToIpfs = createServerFn({ method: "POST" }).handler(
-  async ({ data: formData }) => {
-    const file = formData?.get?.("file");
+export const uploadFileToIpfs = createServerFn({ method: "POST" })
+  .inputValidator((data) => {
+    if (!(data instanceof FormData)) {
+      throw new Error("Expected FormData");
+    }
+
+    return data.get("file");
+  })
+  .handler(async ({ data: file }) => {
     if (!file) return errorResponse("No file provided to upload", 400, true);
 
     try {
@@ -37,8 +43,7 @@ export const uploadFileToIpfs = createServerFn({ method: "POST" }).handler(
       console.error("Error uploading file to Pinata in action:", error);
       return errorResponse(error);
     }
-  }
-);
+  });
 
 export const getProfileSettingsFromIpfs = createServerFn({
   method: "GET"
