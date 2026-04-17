@@ -398,7 +398,7 @@ export default function ProfileCard({
           level={2}
           style={{
             ...dynamicStyles.text.primary,
-            fontSize: appearanceSettings.fontSize * 1.6 + "px",
+            fontSize: fontSize * 1.6 + "px",
             margin: "16px 0 8px 0"
           }}
         >
@@ -481,7 +481,6 @@ export default function ProfileCard({
                       maxLength={1000}
                       showCount
                       onChange={(e) => setPostInput(e.target.value)}
-                      onPressEnter={handleCreatePost}
                       style={{ ...dynamicStyles.input, marginBottom: "16px" }}
                     />
                     <Button
