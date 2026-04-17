@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { ConfigProvider, theme, App as AntdApp } from "antd";
 import { createAppKit } from "@reown/appkit/react";
 import { EthersAdapter } from "@reown/appkit-adapter-ethers";
-import { neroTestnetChain, neroMainnetChain } from "@/app/utils";
+import { neroTestnetChain, neroMainnetChain } from "@/lib";
 
 // 1. Get projectId at https://cloud.reown.com
 const projectId = process.env.NEXT_PUBLIC_REOWN_PROJECT_ID;

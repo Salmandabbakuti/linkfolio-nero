@@ -10,7 +10,7 @@ import {
   RightOutlined
 } from "@ant-design/icons";
 import { useRef } from "react";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import styles from "./Hero.module.css";
 
 const { Title, Paragraph } = Typography;
@@ -127,7 +127,7 @@ export default function Hero({ onGetStarted }) {
               Create Your LinkFolio
               <ArrowRightOutlined />
             </Button>
-            <Link href="/explore">
+            <Link to="/explore">
               <Button
                 type="default"
                 size="large"

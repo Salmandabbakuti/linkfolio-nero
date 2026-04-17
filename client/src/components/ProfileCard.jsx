@@ -27,14 +27,14 @@ import {
   useAppKitState
 } from "@reown/appkit/react";
 import { BrowserProvider, parseEther, formatEther } from "ethers";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import {
   supportedSocials,
   ellipsisString,
   linkFolioContract
-} from "@/app/utils";
-import { executeOperation } from "@/app/utils/aaUtils";
-import { EXPLORER_URL } from "@/app/utils/constants";
+} from "@/lib";
+import { executeOperation } from "@/lib/aaUtils";
+import { EXPLORER_URL } from "@/lib/constants";
 
 dayjs.extend(relativeTime);
 
@@ -68,9 +68,9 @@ export default function ProfileCard({
   const { selectedNetworkId } = useAppKitState();
   const { walletProvider } = useAppKitProvider("eip155");
 
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const activeTab = searchParams.get("tab") || "links";
+  const navigate = useNavigate();
+  const search = useSearch({ strict: false });
+  const activeTab = search?.tab || "links";
 
   const isProfileOwner =
     aaWalletAddress &&
@@ -420,7 +420,13 @@ export default function ProfileCard({
           defaultActiveKey="links"
           animated
           activeKey={activeTab}
-          onChange={(key) => router.push(`/${profile?.handle}?tab=${key}`)}
+          onChange={(key) =>
+            navigate({
+              to: "/$handle",
+              params: { handle: profile?.handle },
+              search: (prev) => ({ ...prev, tab: key })
+            })
+          }
           items={[
             {
               key: "links",

@@ -2,7 +2,7 @@
 import { Layout, Menu, Drawer, Button, Badge, Typography, Tag } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import styles from "./SiteLayout.module.css";
 import "antd/dist/reset.css";
 
@@ -27,23 +27,27 @@ export default function SiteLayout({ children }) {
     <Layout className={styles.siteLayout}>
       <Header className={styles.siteHeader}>
         <div className={styles.leftSection}>
-          <Link href="/">
+          <Link to="/">
             <h3 className={styles.siteLogo}>🔗 LinkFolio</h3>
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className={styles.desktopNav}>
-            {navigationItems.map((item) => (
-              <Link key={item.key} href={item.href} className={styles.navLink}>
-                {item.label}
-              </Link>
-            ))}
+            {navigationItems.map((item) =>
+              item.href.startsWith("/#") ? (
+                <a key={item.key} href={item.href} className={styles.navLink}>
+                  {item.label}
+                </a>
+              ) : (
+                <Link key={item.key} to={item.href} className={styles.navLink}>
+                  {item.label}
+                </Link>
+              )
+            )}
           </nav>
         </div>
 
         <div className={styles.headerActions}>
           <appkit-button />
-          {/* Mobile Menu Button */}
           <Button
             className={styles.mobileMenuButton}
             type="text"
@@ -52,7 +56,6 @@ export default function SiteLayout({ children }) {
           />
         </div>
 
-        {/* Mobile Navigation Drawer */}
         <Drawer
           title="Navigation"
           placement="right"
@@ -66,7 +69,11 @@ export default function SiteLayout({ children }) {
             onClick={() => setMobileMenuOpen(false)}
             items={navigationItems.map((item) => ({
               key: item.key,
-              label: <Link href={item.href}>{item.label}</Link>
+              label: item.href.startsWith("/#") ? (
+                <a href={item.href}>{item.label}</a>
+              ) : (
+                <Link to={item.href}>{item.label}</Link>
+              )
             }))}
           />
         </Drawer>
@@ -81,13 +88,13 @@ export default function SiteLayout({ children }) {
               © {currentYear} LinkFolio. All rights reserved.
             </p>
             <div className={styles.bottomFooterLinks}>
-              <Link href="#" className={styles.bottomFooterLink}>
+              <a href="#" className={styles.bottomFooterLink}>
                 Privacy Policy
-              </Link>
+              </a>
               <span className={styles.bottomFooterDot}>•</span>
-              <Link href="#" className={styles.bottomFooterLink}>
+              <a href="#" className={styles.bottomFooterLink}>
                 Terms of Service
-              </Link>
+              </a>
             </div>
           </div>
 

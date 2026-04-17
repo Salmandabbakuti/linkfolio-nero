@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import Link from "next/link";
 import {
   Button,
   Typography,
@@ -29,10 +28,10 @@ import {
   DollarOutlined,
   NotificationOutlined
 } from "@ant-design/icons";
-import { useRouter } from "next/navigation";
-import { linkFolioContract } from "@/app/utils";
-import Hero from "./components/Hero";
-import styles from "./page.module.css";
+import { useNavigate } from "@tanstack/react-router";
+import { linkFolioContract } from "@/lib";
+import Hero from "@/components/Hero";
+import styles from "@/styles/page.module.css";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -209,7 +208,7 @@ const technologies = [
 export default function Home() {
   const [handle, setHandle] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const navigate = useNavigate();
   const { message } = AntdApp.useApp();
 
   const handleClaim = async () => {
@@ -229,7 +228,7 @@ export default function Home() {
           `${handle} is already taken. Please try another one.`
         );
       }
-      router.push(`/${handle}?mode=claim`);
+      navigate({ to: "/$handle", params: { handle }, search: { mode: "claim" } });
     } catch (err) {
       console.error("Error while checking handle availability", err);
       message.error(
@@ -496,13 +495,13 @@ export default function Home() {
               <div className={styles.footerLinkGroup}>
                 <h4>Quick Links</h4>
                 {quickLinks.map((link) => (
-                  <Link
+                  <a
                     key={link.label}
                     href={link.href}
                     className={styles.footerLink}
                   >
                     {link.label}
-                  </Link>
+                  </a>
                 ))}
               </div>
             </Col>
@@ -511,13 +510,13 @@ export default function Home() {
               <div className={styles.footerLinkGroup}>
                 <h4>Resources</h4>
                 {resources.map((link) => (
-                  <Link
+                  <a
                     key={link.label}
                     href={link.href}
                     className={styles.footerLink}
                   >
                     {link.label}
-                  </Link>
+                  </a>
                 ))}
               </div>
             </Col>

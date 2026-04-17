@@ -3,10 +3,10 @@
   "version": "0.5.1",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "vite dev",
+    "build": "vite build",
+    "start": "node .output/server/index.mjs",
+    "lint": "echo \"Lint not configured for TanStack migration yet\""
   },
   "dependencies": {
     "@ant-design/icons": "^6.1.1",
@@ -17,13 +17,18 @@
     "ethers": "^6.16.0",
     "graphql": "^16.13.2",
     "graphql-request": "^7.4.0",
-    "next": "16.2.3",
     "pinata": "^2.5.5",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
-    "userop": "github:nerochain/aa-userop-sdk"
+    "userop": "github:nerochain/aa-userop-sdk",
+    "@tanstack/react-router": "^1.132.0",
+    "@tanstack/react-start": "^1.132.0",
+    "nitro": "^2.12.7",
+    "vite": "^8.0.0",
+    "@vitejs/plugin-react": "^5.1.0"
   },
   "devDependencies": {
     "babel-plugin-react-compiler": "^1.0.0"
-  }
+  },
+  "type": "module"
 }
