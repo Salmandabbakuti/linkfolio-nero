@@ -13,9 +13,7 @@ export default defineConfig({
   },
   plugins: [
     tanstackStart(),
-    nitro({
-      preset: "vercel"
-    }),
+    nitro(),
     react(),
     babel({ presets: [reactCompilerPreset()] })
   ]

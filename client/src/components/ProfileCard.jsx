@@ -10,7 +10,6 @@ import {
   Typography,
   Divider,
   Tag,
-  Badge,
   Image,
   App as AntdApp
 } from "antd";
@@ -365,151 +364,294 @@ export default function ProfileCard({
     .filter(Boolean);
 
   return (
-    <Badge.Ribbon
-      text={profile?.category}
-      color={dynamicStyles.accent}
-      style={dynamicStyles.base}
-    >
-      <div style={componentStyle}>
-        {/* Banner */}
-        {appearanceSettings.banner && (
-          <Image
-            src={appearanceSettings.banner}
-            alt="Profile Banner"
-            preview={{
-              mask: { blur: true }
-            }}
-            width={"calc(100% + 48px)"}
-            height={120}
-            style={dynamicStyles.banner}
-          />
-        )}
+    <div style={componentStyle}>
+      {/* Banner */}
+      {appearanceSettings.banner && (
+        <Image
+          src={appearanceSettings.banner}
+          alt="Profile Banner"
+          preview={{
+            mask: { blur: true }
+          }}
+          width={"calc(100% + 48px)"}
+          height={120}
+          style={dynamicStyles.banner}
+        />
+      )}
 
-        <div style={{ textAlign: "center" }}>
-          <Image
-            src={
-              profile?.avatar?.fileList?.[0]?.thumbUrl ||
-              profile?.avatar ||
-              `https://api.dicebear.com/5.x/open-peeps/svg?seed=${profile?.handle}`
-            }
-            alt="Profile Avatar"
-            preview={{
-              mask: { blur: true }
-            }}
-            width={100}
-            height={100}
-            style={dynamicStyles.avatar}
-          />
-          <Title
-            level={2}
-            style={{
-              ...dynamicStyles.text.primary,
-              fontSize: appearanceSettings.fontSize * 1.6 + "px",
-              margin: "16px 0 8px 0"
-            }}
-          >
-            {profile?.name}
-          </Title>
-          <Text style={{ ...dynamicStyles.text.secondary }}>
-            @{profile?.handle}
-          </Text>
-          <Paragraph ellipsis style={{ ...dynamicStyles.text.secondary }}>
-            {profile?.bio}
-          </Paragraph>
-
-          <Space wrap size="small" align="center">
-            <Tag title="NFT ID" style={dynamicStyles.tag}>
-              #{profile?.id || 0}
-            </Tag>
-            <Tag title="Category" style={dynamicStyles.tag}>
-              {profile?.category}
-            </Tag>
-            <Tag
-              title="Tips"
-              icon={<DollarOutlined />}
-              style={{ ...dynamicStyles.tag, marginLeft: "8px" }}
-            >
-              {formatEther(profile?.tipAmount || 0n)} NERO
-            </Tag>
-            <Tag style={{ ...dynamicStyles.tag, marginLeft: "8px" }}>
-              <Text copyable={{ text: profile?.eoa?.id || account || "" }}>
-                {ellipsisString(profile?.eoa?.id || account || "", 8, 5)}
-              </Text>
-            </Tag>
-          </Space>
-        </div>
-
-        <Tabs
-          defaultActiveKey="links"
-          animated
-          activeKey={activeTab}
-          onChange={(key) =>
-            navigate({
-              to: "/$handle",
-              params: { handle: profile?.handle },
-              search: (prev) => ({ ...prev, tab: key })
-            })
+      <div style={{ textAlign: "center" }}>
+        <Image
+          src={
+            profile?.avatar?.fileList?.[0]?.thumbUrl ||
+            profile?.avatar ||
+            `https://api.dicebear.com/5.x/open-peeps/svg?seed=${profile?.handle}`
           }
-          items={[
-            {
-              key: "links",
-              label: (
+          alt="Profile Avatar"
+          preview={{
+            mask: { blur: true }
+          }}
+          width={100}
+          height={100}
+          style={dynamicStyles.avatar}
+        />
+        <Title
+          level={2}
+          style={{
+            ...dynamicStyles.text.primary,
+            fontSize: appearanceSettings.fontSize * 1.6 + "px",
+            margin: "16px 0 8px 0"
+          }}
+        >
+          {profile?.name}
+        </Title>
+        <Text style={{ ...dynamicStyles.text.secondary }}>
+          @{profile?.handle}
+        </Text>
+        <Paragraph ellipsis style={{ ...dynamicStyles.text.secondary }}>
+          {profile?.bio}
+        </Paragraph>
+
+        <Space wrap size="small" align="center">
+          <Tag title="NFT ID" style={dynamicStyles.tag}>
+            #{profile?.id || 0}
+          </Tag>
+          <Tag title="Category" style={dynamicStyles.tag}>
+            {profile?.category}
+          </Tag>
+          <Tag
+            title="Tips"
+            icon={<DollarOutlined />}
+            style={{ ...dynamicStyles.tag, marginLeft: "8px" }}
+          >
+            {formatEther(profile?.tipAmount || 0n)} NERO
+          </Tag>
+          <Tag style={{ ...dynamicStyles.tag, marginLeft: "8px" }}>
+            <Text copyable={{ text: profile?.eoa?.id || account || "" }}>
+              {ellipsisString(profile?.eoa?.id || account || "", 8, 5)}
+            </Text>
+          </Tag>
+        </Space>
+      </div>
+
+      <Tabs
+        defaultActiveKey="links"
+        animated
+        activeKey={activeTab}
+        onChange={(key) =>
+          navigate({
+            to: "/$handle",
+            params: { handle: profile?.handle },
+            search: (prev) => ({ ...prev, tab: key })
+          })
+        }
+        items={[
+          {
+            key: "links",
+            label: (
+              <Typography.Text strong style={dynamicStyles.text.primary}>
+                Links
+              </Typography.Text>
+            ),
+            children: (
+              <div style={dynamicStyles.base}>
+                <Descriptions column={2} colon={false} items={items} />
+              </div>
+            )
+          },
+          {
+            key: "posts",
+            label: (
+              <Typography.Text strong style={dynamicStyles.text.primary}>
+                Posts
+              </Typography.Text>
+            ),
+            children: (
+              <div style={dynamicStyles.base}>
+                <Paragraph style={dynamicStyles.text.secondary}>
+                  📢 Stay in the loop — see what this creator is sharing with
+                  the world.
+                </Paragraph>
+                {isProfileOwner && (
+                  <>
+                    <Input.TextArea
+                      placeholder="Share what you're building. Updates, ideas, milestones — your space, your voice."
+                      value={postInput}
+                      rows={4}
+                      autoSize={{ minRows: 3, maxRows: 6 }}
+                      maxLength={1000}
+                      showCount
+                      onChange={(e) => setPostInput(e.target.value)}
+                      onPressEnter={handleCreatePost}
+                      style={{ ...dynamicStyles.input, marginBottom: "16px" }}
+                    />
+                    <Button
+                      variant="solid"
+                      onClick={handleCreatePost}
+                      loading={loading?.createPost}
+                      style={dynamicStyles.button}
+                    >
+                      Submit
+                    </Button>
+                  </>
+                )}
+                <Divider />
                 <Typography.Text strong style={dynamicStyles.text.primary}>
-                  Links
+                  Posts ({profile?.posts?.length || 0})
                 </Typography.Text>
-              ),
-              children: (
-                <div style={dynamicStyles.base}>
-                  <Descriptions column={2} colon={false} items={items} />
-                </div>
-              )
-            },
-            {
-              key: "posts",
-              label: (
-                <Typography.Text strong style={dynamicStyles.text.primary}>
-                  Posts
-                </Typography.Text>
-              ),
-              children: (
-                <div style={dynamicStyles.base}>
-                  <Paragraph style={dynamicStyles.text.secondary}>
-                    📢 Stay in the loop — see what this creator is sharing with
-                    the world.
-                  </Paragraph>
-                  {isProfileOwner && (
-                    <>
-                      <Input.TextArea
-                        placeholder="Share what you're building. Updates, ideas, milestones — your space, your voice."
-                        value={postInput}
-                        rows={4}
-                        autoSize={{ minRows: 3, maxRows: 6 }}
-                        maxLength={1000}
-                        showCount
-                        onChange={(e) => setPostInput(e.target.value)}
-                        onPressEnter={handleCreatePost}
-                        style={{ ...dynamicStyles.input, marginBottom: "16px" }}
+                <List
+                  dataSource={profile?.posts || []}
+                  itemLayout="horizontal"
+                  split
+                  renderItem={(item) => (
+                    <List.Item>
+                      <List.Item.Meta
+                        avatar={
+                          <Avatar
+                            shape="circle"
+                            size="small"
+                            style={{
+                              cursor: "pointer",
+                              border: "1px solid grey"
+                            }}
+                            src={
+                              item?.author?.avatar ||
+                              `https://api.dicebear.com/5.x/open-peeps/svg?seed=${item?.author?.id}`
+                            }
+                          />
+                        }
+                        title={
+                          <Space>
+                            <Typography.Text
+                              strong
+                              style={dynamicStyles.text.primary}
+                            >
+                              {item?.author?.name}
+                            </Typography.Text>
+                            <Typography.Text style={dynamicStyles.text.muted}>
+                              {dayjs(item?.createdAt * 1000).fromNow()}
+                            </Typography.Text>
+                          </Space>
+                        }
+                        description={
+                          <span style={dynamicStyles.base}>
+                            {item?.content}
+                          </span>
+                        }
                       />
-                      <Button
-                        variant="solid"
-                        onClick={handleCreatePost}
-                        loading={loading?.createPost}
-                        style={dynamicStyles.button}
-                      >
-                        Submit
-                      </Button>
-                    </>
+                    </List.Item>
                   )}
-                  <Divider />
-                  <Typography.Text strong style={dynamicStyles.text.primary}>
-                    Posts ({profile?.posts?.length || 0})
-                  </Typography.Text>
-                  <List
-                    dataSource={profile?.posts || []}
-                    itemLayout="horizontal"
-                    split
-                    renderItem={(item) => (
-                      <List.Item>
+                />
+              </div>
+            )
+          },
+          {
+            key: "notes",
+            label: (
+              <Typography.Text strong style={dynamicStyles.text.primary}>
+                Notes
+              </Typography.Text>
+            ),
+            children: (
+              <div style={dynamicStyles.base}>
+                <Paragraph style={dynamicStyles.text.secondary}>
+                  ✍️ Got something to say? Leave a note and make their day! Your
+                  notes will be visible to the community.
+                </Paragraph>
+                <Input.TextArea
+                  placeholder="Drop a quick thought, shout-out, or question for this creator."
+                  value={noteInput}
+                  onChange={(e) => setNoteInput(e.target.value)}
+                  rows={2}
+                  maxLength={280}
+                  showCount
+                  style={{ ...dynamicStyles.input, marginBottom: "0.5em" }}
+                />
+                <Space wrap style={{ marginBottom: "0.5em" }}>
+                  {suggestedTips.map((tip) => (
+                    <Button
+                      key={tip.label}
+                      size="small"
+                      variant="solid"
+                      onClick={() => setTipAmount(tip.value)}
+                      style={{
+                        ...dynamicStyles.button,
+                        minWidth: 60,
+                        backgroundColor:
+                          tipAmount === tip.value
+                            ? dynamicStyles.accent
+                            : undefined
+                      }}
+                    >
+                      {tip.label}
+                    </Button>
+                  ))}
+                  <Input
+                    allowClear
+                    type="number"
+                    size="small"
+                    placeholder="Custom"
+                    value={tipAmount}
+                    onChange={(e) => setTipAmount(e.target.value)}
+                    min={0}
+                    step={0.5}
+                    precision={2}
+                    style={{
+                      ...dynamicStyles.input,
+                      maxWidth: 170,
+                      verticalAlign: "middle"
+                    }}
+                  />
+                </Space>
+                <Typography.Text
+                  style={{
+                    ...dynamicStyles.text.secondary,
+                    fontSize: "12px",
+                    display: "block",
+                    marginBottom: "16px"
+                  }}
+                >
+                  💡 Tip will be sent directly to the profile owner
+                </Typography.Text>
+                <Button
+                  variant="solid"
+                  onClick={handleLeaveNote}
+                  loading={loading?.leaveNote}
+                  icon={tipAmount > 0 ? <DollarOutlined /> : null}
+                  style={dynamicStyles.button}
+                >
+                  {tipAmount && parseFloat(tipAmount) > 0
+                    ? `Submit with ${tipAmount} NERO tip`
+                    : "Submit"}
+                </Button>
+                <Divider />
+                <Typography.Text strong style={dynamicStyles.text.primary}>
+                  Notes ({profile?.notes?.length || 0})
+                </Typography.Text>
+                <List
+                  itemLayout="horizontal"
+                  split
+                  dataSource={profile?.notes || []}
+                  renderItem={(item) => {
+                    const isTipped = parseFloat(item?.tipAmount || "0") > 0;
+                    return (
+                      <List.Item
+                        style={
+                          isTipped
+                            ? {
+                                background: `linear-gradient(90deg, ${dynamicStyles.hexToRgba(
+                                  dynamicStyles.accent,
+                                  0.1
+                                )} 60%, ${dynamicStyles.hexToRgba(
+                                  dynamicStyles.accent,
+                                  0.25
+                                )} 100%)`,
+                                border: `1px solid ${dynamicStyles.accent}`,
+                                borderRadius: "8px",
+                                marginBottom: "8px"
+                              }
+                            : { background: "transparent" }
+                        }
+                      >
                         <List.Item.Meta
                           avatar={
                             <Avatar
@@ -519,23 +661,38 @@ export default function ProfileCard({
                                 cursor: "pointer",
                                 border: "1px solid grey"
                               }}
-                              src={
-                                item?.author?.avatar ||
-                                `https://api.dicebear.com/5.x/open-peeps/svg?seed=${item?.author?.id}`
-                              }
+                              src={`https://api.dicebear.com/5.x/open-peeps/svg?seed=${item?.author}`}
                             />
                           }
                           title={
-                            <Space>
+                            <Space wrap>
                               <Typography.Text
                                 strong
                                 style={dynamicStyles.text.primary}
                               >
-                                {item?.author?.name}
+                                {ellipsisString(item?.author, 8, 5)}
                               </Typography.Text>
                               <Typography.Text style={dynamicStyles.text.muted}>
                                 {dayjs(item?.createdAt * 1000).fromNow()}
                               </Typography.Text>
+                              {isTipped && (
+                                <>
+                                  <Tag
+                                    icon={<DollarOutlined />}
+                                    style={dynamicStyles.tag}
+                                  >
+                                    {formatEther(item?.tipAmount)} NERO
+                                  </Tag>
+                                  <a
+                                    href={`${EXPLORER_URL}/tx/${item?.txHash}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{ color: dynamicStyles.accent }}
+                                  >
+                                    <ExportOutlined title="View on Explorer" />
+                                  </a>
+                                </>
+                              )}
                             </Space>
                           }
                           description={
@@ -545,202 +702,36 @@ export default function ProfileCard({
                           }
                         />
                       </List.Item>
-                    )}
-                  />
-                </div>
-              )
-            },
-            {
-              key: "notes",
-              label: (
-                <Typography.Text strong style={dynamicStyles.text.primary}>
-                  Notes
-                </Typography.Text>
-              ),
-              children: (
-                <div style={dynamicStyles.base}>
-                  <Paragraph style={dynamicStyles.text.secondary}>
-                    ✍️ Got something to say? Leave a note and make their day!
-                    Your notes will be visible to the community.
-                  </Paragraph>
-                  <Input.TextArea
-                    placeholder="Drop a quick thought, shout-out, or question for this creator."
-                    value={noteInput}
-                    onChange={(e) => setNoteInput(e.target.value)}
-                    rows={2}
-                    maxLength={280}
-                    showCount
-                    style={{ ...dynamicStyles.input, marginBottom: "0.5em" }}
-                  />
-                  <Space wrap style={{ marginBottom: "0.5em" }}>
-                    {suggestedTips.map((tip) => (
-                      <Button
-                        key={tip.label}
-                        size="small"
-                        variant="solid"
-                        onClick={() => setTipAmount(tip.value)}
-                        style={{
-                          ...dynamicStyles.button,
-                          minWidth: 60,
-                          backgroundColor:
-                            tipAmount === tip.value
-                              ? dynamicStyles.accent
-                              : undefined
-                        }}
-                      >
-                        {tip.label}
-                      </Button>
-                    ))}
-                    <Input
-                      allowClear
-                      type="number"
-                      size="small"
-                      placeholder="Custom"
-                      value={tipAmount}
-                      onChange={(e) => setTipAmount(e.target.value)}
-                      min={0}
-                      step={0.5}
-                      precision={2}
-                      style={{
-                        ...dynamicStyles.input,
-                        maxWidth: 170,
-                        verticalAlign: "middle"
-                      }}
-                    />
-                  </Space>
-                  <Typography.Text
-                    style={{
-                      ...dynamicStyles.text.secondary,
-                      fontSize: "12px",
-                      display: "block",
-                      marginBottom: "16px"
-                    }}
-                  >
-                    💡 Tip will be sent directly to the profile owner
-                  </Typography.Text>
-                  <Button
-                    variant="solid"
-                    onClick={handleLeaveNote}
-                    loading={loading?.leaveNote}
-                    icon={tipAmount > 0 ? <DollarOutlined /> : null}
-                    style={dynamicStyles.button}
-                  >
-                    {tipAmount && parseFloat(tipAmount) > 0
-                      ? `Submit with ${tipAmount} NERO tip`
-                      : "Submit"}
-                  </Button>
-                  <Divider />
-                  <Typography.Text strong style={dynamicStyles.text.primary}>
-                    Notes ({profile?.notes?.length || 0})
-                  </Typography.Text>
-                  <List
-                    itemLayout="horizontal"
-                    split
-                    dataSource={profile?.notes || []}
-                    renderItem={(item) => {
-                      const isTipped = parseFloat(item?.tipAmount || "0") > 0;
-                      return (
-                        <List.Item
-                          style={
-                            isTipped
-                              ? {
-                                  background: `linear-gradient(90deg, ${dynamicStyles.hexToRgba(
-                                    dynamicStyles.accent,
-                                    0.1
-                                  )} 60%, ${dynamicStyles.hexToRgba(
-                                    dynamicStyles.accent,
-                                    0.25
-                                  )} 100%)`,
-                                  border: `1px solid ${dynamicStyles.accent}`,
-                                  borderRadius: "8px",
-                                  marginBottom: "8px"
-                                }
-                              : { background: "transparent" }
-                          }
-                        >
-                          <List.Item.Meta
-                            avatar={
-                              <Avatar
-                                shape="circle"
-                                size="small"
-                                style={{
-                                  cursor: "pointer",
-                                  border: "1px solid grey"
-                                }}
-                                src={`https://api.dicebear.com/5.x/open-peeps/svg?seed=${item?.author}`}
-                              />
-                            }
-                            title={
-                              <Space wrap>
-                                <Typography.Text
-                                  strong
-                                  style={dynamicStyles.text.primary}
-                                >
-                                  {ellipsisString(item?.author, 8, 5)}
-                                </Typography.Text>
-                                <Typography.Text
-                                  style={dynamicStyles.text.muted}
-                                >
-                                  {dayjs(item?.createdAt * 1000).fromNow()}
-                                </Typography.Text>
-                                {isTipped && (
-                                  <>
-                                    <Tag
-                                      icon={<DollarOutlined />}
-                                      style={dynamicStyles.tag}
-                                    >
-                                      {formatEther(item?.tipAmount)} NERO
-                                    </Tag>
-                                    <a
-                                      href={`${EXPLORER_URL}/tx/${item?.txHash}`}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      style={{ color: dynamicStyles.accent }}
-                                    >
-                                      <ExportOutlined title="View on Explorer" />
-                                    </a>
-                                  </>
-                                )}
-                              </Space>
-                            }
-                            description={
-                              <span style={dynamicStyles.base}>
-                                {item?.content}
-                              </span>
-                            }
-                          />
-                        </List.Item>
-                      );
-                    }}
-                  />
-                </div>
-              )
-            }
-          ]}
-        />
-        {/* Card Footer - Profile Timestamps */}
-        {profile?.createdAt && (
-          <>
-            <Divider />
-            <div
-              style={{
-                fontSize: "12px",
-                textAlign: "center"
-              }}
-            >
-              <small title="Created At">
-                <CalendarOutlined />{" "}
-                {dayjs(profile.createdAt * 1000).format("MMM D, YYYY h:mm A")}
-              </small>
-              {" • "}
-              <small title="Updated At">
-                <EditOutlined />{" "}
-                {dayjs(profile.updatedAt * 1000).format("MMM D, YYYY h:mm A")}
-              </small>
-            </div>
-          </>
-        )}
-      </div>
-    </Badge.Ribbon>
+                    );
+                  }}
+                />
+              </div>
+            )
+          }
+        ]}
+      />
+      {/* Card Footer - Profile Timestamps */}
+      {profile?.createdAt && (
+        <>
+          <Divider />
+          <div
+            style={{
+              fontSize: "12px",
+              textAlign: "center"
+            }}
+          >
+            <small title="Created At">
+              <CalendarOutlined />{" "}
+              {dayjs(profile.createdAt * 1000).format("MMM D, YYYY h:mm A")}
+            </small>
+            {" • "}
+            <small title="Updated At">
+              <EditOutlined />{" "}
+              {dayjs(profile.updatedAt * 1000).format("MMM D, YYYY h:mm A")}
+            </small>
+          </div>
+        </>
+      )}
+    </div>
   );
 }
