@@ -64,9 +64,5 @@ export const Route = createFileRoute("/$handle")({
       links: [{ rel: "canonical", href: canonicalUrl }]
     };
   },
-  component: RouteComponent
+  component: ProfilePage
 });
-
-function RouteComponent() {
-  return <ProfilePage />;
-}

@@ -942,7 +942,7 @@ export default function Profile() {
                                             height: "60px",
                                             backgroundColor: "#f0f0f0", // Fallback color
                                             background:
-                                              template.preview.background,
+                                              template.settings.background,
                                             borderRadius: "6px",
                                             marginBottom: "8px",
                                             position: "relative",
