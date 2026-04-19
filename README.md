@@ -71,9 +71,9 @@ Open http://localhost:3000 with your browser to see the result.
 
 ### Paymaster and AA Integration
 
-The core implemtation of Paymaster and Account Abstraction(AA) can be found in [`client/app/utils/aaUtils.js`](client/app/utils/aaUtils.js)
+The core implemtation of Paymaster and Account Abstraction(AA) can be found in [`client/src/utils/aaUtils.js`](client/src/utils/aaUtils.js)
 
-Interaction flow is demonstrated in [Creation, Update, Delete of Profiles](client/app/[handle]/page.client.jsx#L181) and in [Creation of posts and notes](client/app/components/ProfileCard.jsx#L62),
+Interaction flow is demonstrated in [Creation, Update, Delete of Profiles](client/src/pages/handle.jsx#L373) and in [Creation of posts and notes](client/src/components/ProfileCard.jsx#L169),
 where the user is prompted to sign a message to create a profile, post or note. The Paymaster handles the gasless transaction and the AA SDK manages the smart contract wallet interactions.
 
 ### Demo
@@ -86,6 +86,10 @@ where the user is prompted to sign a message to create a profile, post or note. 
 ![lfv04-explore-sc](https://github.com/user-attachments/assets/160aa900-c888-4723-b330-c1f922cff4d4)
 
 ### ChangeLog
+
+#### 0.6.2
+
+- Migrated frontend framework from Next.js to Vite and TanStack Start, Improved UI/UX.
 
 #### 0.5.0
 
@@ -155,7 +159,7 @@ where the user is prompted to sign a message to create a profile, post or note. 
 - [Hardhat](https://hardhat.org/) - Ethereum development environment for professionals
 - [Reown Appkit](https://reown.com/appkit) - The full stack toolkit to build onchain app UX.
 - [Ethers.js](https://docs.ethers.io/v5/) - A complete and compact library for interacting with the Ethereum Blockchain and its ecosystem.
-- [Next.js](https://nextjs.org/) - The React Framework for Production.
+- [TanStack Start](https://tanstack.com/start) - Full-stack Framework powered by TanStack Router for React and Solid.
 - [Ant Design](https://ant.design/) - A design system for enterprise-level products. Create an efficient and enjoyable work experience.
 
 ## Safety

@@ -1,7 +1,11 @@
-"use client";
-import { useState, useEffect, use } from "react";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import {
+  useNavigate,
+  useParams,
+  useSearch,
+  Link
+} from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import {
   Form,
   Input,
@@ -27,7 +31,6 @@ import {
   App as AntdApp
 } from "antd";
 import {
-  GlobalOutlined,
   DeleteOutlined,
   EditOutlined,
   ShareAltOutlined,
@@ -40,7 +43,17 @@ import {
   SaveOutlined,
   CompressOutlined,
   ArrowLeftOutlined,
-  RollbackOutlined
+  RollbackOutlined,
+  XOutlined,
+  FacebookOutlined,
+  YoutubeOutlined,
+  GithubOutlined,
+  GlobalOutlined,
+  DiscordOutlined,
+  FrownOutlined,
+  CodeOutlined,
+  LinkedinOutlined,
+  InstagramOutlined
 } from "@ant-design/icons";
 import {
   useAppKitProvider,
@@ -48,26 +61,25 @@ import {
   useAppKitState
 } from "@reown/appkit/react";
 import { BrowserProvider } from "ethers";
-import ProfileCard from "@/app/components/ProfileCard";
+import ProfileCard from "@/components/ProfileCard";
 import {
   linkFolioContract,
-  supportedSocials,
   subgraphClient as client,
   GET_PROFILE_QUERY,
   DEFAULT_APPEARANCE_SETTINGS
-} from "@/app/utils";
-import { profileTemplates } from "@/app/utils/profileTemplates";
+} from "@/utils";
+import { profileTemplates } from "@/utils/profileTemplates";
 import {
   EXPLORER_URL,
   LINKFOLIO_CONTRACT_ADDRESS,
   PINATA_GATEWAY_URL
-} from "@/app/utils/constants";
-import { executeOperation, getAAWalletAddress } from "@/app/utils/aaUtils";
+} from "@/utils/constants";
+import { executeOperation, getAAWalletAddress } from "@/utils/aaUtils";
 import {
   uploadProfileSettingsToIpfs,
   uploadFileToIpfs,
   getProfileSettingsFromIpfs
-} from "@/app/actions/pinata";
+} from "@/lib/functions/pinata";
 
 const { Title } = Typography;
 
@@ -90,9 +102,29 @@ const fontFamilies = [
   { label: "System UI", value: "system-ui, sans-serif" }
 ];
 
-export default function Profile({ params }) {
-  const { handle } = use(params);
+const supportedSocials = [
+  { id: "facebook", name: "Facebook", icon: <FacebookOutlined /> },
+  { id: "youtube", name: "YouTube", icon: <YoutubeOutlined /> },
+  { id: "github", name: "GitHub", icon: <GithubOutlined /> },
+  { id: "snapchat", name: "Snapchat", icon: <GlobalOutlined /> },
+  { id: "telegram", name: "Telegram", icon: <GlobalOutlined /> },
+  { id: "discord", name: "Discord", icon: <DiscordOutlined /> },
+  { id: "farcaster", name: "Farcaster", icon: <FrownOutlined /> },
+  { id: "blockchain", name: "Blockchain", icon: <CodeOutlined /> },
+  { id: "linkedin", name: "LinkedIn", icon: <LinkedinOutlined /> },
+  { id: "x", name: "X", icon: <XOutlined /> },
+  { id: "instagram", name: "Instagram", icon: <InstagramOutlined /> },
+  { id: "other", name: "Other", icon: <GlobalOutlined /> }
+];
+
+export default function Profile() {
+  const { handle } = useParams({ strict: false });
   const { message } = AntdApp.useApp();
+  const getProfileSettingsFromIpfsFn = useServerFn(getProfileSettingsFromIpfs);
+  const uploadProfileSettingsToIpfsFn = useServerFn(
+    uploadProfileSettingsToIpfs
+  );
+  const uploadFileToIpfsFn = useServerFn(uploadFileToIpfs);
 
   const initialValues = {
     handle,
@@ -127,13 +159,13 @@ export default function Profile({ params }) {
   const profileFormValues = Form.useWatch([], profileFormData);
   const [settingsFormData] = Form.useForm();
 
-  const router = useRouter();
+  const navigate = useNavigate();
   const { address: account } = useAppKitAccount();
   const { selectedNetworkId } = useAppKitState();
   const { walletProvider } = useAppKitProvider("eip155");
 
-  const searchParams = useSearchParams();
-  const modeParam = searchParams.get("mode");
+  const search = useSearch({ strict: false });
+  const modeParam = search?.mode;
 
   const isProfileOwner =
     aaWalletAddress &&
@@ -258,9 +290,9 @@ export default function Profile({ params }) {
       profileFormData.setFieldsValue(parsedProfile);
       // get profile settings from IPFS if settingsHash is present
       if (parsedProfile?.settingsHash) {
-        const profileSettingsRes = await getProfileSettingsFromIpfs(
-          parsedProfile?.settingsHash
-        );
+        const profileSettingsRes = await getProfileSettingsFromIpfsFn({
+          data: parsedProfile?.settingsHash
+        });
         if (profileSettingsRes?.error) {
           return message.error(
             `Failed to fetch profile settings: ${profileSettingsRes?.error}`
@@ -288,7 +320,9 @@ export default function Profile({ params }) {
     try {
       // upload settings to IPFS
       message.info("Uploading profile settings to IPFS...");
-      const uploadRes = await uploadProfileSettingsToIpfs(appearanceSettings);
+      const uploadRes = await uploadProfileSettingsToIpfsFn({
+        data: appearanceSettings
+      });
       if (uploadRes?.error) {
         return message.error(
           `Failed to upload profile settings: ${uploadRes?.error}`
@@ -300,7 +334,7 @@ export default function Profile({ params }) {
         message.info("Uploading avatar to IPFS...");
         const formData = new FormData();
         formData.append("file", avatarFile?.originFileObj);
-        const uploadRes = await uploadFileToIpfs(formData);
+        const uploadRes = await uploadFileToIpfsFn({ data: formData });
         if (uploadRes?.error) {
           console.error("Avatar upload failed:", uploadRes.error);
           return message.error(
@@ -416,7 +450,7 @@ export default function Profile({ params }) {
       );
       console.log("Delete Profile Tx:", deleteOpTx);
       message.success("Profile deleted successfully!");
-      router.push("/");
+      navigate({ to: "/" });
     } catch (err) {
       console.error("Error deleting profile:", err);
       message.error(
@@ -529,7 +563,7 @@ export default function Profile({ params }) {
           <Button key="create" type="primary" onClick={() => setMode("edit")}>
             Create Profile
           </Button>,
-          <Link key="home" href="/#get-started">
+          <Link key="home" to="/#how-it-works">
             <Button>See How It Works</Button>
           </Link>
         ]}
@@ -908,7 +942,7 @@ export default function Profile({ params }) {
                                             height: "60px",
                                             backgroundColor: "#f0f0f0", // Fallback color
                                             background:
-                                              template.preview.background,
+                                              template.settings.background,
                                             borderRadius: "6px",
                                             marginBottom: "8px",
                                             position: "relative",
@@ -1447,7 +1481,7 @@ export default function Profile({ params }) {
             />
           </Card>
           <Link
-            href="/#get-started"
+            to="/#get-started"
             style={{
               textAlign: "center",
               display: "flex",
@@ -1455,7 +1489,12 @@ export default function Profile({ params }) {
               alignItems: "center"
             }}
           >
-            <Button type="link" style={{ marginTop: "20px" }}>
+            <Button
+              type="link"
+              style={{
+                marginTop: "20px"
+              }}
+            >
               🔗 Create Your LinkFolio
               <ArrowRightOutlined />
             </Button>
