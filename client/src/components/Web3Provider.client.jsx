@@ -1,4 +1,3 @@
-import { ConfigProvider, theme, App as AntdApp } from "antd";
 import { createAppKit } from "@reown/appkit/react";
 import { EthersAdapter } from "@reown/appkit-adapter-ethers";
 import { defineChain } from "@reown/appkit/networks";
@@ -82,29 +81,5 @@ createAppKit({
 });
 
 export default function Web3ProviderClient({ children }) {
-  return (
-    <ConfigProvider
-      theme={{
-        algorithm: theme.darkAlgorithm,
-        token: {
-          colorPrimary: "#6366f1",
-          colorText: "#e5e7eb",
-          colorBgContainer: "rgba(255, 255, 255, 0.05)",
-          colorBgElevated: "#293142",
-          colorBorder: "rgba(124, 139, 255, 0.25)",
-          borderRadius: 8,
-          controlHeight: 32
-        },
-        components: {
-          Layout: {
-            headerBg: "transparent",
-            footerBg: "transparent",
-            bodyBg: "transparent"
-          }
-        }
-      }}
-    >
-      <AntdApp>{children}</AntdApp>
-    </ConfigProvider>
-  );
+  return children;
 }

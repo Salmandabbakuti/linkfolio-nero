@@ -12,12 +12,15 @@ export default function SiteLayout({ children }) {
   const currentYear = new Date().getFullYear();
 
   const navigationItems = [
-    { key: "features", label: "Features", href: "/", hash: "features" },
+    {
+      key: "features",
+      label: "Features",
+      href: "/#features"
+    },
     {
       key: "create",
       label: "Create",
-      href: "/",
-      hash: "get-started"
+      href: "/#get-started"
     },
     { key: "explore", label: "Explore", href: "/explore" }
   ];
@@ -36,12 +39,7 @@ export default function SiteLayout({ children }) {
 
           <nav className={styles.desktopNav}>
             {navigationItems.map((item) => (
-              <Link
-                key={item.key}
-                to={item.href}
-                hash={item.hash}
-                className={styles.navLink}
-              >
+              <Link key={item.key} to={item.href} className={styles.navLink}>
                 {item.label}
               </Link>
             ))}
@@ -71,11 +69,7 @@ export default function SiteLayout({ children }) {
             onClick={() => setMobileMenuOpen(false)}
             items={navigationItems.map((item) => ({
               key: item.key,
-              label: (
-                <Link to={item.href} hash={item.hash}>
-                  {item.label}
-                </Link>
-              )
+              label: <Link to={item.href}>{item.label}</Link>
             }))}
           />
         </Drawer>

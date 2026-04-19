@@ -198,7 +198,7 @@ const resources = [
 const technologies = [
   { name: "NERO Chain", color: "#6366f1" },
   { name: "TheGraph", color: "#10b981" },
-  { name: "Tanstack Start", color: "#0092b8" },
+  { name: "TanStack Start", color: "#0092b8" },
   { name: "AppKit", color: "#ec4899" },
   { name: "ethers.js", color: "#f97316" },
   { name: "Ant Design", color: "#1677ff" }

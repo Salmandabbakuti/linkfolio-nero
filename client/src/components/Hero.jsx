@@ -108,7 +108,7 @@ export default function Hero() {
 
           {/* CTA Buttons */}
           <Space wrap style={{ marginBottom: "20px" }}>
-            <Link to="/" hash="get-started">
+            <Link to="/#get-started">
               <Button
                 type="primary"
                 size="large"

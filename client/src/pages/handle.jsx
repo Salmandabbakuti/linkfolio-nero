@@ -563,7 +563,7 @@ export default function Profile() {
           <Button key="create" type="primary" onClick={() => setMode("edit")}>
             Create Profile
           </Button>,
-          <Link key="home" to="/" hash="how-it-works">
+          <Link key="home" to="/#how-it-works">
             <Button>See How It Works</Button>
           </Link>
         ]}
@@ -1481,8 +1481,7 @@ export default function Profile() {
             />
           </Card>
           <Link
-            to="/"
-            hash="get-started"
+            to="/#get-started"
             style={{
               textAlign: "center",
               display: "flex",
