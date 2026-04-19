@@ -27,7 +27,7 @@ import {
   DollarOutlined,
   NotificationOutlined
 } from "@ant-design/icons";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, Link } from "@tanstack/react-router";
 import { linkFolioContract } from "@/utils";
 import Hero from "@/components/Hero";
 import styles from "@/styles/Home.module.css";
@@ -492,13 +492,13 @@ export default function Home() {
               <div className={styles.footerLinkGroup}>
                 <h4>Quick Links</h4>
                 {quickLinks.map((link) => (
-                  <a
+                  <Link
                     key={link.label}
-                    href={link.href}
+                    to={link.href}
                     className={styles.footerLink}
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </Col>

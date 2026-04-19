@@ -10,7 +10,7 @@ import {
 } from "@ant-design/icons";
 import { useRef } from "react";
 import { Link } from "@tanstack/react-router";
-import styles from "./Hero.module.css";
+import styles from "@/styles/Hero.module.css";
 
 const { Title, Paragraph } = Typography;
 

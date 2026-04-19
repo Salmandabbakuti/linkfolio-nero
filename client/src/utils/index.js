@@ -1,5 +1,4 @@
 import { Contract, JsonRpcProvider } from "ethers";
-import { defineChain } from "@reown/appkit/networks";
 import { GraphQLClient, gql } from "graphql-request";
 import { LINKFOLIO_CONTRACT_ADDRESS } from "./constants";
 
@@ -15,49 +14,6 @@ export const DEFAULT_APPEARANCE_SETTINGS = {
   avatarShape: "circle",
   banner: ""
 };
-
-// Define the Nero Testnet chain
-export const neroTestnetChain = defineChain({
-  id: 689,
-  caipNetworkId: "eip155:689",
-  chainNamespace: "eip155",
-  name: "Nero Testnet",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Nero",
-    symbol: "NERO"
-  },
-  rpcUrls: {
-    default: {
-      http: ["https://rpc-testnet.nerochain.io"],
-      webSocket: ["wss://rpc-testnet.nerochain.io"]
-    }
-  },
-  blockExplorers: {
-    default: { name: "Explorer", url: "https://testnet.neroscan.io" }
-  }
-});
-
-export const neroMainnetChain = defineChain({
-  id: 1689,
-  caipNetworkId: "eip155:1689",
-  chainNamespace: "eip155",
-  name: "Nero Mainnet",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Nero",
-    symbol: "NERO"
-  },
-  rpcUrls: {
-    default: {
-      http: ["https://rpc.nerochain.io"],
-      webSocket: ["wss://rpc.nerochain.io"]
-    }
-  },
-  blockExplorers: {
-    default: { name: "Explorer", url: "https://neroscan.io" }
-  }
-});
 
 // nero mainnet provider
 const defaultProvider = new JsonRpcProvider("https://rpc.nerochain.io", 1689, {

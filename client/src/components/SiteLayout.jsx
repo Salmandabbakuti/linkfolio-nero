@@ -2,8 +2,7 @@ import { Layout, Menu, Drawer, Button, Badge, Typography, Tag } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import styles from "./SiteLayout.module.css";
-import "antd/dist/reset.css";
+import styles from "@/styles/SiteLayout.module.css";
 
 const { Header, Content } = Layout;
 const { Text } = Typography;
@@ -68,7 +67,7 @@ export default function SiteLayout({ children }) {
         >
           <Menu
             mode="vertical"
-            style={{ border: "none" }}
+            style={{ border: "none", backgroundColor: "inherit" }}
             onClick={() => setMobileMenuOpen(false)}
             items={navigationItems.map((item) => ({
               key: item.key,
