@@ -96,7 +96,8 @@ export default function SiteLayout({ children }) {
 
           <Tag
             title="Incident with Nerochain subgraph indexer. This is a known issue and is being actively investigated."
-            color="gold-inverse"
+            color="gold"
+            variant="solid"
           >
             <Text>v0.6.2</Text>{" "}
             <Badge status="processing" color="red" text="Degraded" />
