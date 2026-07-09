@@ -10,7 +10,7 @@ const pinata = new PinataSDK({
 export const uploadProfileSettingsToIpfs = createServerFn({
   method: "POST"
 })
-  .inputValidator((data) => {
+  .validator((data) => {
     if (!data || typeof data !== "object") {
       throw new Error(
         "uploadProfileSettingsToIpfs: Expected an object with profile settings"
@@ -30,7 +30,7 @@ export const uploadProfileSettingsToIpfs = createServerFn({
   });
 
 export const uploadFileToIpfs = createServerFn({ method: "POST" })
-  .inputValidator((data) => {
+  .validator((data) => {
     if (!(data instanceof FormData)) {
       throw new Error("uploadFileToIpfs: Expected FormData");
     }
@@ -52,7 +52,7 @@ export const uploadFileToIpfs = createServerFn({ method: "POST" })
 export const getProfileSettingsFromIpfs = createServerFn({
   method: "GET"
 })
-  .inputValidator((data) => {
+  .validator((data) => {
     if (!data) {
       throw new Error("getProfileSettingsFromIpfs: Settings hash is required");
     }
