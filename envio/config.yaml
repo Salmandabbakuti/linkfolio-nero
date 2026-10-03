@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=./node_modules/envio/evm.schema.json
+name: envio-indexer
+disable_default_cross_chain: true
+address_format: lowercase
+field_selection:
+  transaction_fields:
+    - hash
+    - from
+    - to
+chains:
+  - id: 1689
+    rpc: https://rpc.nerochain.io
+    start_block: 6488434
+    contracts:
+      - name: LinkFolio
+        address:
+          - "0xd231fE46b4A8500d4aDD5AD98EC3c4ca56E7dee4"
+        events:
+          - event: NoteLeft(uint256 indexed tokenId, string handle, uint256 noteId, string content, address author, uint256 tipAmount)
+          - event: PostCreated(uint256 indexed tokenId, string handle, uint256 postId, string content, address author)
+          - event: ProfileCreated(uint256 indexed tokenId, string name, string handle, uint8 category, string bio, string avatar, address owner, address eoa, string[] linkKeys, string[] links, string settingsHash)
+          - event: ProfileDeleted(uint256 indexed tokenId, string handle)
+          - event: ProfileUpdated(uint256 indexed tokenId, string name, string handle, uint8 category, string bio, string avatar, address owner, string[] linkKeys, string[] links, string settingsHash)

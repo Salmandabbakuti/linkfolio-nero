@@ -1,0 +1,46 @@
+type User {
+  id: ID!
+  address: String!
+  scw: String! # respective smart contract wallet address for the user
+  profiles: [Profile!]! @derivedFrom(field: "eoa")
+  createdAt: Int!
+}
+
+type Profile {
+  id: ID!
+  tokenId: BigInt!
+  name: String!
+  handle: String!
+  category: String!
+  bio: String
+  avatar: String
+  linkKeys: [String!]!
+  links: [String!]!
+  settingsHash: String! # hash of the appearance settings
+  owner: String! # The address that created the profile
+  eoa: User! # The user that owns the profile
+  tipAmount: BigInt! # total amount of tips received by the profile
+  posts: [Post!]! @derivedFrom(field: "author")
+  notes: [Note!]! @derivedFrom(field: "to")
+  createdAt: Int!
+  updatedAt: Int!
+}
+
+type Note {
+  # The ID of the note is a combination of the profile ID and the note ID
+  id: ID!
+  to: Profile! # to which profile the note belongs
+  content: String!
+  author: String! # who created the note
+  tipAmount: BigInt! # amount of tip sent with the note
+  txHash: String! # transaction hash of the note creation
+  createdAt: Int!
+}
+
+type Post {
+  # The ID of the post is a combination of the profile ID and the post ID
+  id: ID!
+  content: String!
+  author: Profile! # who created the post
+  createdAt: Int!
+}
