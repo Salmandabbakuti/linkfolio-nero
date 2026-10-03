@@ -37,25 +37,23 @@ export const linkFolioContract = new Contract(
   defaultProvider
 );
 
-const subgraphUrl =
-  import.meta.env.VITE_SUBGRAPH_API_URL ||
-  "https://subgraph.mainnet.nero.metaborong.com/subgraphs/name/linkfolio-nero";
+const indexerQueryUrl =
+  import.meta.env.VITE_INDEXER_QUERY_URL ||
+  "https://indexer.dev.hyperindex.xyz/a3b7607/v1/graphql";
 
-export const subgraphClient = new GraphQLClient(subgraphUrl);
+export const graphqlClient = new GraphQLClient(indexerQueryUrl);
 
 export const GET_PROFILES_QUERY = gql`
   query getProfiles(
-    $first: Int
-    $skip: Int
-    $orderBy: Profile_orderBy
-    $orderDirection: OrderDirection
-    $where: Profile_filter
+    $limit: Int
+    $offset: Int
+    $where: Profile_bool_exp
+    $order_by: [Profile_order_by!]
   ) {
-    profiles(
-      first: $first
-      skip: $skip
-      orderBy: $orderBy
-      orderDirection: $orderDirection
+    profiles: Profile(
+      limit: $limit
+      offset: $offset
+      order_by: $order_by
       where: $where
     ) {
       id
@@ -76,19 +74,16 @@ export const GET_PROFILES_QUERY = gql`
 
 export const GET_PROFILE_QUERY = gql`
   query getProfile(
-    $id: ID!
-    $notes_first: Int
-    $notes_skip: Int
-    $notes_orderBy: Note_orderBy
-    $notes_orderDirection: OrderDirection
-    $notes_where: Note_filter
-    $posts_first: Int
-    $posts_skip: Int
-    $posts_orderBy: Post_orderBy
-    $posts_orderDirection: OrderDirection
-    $posts_where: Post_filter
+    $id: String!
+    $chainId: Int!
+    $notes_limit: Int
+    $notes_offset: Int
+    $notes_order_by: [Note_order_by!]
+    $posts_limit: Int
+    $posts_offset: Int
+    $posts_order_by: [Post_order_by!]
   ) {
-    profile(id: $id) {
+    profile: Profile_by_pk(id: $id, chainId: $chainId) {
       id
       tokenId
       name
@@ -105,11 +100,9 @@ export const GET_PROFILE_QUERY = gql`
       links
       settingsHash
       notes(
-        first: $notes_first
-        skip: $notes_skip
-        orderBy: $notes_orderBy
-        orderDirection: $notes_orderDirection
-        where: $notes_where
+        limit: $notes_limit
+        offset: $notes_offset
+        order_by: $notes_order_by
       ) {
         id
         content
@@ -119,11 +112,9 @@ export const GET_PROFILE_QUERY = gql`
         createdAt
       }
       posts(
-        first: $posts_first
-        skip: $posts_skip
-        orderBy: $posts_orderBy
-        orderDirection: $posts_orderDirection
-        where: $posts_where
+        limit: $posts_limit
+        offset: $posts_offset
+        order_by: $posts_order_by
       ) {
         id
         content
@@ -142,8 +133,8 @@ export const GET_PROFILE_QUERY = gql`
 `;
 
 export const PROFILE_EXISTS_QUERY = gql`
-  query profile($id: ID!) {
-    profile(id: $id) {
+  query profile($id: String!, $chainId: Int!) {
+    profile: Profile_by_pk(id: $id, chainId: $chainId) {
       id
       handle
     }

@@ -15,7 +15,7 @@ import {
 } from "antd";
 import { Link } from "@tanstack/react-router";
 import { useAppKitAccount } from "@reown/appkit/react";
-import { subgraphClient as client, GET_PROFILES_QUERY } from "@/utils";
+import { graphqlClient, GET_PROFILES_QUERY } from "@/utils";
 import { SyncOutlined } from "@ant-design/icons";
 
 const { Title, Paragraph } = Typography;
@@ -46,38 +46,38 @@ export default function Explore() {
 
   const fetchProfiles = () => {
     setDataLoading(true);
-    client
+    graphqlClient
       .request(GET_PROFILES_QUERY, {
-        first: 30,
-        skip: 0,
-        orderBy: "createdAt",
-        orderDirection: "desc",
-        where: {
-          and: [
-            { eoa: showMyProfiles ? account?.toLowerCase() : undefined },
-            ...(searchQuery
-              ? [
-                  {
-                    or: [
-                      {
-                        name_contains_nocase: searchQuery
-                      },
-                      {
-                        handle_contains_nocase: searchQuery
-                      },
-                      {
-                        bio_contains_nocase: searchQuery
-                      },
-                      {
-                        category_contains_nocase: searchQuery
-                      },
-                      { eoa_contains_nocase: searchQuery }
-                    ]
-                  }
+        limit: 30,
+        offset: 0,
+        order_by: [{ createdAt: "desc" }],
+        where:
+          showMyProfiles || searchQuery
+            ? {
+                _and: [
+                  ...(showMyProfiles && account
+                    ? [{ eoa: { id: { _eq: account.toLowerCase() } } }]
+                    : []),
+                  ...(searchQuery
+                    ? [
+                        {
+                          _or: [
+                            { name: { _ilike: `%${searchQuery}%` } },
+                            { handle: { _ilike: `%${searchQuery}%` } },
+                            { bio: { _ilike: `%${searchQuery}%` } },
+                            { category: { _ilike: `%${searchQuery}%` } },
+                            {
+                              eoa: {
+                                id: { _ilike: `%${searchQuery}%` }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    : [])
                 ]
-              : [])
-          ]
-        }
+              }
+            : undefined
       })
       .then((data) => {
         setProfiles(data?.profiles || []);
