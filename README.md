@@ -38,22 +38,20 @@ npx hardhat compile
 npx hardhat ignition deploy ./ignition/modules/LinkFolio.ts --network neroMainnet
 ```
 
-### 2. Deploying Subgraph
+### 2. Indexing with Envio HyperIndex
 
-> Subgraph will be deployed to NERO Chain's hosted Sandbox environment. Please refer to the [Graph Node documentation](https://thegraph.com/docs/en/indexing/tooling/graph-node/) for more information on how to set up your environment. Update `package.json` scripts to point to your local Graph Node if you are running one.
+The client reads profiles, posts, and notes from the Envio HyperIndex GraphQL API. The indexer configuration, supported schema, and event handlers are in [`envio/`](envio/); the original [`subgraph/`](subgraph/) project is retained as a migration reference.
+
+To run the indexer locally, install [Node.js 22+](https://nodejs.org/), pnpm, and Docker, then run:
 
 ```bash
-
-cd subgraph
-
-npm install
-
-npm run codegen
-
-npm run create-remote # create a new subgraph on the sandbox environment
-
-npm run deploy-remote # deploy the subgraph to the sandbox environment
+cd envio
+pnpm install
+pnpm codegen
+pnpm dev
 ```
+
+For hosted indexing and deployment, see the [Envio documentation](https://docs.envio.dev/). Set `VITE_INDEXER_QUERY_URL` in `client/.env` to the GraphQL endpoint for the indexer deployment you want the client to use. If unset, it defaults to the current development endpoint: `https://indexer.dev.hyperindex.xyz/a3b7607/v1/graphql`.
 
 ### 3. Running the Client
 
@@ -86,6 +84,12 @@ where the user is prompted to sign a message to create a profile, post or note. 
 ![lfv04-explore-sc](https://github.com/user-attachments/assets/160aa900-c888-4723-b330-c1f922cff4d4)
 
 ### ChangeLog
+
+#### 0.7.0
+
+- Migrated profile, post, and note indexing from The Graph mappings to Envio HyperIndex handlers, preserving profile creation/update/deletion, post and note creation, and tip totals.
+- Migrated client GraphQL queries to Envio entity names, filters, ordering, and pagination; profile lookups include the NERO Mainnet chain ID.
+- Added `VITE_INDEXER_QUERY_URL` to configure the Envio GraphQL endpoint; the client defaults to the development endpoint.
 
 #### 0.6.2
 

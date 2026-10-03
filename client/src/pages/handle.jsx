@@ -64,7 +64,7 @@ import { BrowserProvider } from "ethers";
 import ProfileCard from "@/components/ProfileCard";
 import {
   linkFolioContract,
-  subgraphClient as client,
+  graphqlClient,
   GET_PROFILE_QUERY,
   DEFAULT_APPEARANCE_SETTINGS
 } from "@/utils";
@@ -258,18 +258,15 @@ export default function Profile() {
   const fetchProfile = async () => {
     setLoading({ ...loading, read: true });
     try {
-      const data = await client.request(GET_PROFILE_QUERY, {
+      const data = await graphqlClient.request(GET_PROFILE_QUERY, {
         id: handle,
-        notes_first: 100,
-        notes_skip: 0,
-        notes_orderBy: "createdAt",
-        notes_orderDirection: "desc",
-        notes_where: {},
-        posts_first: 100,
-        posts_skip: 0,
-        posts_orderBy: "createdAt",
-        posts_orderDirection: "desc",
-        posts_where: {}
+        chainId: 1689,
+        notes_limit: 100,
+        notes_offset: 0,
+        notes_order_by: [{ createdAt: "desc" }],
+        posts_limit: 100,
+        posts_offset: 0,
+        posts_order_by: [{ createdAt: "desc" }]
       });
       const profile = data?.profile;
       if (!profile && modeParam === "claim") setMode("edit");
